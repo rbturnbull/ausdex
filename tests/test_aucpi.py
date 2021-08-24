@@ -1,8 +1,9 @@
+from datetime import datetime
 import unittest
 import numpy as np
-from datetime import datetime
+import pandas as pd
 
-from aucpi import adjust
+from aucpi import adjust, Aucpi
 
 class TestAucpi(unittest.TestCase):
     """ 
@@ -29,4 +30,37 @@ class TestAucpi(unittest.TestCase):
     def test_no_evaluation_date(self):
         value = adjust(42, "Sep 1990")
         self.assertGreaterEqual( value, 80 ) # This will fail if there is significant deflation after 2021
+
+    def test_numpy(self):
+        array = np.array([30, 52.35, -63])
+        value = adjust(array, "June 1981", evaluation_date="Feb 2011")
+        np.testing.assert_allclose( value, np.array([102.36, 178.62, -214.95]), atol=1e-02)
+
+    def test_cpi_australia_at_pandas(self):
+        dates = pd.to_datetime(pd.Series(["June 1 2019", "February 3 1944", "Feb 3 1997"]))
+        aucpi = Aucpi()
+        results = aucpi.cpi_australia_at( dates )
+        np.testing.assert_allclose( results, np.array([114.8, np.nan, 67]), atol=1e-02)
+
+    def test_pandas(self):
+        df = pd.DataFrame(data=[
+            ["June 1975", 56],
+            ["Feb 1976", 56],
+            ["4 October 1977", -60],
+        ], columns=["date", "value"])
+        results = adjust(df.value, df.date, evaluation_date="5 April 2005")
+        self.assertEqual( results.size, len(df) )
+
+        np.testing.assert_allclose( results, np.array([290.99, 273.67, -240.29]), atol=1e-02)
+
+    def test_pandas_evaluation_dates(self):
+        df = pd.DataFrame(data=[
+            ["Dec 1990", "Sep 1970", 34.86, 5.79],
+            ["Sep 1970", "Dec 1990", 5.79, 34.86],
+            ["5 April 2005", "4 October 1977", -240.29, -60],
+        ], columns=["date", "evaluation", "value", "gold"])
+        results = adjust(df.value, df.date, evaluation_date=df.evaluation)
+        self.assertEqual( results.size, len(df) )
+
+        np.testing.assert_allclose( results, df.gold, atol=1e-02)
 

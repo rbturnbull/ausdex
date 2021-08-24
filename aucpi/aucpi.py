@@ -4,6 +4,7 @@ from appdirs import user_cache_dir
 import pandas as pd
 from dateutil import parser
 import numpy as np
+import numbers
 
 from cached_property import cached_property
 
@@ -25,7 +26,6 @@ class Aucpi():
 
         cached_download(url, local_path)
         return local_path
-
 
     def get_640101(self, quarter, year):
         return self.get_abs("640101", quarter, year)
@@ -56,27 +56,55 @@ class Aucpi():
         df = self.latest_df
         return df['Index Numbers ;  All groups CPI ;  Australia ;']
 
-    def cpi_australia_at(self, date: (datetime,str)):
+    def cpi_australia_at(self, date: (datetime,str, pd.Series,np.ndarray)):
+        """ 
+        Returns the CPI for dates. 
+        
+        If `date` is a string then it is converted to a datetime using dateutil.parser.
+        If `date` is a vector then it returns a vector otherwise it returns a single scalar value.
+        If `date` is before the earliest reference date (i.e. 1948-09-01) then it returns a NaN.
+        """
         if type(date) == str:
             date = parser.parse(date)
-        try:
-            return self.cpi_australia_series[self.cpi_australia_series.index <= date].iloc[-1]
-        except:
-            raise ValueError(f"Cannot get CPI for date '{date}'")
+        
+        date = pd.to_datetime(date)
+        dates = np.array(date,dtype="datetime64[D]")
+        min_date = self.cpi_australia_series.index.min()
+        cpis = np.array(self.cpi_australia_series[np.searchsorted( self.cpi_australia_series.index, date, side="right" )-1], dtype=float)
+        cpis[ dates < min_date ] = np.nan
 
-    def adjust( self, value, original_date: (datetime,str), evaluation_date: (datetime,str) = None ):
+        if cpis.size == 1:
+            return cpis.item()
+
+        return cpis
+        #     return self.cpi_australia_series[np.searchsorted( self.cpi_australia_series.index, date, side="right" )-1]
+
+        # try:
+        #     return self.cpi_australia_series[np.searchsorted( self.cpi_australia_series.index, date, side="right" )-1]
+        # except:
+        #     raise ValueError(f"Cannot get CPI for date '{date}'")
+
+    def adjust( 
+        self, 
+        value: (numbers.Number, np.ndarray, pd.Series), 
+        original_date: (datetime,str), 
+        evaluation_date: (datetime,str) = None,
+    ):
         """ Adjusts a value for inflation. """
-        try:
-            evaluation_date = evaluation_date or datetime.now()
+        if evaluation_date is None:
+            evaluation_date = datetime.now()
 
-            original_cpi = self.cpi_australia_at(original_date)
-            evaluation_cpi = self.cpi_australia_at(evaluation_date)
-            return value * evaluation_cpi/original_cpi
-        except:
-            return np.nan
+        original_cpi = self.cpi_australia_at(original_date)
+        evaluation_cpi = self.cpi_australia_at(evaluation_date)
+        return value * evaluation_cpi/original_cpi
+
 
 
 aucpi = Aucpi()
-def adjust(value, original_date: (datetime,str), evaluation_date: (datetime,str) = None):
+def adjust(
+    value: (numbers.Number, np.ndarray, pd.Series), 
+    original_date: (datetime,str), 
+    evaluation_date: (datetime,str) = None,    
+):
     """ Adjusts a value for inflation. """
     return aucpi.adjust(value, original_date=original_date, evaluation_date=evaluation_date)
