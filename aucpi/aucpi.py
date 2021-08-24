@@ -2,12 +2,12 @@ from datetime import datetime
 from pathlib import Path
 from appdirs import user_cache_dir
 import pandas as pd
-from datetime import datetime
 from dateutil import parser
+import numpy as np
 
 from cached_property import cached_property
 
-from .files import cached_download
+from aucpi.files import cached_download
 
 class Aucpi():
     ACCEPTED_QUARTERS = ["mar", "jun", "sep", "dec"]
@@ -57,14 +57,26 @@ class Aucpi():
         return df['Index Numbers ;  All groups CPI ;  Australia ;']
 
     def cpi_australia_at(self, date: (datetime,str)):
-        if type(date) ==str:
-            date = parser.parse(date)  
-        return self.cpi_australia_series[self.cpi_australia_series.index < date].iloc[-1]
+        if type(date) == str:
+            date = parser.parse(date)
+        try:
+            return self.cpi_australia_series[self.cpi_australia_series.index <= date].iloc[-1]
+        except:
+            raise ValueError(f"Cannot get CPI for date '{date}'")
 
     def adjust( self, value, original_date: (datetime,str), evaluation_date: (datetime,str) = None ):
         """ Adjusts a value for inflation. """
-        evaluation_date = evaluation_date or datetime.now()
+        try:
+            evaluation_date = evaluation_date or datetime.now()
 
-        original_cpi = self.cpi_australia_at(original_date)
-        evaluation_cpi = self.cpi_australia_at(evaluation_date)
-        return value * evaluation_cpi/original_cpi
+            original_cpi = self.cpi_australia_at(original_date)
+            evaluation_cpi = self.cpi_australia_at(evaluation_date)
+            return value * evaluation_cpi/original_cpi
+        except:
+            return np.nan
+
+
+aucpi = Aucpi()
+def adjust(value, original_date: (datetime,str), evaluation_date: (datetime,str) = None):
+    """ Adjusts a value for inflation. """
+    return aucpi.adjust(value, original_date=original_date, evaluation_date=evaluation_date)

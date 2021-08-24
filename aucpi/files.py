@@ -12,7 +12,7 @@ def cached_download( url: str, local_path: (str, Path), attempt_download=True ) 
 
     Raises:
         Exception: Raises an exception if it cannot download the file.
-
+        
     """
 
     local_path = Path(local_path)

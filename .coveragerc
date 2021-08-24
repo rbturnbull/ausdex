@@ -1,0 +1,6 @@
+[run]
+source = aucpi
+
+[report]
+precision = 2
+

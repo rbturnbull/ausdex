@@ -13,10 +13,16 @@ openpyxl = "^3.0.7"
 xlrd = "^2.0.1"
 cached-property = "^1.5.2"
 python-dateutil = "^2.8.2"
+typer = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 ipykernel = "^6.2.0"
+pytest = "^6.2.4"
+coverage = "^5.5"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["setuptools >= 40.6.0", "poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+aucpi = 'aucpi.main:app'
