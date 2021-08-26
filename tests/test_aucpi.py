@@ -64,3 +64,7 @@ class TestAucpi(unittest.TestCase):
 
         np.testing.assert_allclose( results, df.gold, atol=1e-02)
 
+    def test_get_abs_by_date(self):
+        aucpi = Aucpi()
+        file = aucpi.get_abs_by_date( "640101", datetime(2021,8,26) )
+        self.assertIn("640101-jun-2021.xls", str(file))

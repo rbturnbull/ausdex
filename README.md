@@ -54,11 +54,9 @@ The values, the dates and the evaluation dates can be vectors by using NumPy arr
 ```
 
 ## Dataset and Validation
-The Consumer Price Index dataset is taken from the Australian Bureau of Statistics (https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). It uses the nation-wide CPI value. The validation examples in the tests are taken from the Australian Reserve Bank's inflation calculator (https://www.rba.gov.au/calculator/).
+The Consumer Price Index dataset is taken from the Australian Bureau of Statistics (https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). It uses the nation-wide CPI value. The validation examples in the tests are taken from the Australian Reserve Bank's inflation calculator (https://www.rba.gov.au/calculator/). This will automatically update each quarter as the new datasets are released.
 
 The CPI data goes back to 1948. Using dates before this will result in a NaN.
-
-NB. The code is currently hardcoded to download the CPI data for June 2021. This means that future dates will use CPI values from this this date. This will be fixed in a future update.
 
 ## Development
 

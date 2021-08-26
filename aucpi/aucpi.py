@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from appdirs import user_cache_dir
 import pandas as pd
@@ -14,6 +14,7 @@ class Aucpi():
     ACCEPTED_QUARTERS = ["mar", "jun", "sep", "dec"]
 
     def get_abs(self, id, quarter, year):
+        """ Gets a CPI datafile from the Australian Burau of Statistics. """
         quarter = quarter.lower()[:3]
         if quarter not in self.ACCEPTED_QUARTERS:
             raise ValueError(f"Cannot understand quarter {quarter}.")
@@ -27,14 +28,28 @@ class Aucpi():
         cached_download(url, local_path)
         return local_path
 
-    def get_640101(self, quarter, year):
-        return self.get_abs("640101", quarter, year)
+    def get_abs_by_date(self, id, date):
+        """ Gets the latest CPI datafile from the Australian Burau of Statistics before a specific date. """
+        file = None
+        while file is None and date > datetime(1948,1,1):
+            try:
+                year = date.year
+                quarter_index = (date.month-3)//3
+                if quarter_index == -1:
+                    quarter_index = 3
+                    year -= 1
+                quarter = self.ACCEPTED_QUARTERS[quarter_index]
+
+                file = self.get_abs(id, quarter, year)
+            except:
+                print(f"CPI data for {date} not available.")
+
+            date -= timedelta(89) # go back approximately a quarter
+
+        return file
 
     def latest_640101(self):
-        # HACK. should get quarter and year dynamically
-        quarter = "jun"
-        year = 2021
-        return self.get_640101(quarter, year)
+        return self.get_abs_by_date( "640101", datetime.now() )
 
     @cached_property
     def latest_df(self) -> pd.DataFrame:
