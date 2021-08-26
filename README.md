@@ -1,5 +1,7 @@
 # aucpi
 
+![pipline](https://github.com/rbturnbull/aucpi/actions/workflows/coverage.yml/badge.svg)
+
 Adjusts Australian dollars for inflation.
 
 ## Installation
