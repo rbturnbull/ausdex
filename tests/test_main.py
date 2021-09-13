@@ -1,4 +1,5 @@
 import unittest
+import re
 
 from typer.testing import CliRunner
 
@@ -11,7 +12,7 @@ class TestMain(unittest.TestCase):
     def test_version(self):
         result = self.runner.invoke(main.app, ["--version"])
         assert result.exit_code == 0
-        assert "0.1.0" in result.stdout
+        assert re.match(r"\d+\.\d+\.\d+", result.stdout)
 
     def test_adjust(self):
         result = self.runner.invoke(main.app, ["13", 'March 1991', '--evaluation-date', 'June 2010'])

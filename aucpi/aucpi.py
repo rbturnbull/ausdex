@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from appdirs import user_cache_dir
 import pandas as pd
+import modin.pandas as mpd
 from dateutil import parser
 import numpy as np
 import numbers
@@ -81,8 +82,11 @@ class Aucpi():
         """
         if type(date) == str:
             date = parser.parse(date)
-        
-        date = pd.to_datetime(date)
+        elif type(date) == mpd.Series:
+            date = mpd.to_datetime(date)
+        else:
+            date = pd.to_datetime(date)
+
         dates = np.array(date,dtype="datetime64[D]")
         min_date = self.cpi_australia_series.index.min()
         cpis = np.array(self.cpi_australia_series[np.searchsorted( self.cpi_australia_series.index, date, side="right" )-1], dtype=float)
