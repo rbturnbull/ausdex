@@ -1,6 +1,7 @@
 # aucpi
 
 ![pipline](https://github.com/rbturnbull/aucpi/actions/workflows/coverage.yml/badge.svg)
+[<img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rbturnbull/49262550cc8b0fb671d46df58de213d4/raw/coverage-badge.json">](<https://rbturnbull.github.io/aucpi/coverage/>)
 [<img src="https://github.com/rbturnbull/aucpi/actions/workflows/docs.yml/badge.svg">](<https://rbturnbull.github.io/aucpi/>)
 [<img src="https://img.shields.io/badge/code%20style-black-000000.svg">](<https://github.com/psf/black>)
 
