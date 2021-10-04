@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aucpi"
-version = "0.1.3"
+version = "0.1.4"
 description = "Adjusts Australian dollars for inflation."
 authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>"]
 license = "Apache 2.0"
