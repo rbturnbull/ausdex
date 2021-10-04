@@ -15,7 +15,7 @@ class TestMain(unittest.TestCase):
         assert re.match(r"\d+\.\d+\.\d+", result.stdout)
 
     def test_adjust(self):
-        result = self.runner.invoke(main.app, ["13", 'March 1991', '--evaluation-date', 'June 2010'])
+        result = self.runner.invoke(main.app, ["adjust", "13", 'March 1991', '--evaluation-date', 'June 2010'])
         assert result.exit_code == 0
         assert "21.14" in result.stdout
 
