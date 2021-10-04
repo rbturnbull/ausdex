@@ -1,5 +1,5 @@
 ---
-title: 'ozdex: A Python package for galactic dynamics'
+title: 'ozdex: A Python package for using Australian economic indexing data'
 tags:
   - Python
   - economics
@@ -10,7 +10,7 @@ authors:
     orcid: 0000-0003-1274-6750
     affiliation: 1
   - name: Jonathan Garber^[co-first author] # note this makes a footnote saying 'co-first author'
-    orcid: 0000-0003-1274-6750
+    orcid: 0000-0001-6754-4748
     affiliation: 1
 affiliations:
  - name: Melbourne Data Analytics Platform, University of Melbourne
