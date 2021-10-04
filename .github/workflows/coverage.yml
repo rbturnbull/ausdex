@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.8, 3.9]
+        python-version: [3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -25,6 +25,7 @@ jobs:
     - name: Coverage
       run: |
         poetry run coverage run -m pytest
+        poetry run coverage html
         echo "COVERAGE=$(poetry run coverage report --precision 2 | grep TOTAL | tr -s ' ' | cut -f 4 -d " ")" >> $GITHUB_ENV
     - name: Create Badge
       uses: schneegans/dynamic-badges-action@v1.1.0
