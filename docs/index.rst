@@ -21,7 +21,7 @@ available in a convenient Python package with a simple programatic and command l
    installation
    inflation
    advantage
-   credits
+   citation
 
 
 Indices and tables
