@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inflation &mdash; ozdex 0.1.4 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Socio-Economic Advantage" href="advantage.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> ozdex
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Inflation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-usage">Command Line Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-usage">Module Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-and-validation">Dataset and Validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advantage.html">Socio-Economic Advantage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="credits.html">Credits</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ozdex</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Inflation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/inflation.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  
+<style>
+/* CSS overrides for sphinx_rtd_theme */
+
+/* 24px margin */
+.nbinput.nblast.container,
+.nboutput.nblast.container {
+    margin-bottom: 19px;  /* padding has already 5px */
+}
+
+/* ... except between code cells! */
+.nblast.container + .nbinput.container {
+    margin-top: -19px;
+}
+
+.admonition > p:before {
+    margin-right: 4px;  /* make room for the exclamation icon */
+}
+
+/* Fix math alignment, see https://github.com/rtfd/sphinx_rtd_theme/pull/686 */
+.math {
+    text-align: unset;
+}
+</style>
+<section class="tex2jax_ignore mathjax_ignore" id="inflation">
+<h1>Inflation<a class="headerlink" href="#inflation" title="Permalink to this headline"></a></h1>
+<p>Adjusts Australian dollars for inflation.</p>
+<section id="command-line-usage">
+<h2>Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline"></a></h2>
+<p>Adjust single values using the command line interface:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">aucpi</span> <span class="n">adjust</span> <span class="n">VALUE</span> <span class="n">ORIGINAL_DATE</span>
+</pre></div>
+</div>
+<p>This adjust the value from the original date to the equivalent in today’s dollars.</p>
+<p>For example, to adjust $26 from July 21, 1991 to today run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ aucpi adjust 26 &quot;July 21 1991&quot; 
+$ 52.35
+</pre></div>
+</div>
+<p>To choose a different date for evaluation use the <code class="docutils literal notranslate"><span class="pre">--evaluation-date</span></code> option. e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ aucpi adjust 26 &quot;July 21 1991&quot;  --evaluation-date &quot;Sep 1999&quot;
+$ 30.27
+</pre></div>
+</div>
+</section>
+<section id="module-usage">
+<h2>Module Usage<a class="headerlink" href="#module-usage" title="Permalink to this headline"></a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">aucpi</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aucpi</span><span class="o">.</span><span class="n">adjust</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">)</span>
+<span class="go">52.35254237288135</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">aucpi</span><span class="o">.</span><span class="n">adjust</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">,</span><span class="n">evaluation_date</span><span class="o">=</span><span class="s2">&quot;Sep 1999&quot;</span><span class="p">)</span>
+<span class="go">30.27457627118644</span>
+</pre></div>
+</div>
+<p>The dates can be as strings or Python datetime objects.</p>
+<p>The values, the dates and the evaluation dates can be vectors by using NumPy arrays or Pandas Series. e.g.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span> <span class="p">[</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">],[</span><span class="mi">25</span><span class="p">,</span><span class="s2">&quot;Oct 1989&quot;</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;adjusted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aucpi</span><span class="o">.</span><span class="n">adjust</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
+<span class="go">   value          date   adjusted</span>
+<span class="go">0     26  July 21 1991  52.352542</span>
+<span class="go">1     25      Oct 1989  54.797048</span>
+</pre></div>
+</div>
+</section>
+<section id="dataset-and-validation">
+<h2>Dataset and Validation<a class="headerlink" href="#dataset-and-validation" title="Permalink to this headline"></a></h2>
+<p>The Consumer Price Index dataset is taken from the Australian Bureau of Statistics (https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). It uses the nation-wide CPI value. The validation examples in the tests are taken from the Australian Reserve Bank’s inflation calculator (https://www.rba.gov.au/calculator/). This will automatically update each quarter as the new datasets are released.</p>
+<p>The CPI data goes back to 1948. Using dates before this will result in a NaN.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="advantage.html" class="btn btn-neutral float-right" title="Socio-Economic Advantage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, Robert Turnbull and Jonathan Garber.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
