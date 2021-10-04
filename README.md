@@ -2,6 +2,8 @@
 
 ![pipline](https://github.com/rbturnbull/aucpi/actions/workflows/coverage.yml/badge.svg)
 ![docs](https://github.com/rbturnbull/aucpi/actions/workflows/docs.yml/badge.svg)
+![black](https://img.shields.io/badge/code%20style-black-000000.svg)
+[<img src="https://img.shields.io/badge/code%20style-black-000000.svg">](<https://github.com/psf/black>)
 
 Adjusts Australian dollars for inflation.
 

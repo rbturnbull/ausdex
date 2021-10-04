@@ -2,7 +2,7 @@ from pathlib import Path
 import urllib.request
 
 
-def cached_download( url: str, local_path: (str, Path), attempt_download=True ) -> None:
+def cached_download(url: str, local_path: (str, Path), attempt_download=True) -> None:
     """
     Downloads a file if a local file does not already exist.
 
@@ -12,7 +12,7 @@ def cached_download( url: str, local_path: (str, Path), attempt_download=True ) 
 
     Raises:
         Exception: Raises an exception if it cannot download the file.
-        
+
     """
 
     local_path = Path(local_path)
@@ -25,5 +25,3 @@ def cached_download( url: str, local_path: (str, Path), attempt_download=True ) 
 
     if not local_path.exists() or local_path.stat().st_size == 0:
         raise Exception(f"Error reading {local_path}")
-
-
