@@ -1,35 +1,25 @@
-# aucpi
-
-![pipline](https://github.com/rbturnbull/aucpi/actions/workflows/coverage.yml/badge.svg)
-![docs](https://github.com/rbturnbull/aucpi/actions/workflows/docs.yml/badge.svg)
+# Inflation
 
 Adjusts Australian dollars for inflation.
 
-## Installation
-
-You can install the development version directly from github:
-
-```
-pip install git+https://github.com/rbturnbull/aucpi.git
-```
 
 ## Command Line Usage
 
 Adjust single values using the command line interface:
 ```
-aucpi VALUE ORIGINAL_DATE
+aucpi adjust VALUE ORIGINAL_DATE
 ```
 This adjust the value from the original date to the equivalent in today's dollars.
 
 For example, to adjust $26 from July 21, 1991 to today run:
 ```
-$ aucpi 26 "July 21 1991" 
+$ aucpi adjust 26 "July 21 1991" 
 $ 52.35
 ```
 
 To choose a different date for evaluation use the `--evaluation-date` option. e.g.
 ```
-$ aucpi 26 "July 21 1991"  --evaluation-date "Sep 1999"
+$ aucpi adjust 26 "July 21 1991"  --evaluation-date "Sep 1999"
 $ 30.27
 ```
 
@@ -58,25 +48,3 @@ The values, the dates and the evaluation dates can be vectors by using NumPy arr
 The Consumer Price Index dataset is taken from the Australian Bureau of Statistics (https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). It uses the nation-wide CPI value. The validation examples in the tests are taken from the Australian Reserve Bank's inflation calculator (https://www.rba.gov.au/calculator/). This will automatically update each quarter as the new datasets are released.
 
 The CPI data goes back to 1948. Using dates before this will result in a NaN.
-
-## Development
-
-To devlop aucpi, clone the repo and install the dependencies using poetry:
-
-```
-git clone https://github.com/rbturnbull/aucpi.git
-cd aucpi
-poetry install
-```
-
-You can enter the environment by running:
-
-```
-poetry shell
-```
-
-The tests can be run using `pytest`.
-
-## Credits
-
-Robert Turnbull (University of Melbourne)
