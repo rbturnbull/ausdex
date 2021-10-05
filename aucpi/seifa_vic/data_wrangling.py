@@ -1,5 +1,6 @@
-from .download_data import load_gis_data, load_csv_data, load_xls_data, load_shapefile_data
-from geopandas.tools import sjoin	
+from .data_io import load_gis_data, load_csv_data, load_xls_data, load_shapefile_data, get_cached_path
+from geopandas.tools import sjoin
+import geopandas as gpd
 import pandas as pd
 
 def group_repeat_names_vic(x):
@@ -115,9 +116,10 @@ def get_2016_vic_suburb_name_fixer():
 	return name_fixer_dict_2016
 
 def get_ssc_2011(code_begin, code_end):
-	ssc_2011 = load_csv_data('state_suburb_codes_2011')
+	ssc_2011 = load_csv_data('state_suburb_codes_2011', zipped=True)
 	ssc_2011 = ssc_2011[(ssc_2011['SSC_CODE_2011'] >= code_begin) &( ssc_2011['SSC_CODE_2011'] <code_end)]
 	ssc_2011 = ssc_2011.drop_duplicates(subset='SSC_CODE_2011')
+	return ssc_2011
 
 
 def get_victorian_abs_spreadsheets():
@@ -130,10 +132,12 @@ def combine_victorian_abs_spreadsheets(df_2011=None, df_2016=None):
 		df_2011, df_2016 = get_victorian_abs_spreadsheets()
 	ssc_2011 = get_ssc_2011(20000,30000)
 	for year, df_rename in zip([2016, 2011], [ df_2016, df_2011]):
+		print(f'processing year {year}')
+		df_rename['suburb_code'] = pd.to_numeric(df_rename['suburb_code'],downcast='integer', errors='coerce')
+		df_rename.dropna(subset=['suburb_code'], inplace=True)
 		df_rename = df_rename[(df_rename['suburb_code'] < 30000) & (df_rename['suburb_code'] > 19999)]
 		df_out_l = []
 		if year == 2011:
-
 			df_rename = df_rename.merge(ssc_2011[['SSC_CODE_2011','SSC_NAME_2011']], left_on='suburb_code', right_on='SSC_CODE_2011', how='left')
 			df_rename.rename(columns={"SSC_NAME_2011":'suburb_name'}, inplace=True)
 
@@ -162,12 +166,77 @@ def combine_2006_dataset():
 	seifa_2006.columns = ['cd_code', 'irsad_score', 'irsd_score', 'ier_score', 'ieo_score', 'population']
 	seifa_2006 = seifa_2006[(seifa_2006['cd_code']> 2000000) & (seifa_2006['cd_code'] < 3000000)]
 	CD_2006 = CD_2006.merge(seifa_2006[['cd_code', 'ier_score', 'ieo_score', 'population']], left_on ='CD_CODE06', right_on = 'cd_code', how='left' )
+	return CD_2006
 
 
 def get_aurin_datasets_vic():
 	# will eventual give out gdf_1986, 1991, 1996 from aurin
-	pass
+	gdf_2001 = gpd.read_file('/Users/garberj/data/vbadata_SEIFA/ABS_-_Socio-Economic_Indexes_for_Areas__SEIFA___CD__2001.json/data2516898914808603983.json')
+	gdf_1996 = gpd.read_file('/Users/garberj/data/vbadata_SEIFA/ABS_-_Socio-Economic_Indexes_for_Areas__SEIFA___CD__1996.json/data7336844287967253519.json')
+	gdf_1991 = gpd.read_file('/Users/garberj/data/vbadata_SEIFA/ABS_-_Socio-Economic_Indexes_for_Areas__SEIFA___CD__1991.json/data354505989715425060.json')
+	gdf_1986= gpd.read_file('/Users/garberj/data/vbadata_SEIFA/ABS_-_Socio-Economic_Indexes_for_Areas__SEIFA___CD__1986.json/data7355794508419511170.json')
+	return gdf_1986, gdf_1991, gdf_1996, gdf_2001
 
-def combine_victorian_datasets():
-	df_comb =combine_victorian_abs_spreadsheets()
-	 
+
+def convert_cds_colnames_gdf(df):
+	name_change = {}
+	drop_cols = []
+	keep_cols = ['geometry', 'ier_score', 'ieo_score']
+	for col in list(df.columns):
+		print(col) 
+		if 'index_of_economic_resources' in col:
+			name_change[col] = 'ier_score'
+
+		elif 'index_of_education_and_occupation' in col:
+			name_change[col] = 'ieo_score'
+		elif 'index_of_relative_socio_economic_disadvantage' in col:
+			name_change[col] = 'irsd_score'
+		elif 'rural_index_of_relative_socio_economic_advantag' in col:
+			name_change[col] = 'rirsa_score'
+		elif 'urban_index_of_relative_socio_economic_advantag' in col:
+			name_change[col] = 'uirsa_score'		
+		elif '_population' in col:
+			name_change[col] = 'population'
+		elif 'isad_score' in col:
+			name_change[col] = 'irsad_score'
+		elif col not in keep_cols:
+			drop_cols.append(col)
+	
+	return df.rename(columns = name_change).drop(columns=drop_cols)
+
+def calc_area(gdf, crs ='EPSG:32756'):
+    return gdf.geometry.to_crs(crs).area
+
+def w_avg(df, values, weights):
+    
+    d = df[values]
+    w = df[weights]
+    return (d * w).sum() / w.sum()
+
+def preprocess_victorian_datasets(force_rebuild = False):
+	preprocessed_path = get_cached_path('preprocessed_vic_seifa.csv')
+	if (preprocessed_path.exists() == False) or (force_rebuild==True):
+		df_comb =combine_victorian_abs_spreadsheets()
+		gdf_2006 = combine_2006_dataset()
+		gdf_1986, gdf_1991, gdf_1996, gdf_2001 = get_aurin_datasets_vic()
+		suburbs_coordinates, _ = wrangle_victorian_gis_data()
+		concat_stack = []
+		for year,df in zip([1986, 1991, 1996, 2001, 2006],[gdf_1986, gdf_1991, gdf_1996, gdf_2001, gdf_2006]):
+			df_rename = convert_cds_colnames_gdf(df)
+			df_union = gpd.overlay(df_rename.to_crs("EPSG:4326"), suburbs_coordinates)
+			df_union['area'] = calc_area(df_union)
+			col_dict = {}
+			for col in ['ieo_score', 'ier_score', 'irsad_score','rirsa_score', 'uirsa_score', 'irsd_score']:
+				if col in df_union.columns:
+					col_dict[col]  = df_union.groupby('Site_suburb').apply(w_avg, col, 'area')
+			
+
+			out = pd.DataFrame(col_dict).reset_index()
+			out['year'] = year
+			concat_stack.append(out)
+		combined = pd.concat(concat_stack)
+		total_df = pd.concat([combined, df_comb])
+		total_df.to_csv(preprocessed_path, index=False)
+	else:
+		total_df = pd.read_csv(preprocessed_path)
+	return total_df
