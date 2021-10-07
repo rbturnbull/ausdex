@@ -27,8 +27,8 @@ jobs:
       run: |
         bash make_test_config.sh
       env:
-        USERNAME: ${{ secrets.AurinUserName }}
-        PASSWORD: ${{ secrets.AurinPassWord }}
+        USERNAME: ${{ secrets.AURINUSERNAME }}
+        PASSWORD: ${{ secrets.AURINPASSWORD }}
     - name: Coverage
       run: |
         poetry run coverage run -m pytest
