@@ -12,9 +12,7 @@ jobs:
         python-version: [3.9]
 
     steps:
-      env:
-        USERNAME: ${{ secrets.AurinUserName }}
-        PASSWORD: ${{ secrets.AurinPassWord }}
+      
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -28,6 +26,9 @@ jobs:
     - name: Create config file for aurin
       run: |
         bash make_test_config.sh
+      env:
+        USERNAME: ${{ secrets.AurinUserName }}
+        PASSWORD: ${{ secrets.AurinPassWord }}
     - name: Coverage
       run: |
         poetry run coverage run -m pytest
