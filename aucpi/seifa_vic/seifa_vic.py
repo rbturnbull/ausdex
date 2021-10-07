@@ -16,7 +16,7 @@ class SeifaVic:
 		df = self.get_suburb_data(suburb).dropna(subset=[variable]).sort_values('year')
 		if fill_value == 'boundary_value':
 			fill_value = [df[variable].values[0], df[variable].values[-1]]
-		return interp1d(df['year'].values, df[variable].values,fill_value=fill_value **kwargs)
+		return interp1d(df['year'].values, df[variable].values,fill_value=fill_value, **kwargs)
 	
 	def get_seifa_data(self,year_values, suburb,variable, fill_value = 'extrapolate', **kwargs ):
 		assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.array, pd.Series))
