@@ -73,7 +73,7 @@ def convert_spreadsheet_colnames(df):
 			name_change[col] = 'cd_code'
 		else:
 			drop_cols.append(col)
-	print(drop_cols, name_change)
+	# print(drop_cols, name_change)
 	return df.rename(columns = name_change).drop(columns=drop_cols)
 
         
@@ -135,12 +135,13 @@ def combine_victorian_abs_spreadsheets(df_2011=None, df_2016=None):
 	if (type(df_2011) == type(None)) |(type(df_2016) == type(None) ): 
 		df_2011, df_2016 = get_victorian_abs_spreadsheets()
 	ssc_2011 = get_ssc_2011(20000,30000)
+	df_out_l = []
 	for year, df_rename in zip([2016, 2011], [ df_2016, df_2011]):
 		print(f'processing year {year}')
 		df_rename['suburb_code'] = pd.to_numeric(df_rename['suburb_code'],downcast='integer', errors='coerce')
 		df_rename.dropna(subset=['suburb_code'], inplace=True)
 		df_rename = df_rename[(df_rename['suburb_code'] < 30000) & (df_rename['suburb_code'] > 19999)]
-		df_out_l = []
+		
 		if year == 2011:
 			df_rename = df_rename.merge(ssc_2011[['SSC_CODE_2011','SSC_NAME_2011']], left_on='suburb_code', right_on='SSC_CODE_2011', how='left')
 			df_rename.rename(columns={"SSC_NAME_2011":'suburb_name'}, inplace=True)
@@ -226,6 +227,7 @@ def preprocess_victorian_datasets(force_rebuild = False):
 	preprocessed_path = get_cached_path('preprocessed_vic_seifa.csv')
 	if (preprocessed_path.exists() == False) or (force_rebuild==True):
 		df_comb =combine_victorian_abs_spreadsheets()
+		# print('df_comb max year before combining with gdf', df_comb.year.max())
 		gdf_2006 = combine_2006_dataset()
 		gdf_1986, gdf_1991, gdf_1996, gdf_2001 = get_aurin_datasets_vic()
 		suburbs_coordinates, _ = wrangle_victorian_gis_data()
