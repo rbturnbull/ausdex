@@ -15,7 +15,10 @@ class SeifaVic:
 	def build_interpolator(self, suburb, variable,fill_value, **kwargs):
 		df = self.get_suburb_data(suburb).dropna(subset=[variable]).sort_values('year')
 		if fill_value == 'boundary_value':
-			fill_value = [df[variable].values[0], df[variable].values[-1]]
+
+			fill_value = (df[variable].values[0], df[variable].values[-1])
+			print('fill_value now', fill_value)
+			kwargs['bounds_error'] = False
 		return interp1d(df['year'].values, df[variable].values,fill_value=fill_value, **kwargs)
 	
 	def get_seifa_data(self,year_values, suburb,variable, fill_value = 'extrapolate', **kwargs ):
@@ -44,12 +47,15 @@ def interpolate_vic_suburb_seifa(year_values,suburb, variable, fill_value='extra
 		`ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,
 		`uirsa_score` for the urban index of relative socio economic advantage,
 		`rirsa_score` for the rural index of relative socio economic advantage
-		fill_value (str): 
+		fill_value (str): can be "extrapolate" to extraplate past the extent of the dataset or "boundary_value" to use the closest datapoint, or 
+		an excepted response for scipy.interpolate.interp1D fill_value keyword argument
 
     Returns:
         np.array: The interpolated value of the valueof that seifa variable at that year.
 
 	"""
-	out = seifa_vic.get_seifa_data(year_values,suburb, variable, 
+	out = seifa_vic.get_seifa_data(year_values,suburb.upper(), variable, 
 								   fill_value=fill_value, **kwargs)
+	if out.size == 1:
+		out = out.item()
 	return out
