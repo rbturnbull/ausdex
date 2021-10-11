@@ -14,15 +14,21 @@ economic environment. These include the Consumer Price Index (CPI) used for calc
 and a variety of indexes designed to measure socio-economic advantage. `ozdex` makes these data
 available in a convenient Python package with a simple programatic and command line interfaces. 
 
+
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    installation
+   seifa_vic
    inflation
    advantage
    reference
    citation
+   
+.. automodule:: aucpi.seifa_vic.seifa_vic
+   :members:
 
 
 Indices and tables
