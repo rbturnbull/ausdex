@@ -2,7 +2,11 @@ import typer
 from pathlib import Path
 from typing import List
 from datetime import datetime
-import importlib.metadata
+import sys
+if sys.version_info.minor <=7:
+    import importlib_metadata as lib_metadata
+else:
+    import importlib.metadata as lib_metadata
 from typing import Optional
 import subprocess
 
@@ -13,7 +17,7 @@ app = typer.Typer()
 
 def version_callback(value: bool):
     if value:
-        version = importlib.metadata.version("aucpi")
+        version = lib_metadata.version("aucpi")
         typer.echo(version)
         raise typer.Exit()
 
@@ -52,6 +56,39 @@ def adjust(
     )
     typer.echo(f"{result:.2f}")
 
+@app.command()
+def seifa_vic(
+   
+    year_value: float,
+    suburb: str,
+    metric: str,
+    fill_value: str = 'extrapolate'
+            ):
+    """
+    interpolates suburb aggregated socioeconomic indices for a given year for a given suburb
+
+    inputs
+    year_value (int, float): The year or array of year values you want interpolated\n
+        suburb (str): The name of the suburb that you want the data interpolated for\n
+		metric (str): the name of the seifa_score variable, options are include\n 
+		`irsd_score` for index of relative socio economic disadvantage,\n
+		`ieo_score` for the index of education and opportunity,\n
+		`ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,\n
+		`uirsa_score` for the urban index of relative socio economic advantage,\n
+		`rirsa_score` for the rural index of relative socio economic advantage\n
+		fill_value (str): can be "extrapolate" to extraplate past the extent of the dataset or "boundary_value" to use the closest datapoint, or \n
+		or an excepted response for scipy.interpolate.interp1D fill_value keyword argument\n
+    outputs
+        interpolated score (float)
+
+    """
+    import warnings
+
+    warnings.filterwarnings('ignore')
+
+    from .seifa_vic import interpolate_vic_suburb_seifa
+    result = interpolate_vic_suburb_seifa(year_value, suburb.upper(),metric,fill_value=fill_value)
+    typer.echo(f"{result:.2f}")
 
 @app.callback()
 def main(
