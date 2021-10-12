@@ -24,11 +24,11 @@ available in a convenient Python package with a simple programatic and command l
    seifa_vic
    inflation
    advantage
-   reference
+   api reference <reference>
    citation
    
-.. automodule:: aucpi.seifa_vic.seifa_vic
-   :members:
+
+
 
 
 Indices and tables

@@ -31,30 +31,19 @@ class SeifaVic:
 seifa_vic = SeifaVic()
 
 
-def interpolate_vic_suburb_seifa(year_values,suburb, variable, fill_value='extrapolate',  **kwargs )-> np.array:
-	"""function to get an interpolated estimate of a SEIFA score for
-	each victorian suburb from Australian Bureau of statistics data
+def interpolate_vic_suburb_seifa(year_values,suburb, metric, fill_value='extrapolate',  **kwargs )-> np.array or float:
+	"""function to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data
 
-	You can input 
-	
-
-    Args:
-        year_values (int, float, np.ndarray like): The year or array of year values you want interpolated
-        suburb (str): The name of the suburb that you want the data interpolated for
-		variable (str): the name of the seifa_score variable, options are include 
-		`irsd_score` for index of relative socio economic disadvantage,
-		`ieo_score` for the index of education and opportunity, 
-		`ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,
-		`uirsa_score` for the urban index of relative socio economic advantage,
-		`rirsa_score` for the rural index of relative socio economic advantage
-		fill_value (str): can be "extrapolate" to extraplate past the extent of the dataset or "boundary_value" to use the closest datapoint, or 
-		an excepted response for scipy.interpolate.interp1D fill_value keyword argument
-
-    Returns:
-        np.array: The interpolated value of the valueof that seifa variable at that year.
-
+	Args:
+		year_values (int, float, np.ndarray like): The year or array of year values you want interpolated.
+		suburb (str): The name of the suburb that you want the data interpolated for (capitalisation doesn't matter).
+		metric (List['ier_score', 'irsd_score','ieo_score','irsad_score','rirsa_score', ‘uirsa_score']): the name of the seifa_score variable, options are include `irsd_score` for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, `rirsa_score` for the rural index of relative socio economic advantage. 
+		fill_value (str, np.array or tuple): Specifies the values returned outside the range of the ABS census datasets. It can be "extrapolate" to extraplate past the extent of the dataset or "boundary_value" to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to 'extrapolate'.
+		**kwargs(dict-like): additional keyword arguments for scipy.interpolate.interp1D object.
+	Returns:
+		np.array or float: The interpolated value (s) of that seifa variable at that year(s). np.array if year_value contains multiple years.
 	"""
-	out = seifa_vic.get_seifa_data(year_values,suburb.upper(), variable, 
+	out = seifa_vic.get_seifa_data(year_values,suburb.upper(), metric, 
 								   fill_value=fill_value, **kwargs)
 	if out.size == 1:
 		out = out.item()
