@@ -28,7 +28,7 @@ class SeifaVic:
 
 
 
-seifa_vic = SeifaVic()
+
 
 
 def interpolate_vic_suburb_seifa(year_values,suburb, metric, fill_value='extrapolate',  **kwargs )-> np.array or float:
@@ -43,6 +43,7 @@ def interpolate_vic_suburb_seifa(year_values,suburb, metric, fill_value='extrapo
 	Returns:
 		np.array or float: The interpolated value (s) of that seifa variable at that year(s). np.array if year_value contains multiple years.
 	"""
+	seifa_vic = SeifaVic()
 	out = seifa_vic.get_seifa_data(year_values,suburb.upper(), metric, 
 								   fill_value=fill_value, **kwargs)
 	if out.size == 1:
