@@ -38,10 +38,25 @@ available in a convenient Python package with a simple programatic and command l
 The ABS issues
 
 
-# Socio-Econonic Advantage
+# Socio-Economic Indices aggregated from census data for Victoria
 
+Since the 1986 census, the Australian Bureau of statistics (ABS) has generated "Socio Economic Indices For Areas" (SEIFA) following each census. These indices are aggregations of socio economic inputs from the census forms (ie household income, rental/mortgage price, educational level) at teh "census district level" or "mesh level" (2006 - current). census districts, or mesh levels, geographic areas statistically defined from the census data to be the largest scale (smallest) geographic building blocks of demographic and socioeconomic data based on population distribution. The Australian Bureau of statistics does aggregate these to other statistical "levels" of geographic area as well as suburbs and local government areas in their "Data Cube" outputs.
 
-"census district" and I aggregate that up to the suburb level
+However, there have been several new suburbs created during the duration of the SEIFA program. To address this, we used the current suburb areal polygons as the constant spatial areas over which we aggregate previous census datasets. For the 2011 and 2016 SEIFA datasets, we used suburb aggregated data provided by the ABS.
+
+## Spatially aggregating the 1986 - 2006 datasets
+
+For the SEIFA datasets from 1986 to 2006, we collected census district polygons from aurin (1986 - 2001) and the ABS data repository (2006), along with associated aggregated SIEFA scores. These census district level SEIFA scores were aggregated to the current suburb GIS datasets using the following steps:
+
+1. suburbs and census districts were both reprojected to [EPSG:4326](https://spatialreference.org/ref/epsg/wgs-84/)
+2. the polygons were unioned together, so the resulting polygon layer had an individual polygon for each overlapping census district and suburb (Figure 1)
+
+3. The merged polygons were reprojected to a utm projected coordinate system [EPSG:32756](https://epsg.io/32756). Note that this utm coordinate system does not overlay the state of victoria perfectly, but we are assuming that locally the measured areas are relatively accurate to each other.
+
+4. The SEIFA scores were aggregated for all of the census district parts within each suburb using a weighted average, with the polygon area as the weight.
+
+![Figure 1](paper_images/example_overlay.png)
+<p align = "center"> Figure 1: map of three suburb outlines (black lines) for Richmond (left), Burnley (center), and Hawthorne (right) overlaying 1986 Census Districts (colored polygons with white boundaries). The census districts are colored according to the census district code. Note that these districts do not line up with subur boundaries. the green district in the lower middle section falls in parts of Richmond, and cremorne. Likewise one of the Orange and Purple Census districts spans two suburbs</p>
 
 # API
 
