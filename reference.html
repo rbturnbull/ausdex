@@ -96,8 +96,31 @@
     text-align: unset;
 }
 </style>
-<section id="seif-vic-api-reference">
-<h1>seif_vic api reference<a class="headerlink" href="#seif-vic-api-reference" title="Permalink to this headline"></a></h1>
+<section id="module-aucpi.seifa_vic.seifa_vic">
+<span id="seif-vic-api-reference"></span><h1>seif_vic api reference<a class="headerlink" href="#module-aucpi.seifa_vic.seifa_vic" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="aucpi.seifa_vic.seifa_vic.interpolate_vic_suburb_seifa">
+<span class="sig-prename descclassname"><span class="pre">aucpi.seifa_vic.seifa_vic.</span></span><span class="sig-name descname"><span class="pre">interpolate_vic_suburb_seifa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year_values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suburb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'extrapolate'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.array</span></span></span><a class="headerlink" href="#aucpi.seifa_vic.seifa_vic.interpolate_vic_suburb_seifa" title="Permalink to this definition"></a></dt>
+<dd><p>function to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>year_values</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>np.ndarray like</em>) – The year or array of year values you want interpolated.</p></li>
+<li><p><strong>suburb</strong> (<em>str</em>) – The name of the suburb that you want the data interpolated for (capitalisation doesn’t matter).</p></li>
+<li><p><strong>metric</strong> (<em>List</em><em>[</em><em>'ier_score'</em><em>, </em><em>'irsd_score'</em><em>,</em><em>'ieo_score'</em><em>,</em><em>'irsad_score'</em><em>,</em><em>'rirsa_score'</em><em>, </em><em>‘uirsa_score'</em><em>]</em>) – the name of the seifa_score variable, options are include <cite>irsd_score</cite> for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, <cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, <cite>rirsa_score</cite> for the rural index of relative socio economic advantage.</p></li>
+<li><p><strong>fill_value</strong> (<em>str</em><em>, </em><em>np.array</em><em> or </em><em>tuple</em>) – Specifies the values returned outside the range of the ABS census datasets. It can be “extrapolate” to extraplate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to ‘extrapolate’.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict-like</em>) – additional keyword arguments for scipy.interpolate.interp1D object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The interpolated value (s) of that seifa variable at that year(s). np.array if year_value contains multiple years.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array or float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
