@@ -363,7 +363,7 @@ div.rendered_html tbody tr:hover {
 <section id="Data-access">
 <h2>Data access<a class="headerlink" href="#Data-access" title="Permalink to this headline"></a></h2>
 <p>When this module is first run, it will pull down datasets from the Australian Bureau of Statistics, The State of Victoria Data repository, and AURIN. You will need to have an API access key and code in order to download the aurin data. You can get one by filling out the form at this <a class="reference external" href="https://aurin.org.au/resources/aurin-apis/sign-up/">link</a>.</p>
-<p>once the form is filled out, you will be sent a username and password to be able to pull requests from the api.</p>
+<p>Once the form is filled out, you will be sent a username and password to be able to pull requests from the API.</p>
 <section id="Storing-the-aurin-api-credentials-in-a-config.ini">
 <h3>Storing the aurin api credentials in a config.ini<a class="headerlink" href="#Storing-the-aurin-api-credentials-in-a-config.ini" title="Permalink to this headline"></a></h3>
 <p>The username and password can either be entered into a config file in package repository folder in the config.ini file, copying the following example:</p>
@@ -384,9 +384,22 @@ div.rendered_html tbody tr:hover {
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>aucpi seifa-vic <span class="o">[</span>OPTIONS<span class="o">]</span> YEAR_VALUE SUBURB METRIC
 </pre></div>
 </div>
-<p>where: - <code class="docutils literal notranslate"><span class="pre">YEAR_VALUE</span></code>: Is the year to interpolate - <code class="docutils literal notranslate"><span class="pre">SUBURB</span></code>: is the name of the suburb to interpolate to (capitalisation doesnt matter) - <code class="docutils literal notranslate"><span class="pre">METRIC</span></code>: is the name of the metric to interpolate: - <code class="docutils literal notranslate"><span class="pre">irsd_score</span></code> for index of relative socio economic disadvantage, - <code class="docutils literal notranslate"><span class="pre">ieo_score</span></code> for the index of education and opportunity, - <code class="docutils literal notranslate"><span class="pre">ier_score</span></code> for an index of economic resources - <code class="docutils literal notranslate"><span class="pre">irsad_score</span></code> for index of socio economic advantage and disadvantage, - <code class="docutils literal notranslate"><span class="pre">uirsa_score</span></code> for the urban index of relative
-socio economic advantage, - <code class="docutils literal notranslate"><span class="pre">rirsa_score</span></code> for the rural index of relative socio economic advantage - <code class="docutils literal notranslate"><span class="pre">--fill-value</span></code>: optional input that dictates how the data are extrapolated outside the year range of the dataset. default is <code class="docutils literal notranslate"><span class="pre">extrapolate</span></code> which extrapolates the data. <code class="docutils literal notranslate"><span class="pre">boundary_value</span></code> which takes the nearest data point, and options defined in the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.interp1d.html">scipy.interpolate.interp1d</a> <code class="docutils literal notranslate"><span class="pre">fill_value</span></code> optional
-argument.</p>
+<p>where:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">YEAR_VALUE</span></code>: Is the year to interpolate</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SUBURB</span></code>: is the name of the suburb to interpolate to (capitalisation doesnt matter)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">METRIC</span></code>: is the name of the metric to interpolate:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">irsd_score</span></code> for index of relative socio economic disadvantage,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ieo_score</span></code> for the index of education and opportunity,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ier_score</span></code> for an index of economic resources</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">irsad_score</span></code> for index of socio economic advantage and disadvantage,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uirsa_score</span></code> for the urban index of relative socio economic advantage,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rirsa_score</span></code> for the rural index of relative socio economic advantage</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--fill-value</span></code>: optional input that dictates how the data are extrapolated outside the year range of the dataset. default is <code class="docutils literal notranslate"><span class="pre">extrapolate</span></code> which extrapolates the data. <code class="docutils literal notranslate"><span class="pre">boundary_value</span></code> which takes the nearest data point, and options defined in the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.interp1d.html">scipy.interpolate.interp1d</a> <code class="docutils literal notranslate"><span class="pre">fill_value</span></code> optional argument.</p></li>
+</ul>
 </section>
 <section id="Using-the-seifa_vic-module:">
 <h2>Using the seifa_vic module:<a class="headerlink" href="#Using-the-seifa_vic-module:" title="Permalink to this headline"></a></h2>
