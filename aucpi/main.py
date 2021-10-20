@@ -74,7 +74,7 @@ def seifa_vic(
     year_value: float, suburb: str, metric: Metric, fill_value: str = "extrapolate"
 ):
     """
-    interpolates suburb aggregated socioeconomic indices for a given year for a given suburb
+    Interpolates suburb aggregated socioeconomic indices for a given year for a given suburb.
 
     inputs
     year_value (int, float): The year or array of year values you want interpolated\n

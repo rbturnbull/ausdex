@@ -44,7 +44,6 @@ class SeifaVic:
         Returns:
                 pd.DataFrame: filtered dataframe with only the data from that suburb
         """
-        suburb = suburb.upper()
         result = self.df[self.df["Site_suburb"] == suburb.upper()]
 
         if len(result) == 0:
@@ -121,7 +120,8 @@ seifa_vic = SeifaVic()
 def interpolate_vic_suburb_seifa(
     year_values, suburb, metric, fill_value="extrapolate", **kwargs
 ) -> np.array or float:
-    """function to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data
+    """
+        Gets an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data.
 
     Args:
             year_values (int, float, np.ndarray like): The year or array of year values you want interpolated.

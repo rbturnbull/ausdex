@@ -4,13 +4,14 @@ from .data_io import (
     load_csv_data,
     load_xls_data,
     load_shapefile_data,
-    get_cached_path,
     load_victorian_suburbs_metadata,
     load_aurin_data,
 )
 from geopandas.tools import sjoin
 import geopandas as gpd
 import pandas as pd
+
+from ..files import get_cached_path
 
 
 def group_repeat_names_vic(x):
@@ -238,12 +239,6 @@ def combine_2006_dataset():
 
 
 def get_aurin_datasets_vic():
-    # will eventual give out gdf_1986, 1991, 1996 from aurin
-    # gdf_2001 = gpd.read_file('/Users/garberj/data/vbadata_SEIFA/ABS_-_Socio-Economic_Indexes_for_Areas__SEIFA___CD__2001.json/data2516898914808603983.json')
-    # gdf_1996 = gpd.read_file('/Users/garberj/data/vbadata_SEIFA/ABS_-_Socio-Economic_Indexes_for_Areas__SEIFA___CD__1996.json/data7336844287967253519.json')
-    # gdf_1991 = gpd.read_file('/Users/garberj/data/vbadata_SEIFA/ABS_-_Socio-Economic_Indexes_for_Areas__SEIFA___CD__1991.json/data354505989715425060.json')
-    # gdf_1986= gpd.read_file('/Users/garberj/data/vbadata_SEIFA/ABS_-_Socio-Economic_Indexes_for_Areas__SEIFA___CD__1986.json/data7355794508419511170.json')
-
     gdf_1986, gdf_1991, gdf_1996, gdf_2001 = load_aurin_data(
         ["seifa_1986_aurin", "seifa_1991_aurin", "seifa_1996_aurin", "seifa_2001_aurin"]
     )
