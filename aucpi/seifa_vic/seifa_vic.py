@@ -3,6 +3,8 @@ from .data_wrangling import preprocess_victorian_datasets
 from scipy.interpolate import interp1d
 import numpy as np
 import pandas as pd
+from pandas.api.types import is_datetime64_any_dtype as is_datetime
+
 from typing import Union
 
 def _make_nan(x):
@@ -14,6 +16,17 @@ def _make_cache_key(suburb, metric, fill_value, **kwargs):
 	test_kwargs = {'test1':'test2'}
 	key_val_list = [f'{str(key)}_{str(kwargs[key])}' for key in sorted(list(kwargs.keys()))]
 	return f"{suburb}_{metric}_{fill_value}_" + '_'.join(key_val_list)
+
+
+def _dt_to_dyr(x):
+	return x.dt.year + x.dt.month/12 + x.dt.day/30
+
+def _date_time_to_decimal_year(x):
+	if type(x) != pd.Timestamp:
+		x= pd.TimeStamp(x)
+	return x.year + x.month/12 + x.day/30
+	
+
 
 class SeifaVic:
 	"""This object loads, or creates the combined dataset for the SEIFA_VIC interpolations
@@ -73,36 +86,14 @@ class SeifaVic:
 		else:
 			return _make_nan
 	
-	def _should_build_interps(self, fill_value, **kwargs):
-		if 'interpolators' not in self.__dict__:
-			return True
-		else:
-			if (fill_value == self.fill_value) & (kwargs == self.kwargs):
-				return False
-			else:
-				return True
+	def get_interpolator(self, suburb: str, metric: str,fill_value: Union[str, np.array, tuple], **kwargs) -> interp1d:
+		cache_name = _make_cache_key(suburb, metric, fill_value, **kwargs)
+		if cache_name not in self.interp_cache:
 
-	def _build_interps(self,fill_value: Union[str, np.array, tuple]  = 'extrapolate', **kwargs ) -> dict:
-		"""private method to build a list of interpolators
-
-		Args:
-			fill_value (Union[str, np.array, tuple], optional): [description]. Defaults to 'extrapolate'.
-
-		Returns:
-			dict: [description]
-		"""
-		self._load_data()
-
-		if self._should_build_interps(fill_value, **kwargs):
-			self.fill_value = fill_value
-			self.kwargs = kwargs
-			self.interpolators = {}
-			for metric in self.metrics:
-				self.interpolators[metric] = {}
-				for suburb in self.df['Site_suburb'].unique():
-					self.interpolators[metric][suburb] = self.build_interpolator(suburb, metric, fill_value=fill_value, **kwargs)
-
+			self.interp_cache[cache_name] = self.build_interpolator(suburb, metric, fill_value=fill_value, **kwargs)
+		return self.interp_cache[cache_name] 
 		
+
 	
 	def get_seifa_interpolation(self,year_values: Union[int,float,np.array, list], suburb: str,metric: str, fill_value: Union[str, np.array, tuple]  = 'null', **kwargs )-> Union[float, np.array]:
 		"""method to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data
@@ -117,24 +108,48 @@ class SeifaVic:
 		Returns:
 			Union[float, np.array]: The interpolated value (s) of that seifa variable at that year(s). np.array if year_value contains multiple years.
 		"""
-		assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.array, pd.Series))
+		# assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.array, pd.Series))
 		self._load_data()
-		return self.build_interpolator(suburb, metric, fill_value=fill_value, **kwargs)(year_values)
+		if type(year_values) == str:
+			try:
+				year_values = pd.to_numeric(year_values)
+				
+			except:
+				try:
+					year_values = pd.to_datetime(year_values)
+					year_values = _date_time_to_decimal_year(year_values)
+				except ValueError:
+					print('string in improper format')
+					
 
-	def get_seifa_interpolation_batch(self,year_values: Union[int,float,np.array, list], suburb: str,metric: str, fill_value: Union[str, np.array, tuple]  = 'null', **kwargs )-> Union[float, np.array]:
+		return self.get_interpolator(suburb, metric, fill_value=fill_value, **kwargs)(year_values)
+
+	def get_seifa_interpolation_batch(self,year_values: Union[int,float,np.array, np.datetime64, list], suburb: str,metric: str, fill_value: Union[str, np.array, tuple]  = 'null', **kwargs )-> Union[float, np.array]:
 		assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.array, pd.Series))
 		self._load_data()
-		self._build_interps(fill_value=fill_value, **kwargs)
-		interps = self.interpolators[metric]
 		if type(suburb) == list:
 			suburb = np.array(suburb)
 		suburb = np.char.upper(suburb)
 		input_df = pd.DataFrame({'suburb': suburb, 'years':year_values})
 		input_df['interpolated'] = 0.
+		if input_df['years'].dtype == object:
+			try:
+				input_df['years'] = pd.to_numeric(input_df['years'])
+				
+			except:
+				try:
+					input_df['years'] = pd.to_datetime(input_df['years'])
+				except ValueError:
+					print('string in improper format')
+		if is_datetime(input_df['years']) ==True:
+			input_df['years'] = input_df['years'].apply(_dt_to_dyr)
+
+
 
 		for sub in input_df.suburb.unique():
 			sub_mask = input_df['suburb']==sub
-			input_df.loc[sub_mask, 'interpolated'] = interps[sub](input_df.loc[sub_mask, 'years'])
+			input_df.loc[sub_mask, 'interpolated'] = self.get_seifa_interpolation(input_df.loc[sub_mask, 'years'].values, 
+																				sub, metric, fill_value=fill_value, **kwargs)
 
 		
 		return input_df['interpolated'].values

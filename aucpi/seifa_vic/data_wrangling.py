@@ -249,6 +249,6 @@ def preprocess_victorian_datasets(force_rebuild = False):
 		combined = pd.concat(concat_stack)
 		total_df = pd.concat([combined, df_comb])
 		total_df.to_csv(preprocessed_path, index=False)
-	else:
-		total_df = pd.read_csv(preprocessed_path)
+	
+	total_df = pd.read_csv(preprocessed_path, na_values='-')
 	return total_df
