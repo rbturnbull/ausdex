@@ -5,6 +5,16 @@ import numpy as np
 import pandas as pd
 from typing import Union
 
+def _make_nan(x):
+	if type(x) != np.array:
+		x = np.array(x)
+	return x*np.nan
+
+def _make_cache_key(suburb, metric, fill_value, **kwargs):
+	test_kwargs = {'test1':'test2'}
+	key_val_list = [f'{str(key)}_{str(kwargs[key])}' for key in sorted(list(kwargs.keys()))]
+	return f"{suburb}_{metric}_{fill_value}_" + '_'.join(key_val_list)
+
 class SeifaVic:
 	"""This object loads, or creates the combined dataset for the SEIFA_VIC interpolations
 	"""
@@ -15,13 +25,19 @@ class SeifaVic:
 		Args:
 			force_rebuild (bool, optional): forces the reconstruction of the combined dataset if already built and saved in user data. Defaults to False.
 		"""
+		self.metrics = ['ier_score', 'irsd_score','ieo_score','irsad_score','rirsa_score', 'uirsa_score']
 		self.force_rebuild = force_rebuild
+		self.interp_cache = {}
 	def _load_data(self):
 		"""loads the preprocessed victorian dataset if it hasn't been loaded already
 		"""
 		if 'df' not in self.__dict__:
 			# print('loading data')
 			self.df = preprocess_victorian_datasets(force_rebuild=self.force_rebuild)
+			for col in ['year'] + self.metrics:
+				self.df[col] = pd.to_numeric(self.df[col], errors='coerce')
+
+	
 	
 	def get_suburb_data(self, suburb: str):
 		"""returns the dataset (self.df) filtered to a suburb
@@ -52,9 +68,43 @@ class SeifaVic:
 			fill_value = (df[metric].values[0], df[metric].values[-1])
 		
 		kwargs['bounds_error'] = False
-		return interp1d(df['year'].values, df[metric].values,fill_value=fill_value, **kwargs)
+		if df.shape[0] >1:
+			return interp1d(df['year'].values, df[metric].values,fill_value=fill_value, **kwargs)
+		else:
+			return _make_nan
 	
-	def get_seifa_interpolation(self,year_values: Union[int,float,np.array, list], suburb: str,metric: str, fill_value: Union[str, np.array, tuple]  = 'extrapolate', **kwargs )-> Union[float, np.array]:
+	def _should_build_interps(self, fill_value, **kwargs):
+		if 'interpolators' not in self.__dict__:
+			return True
+		else:
+			if (fill_value == self.fill_value) & (kwargs == self.kwargs):
+				return False
+			else:
+				return True
+
+	def _build_interps(self,fill_value: Union[str, np.array, tuple]  = 'extrapolate', **kwargs ) -> dict:
+		"""private method to build a list of interpolators
+
+		Args:
+			fill_value (Union[str, np.array, tuple], optional): [description]. Defaults to 'extrapolate'.
+
+		Returns:
+			dict: [description]
+		"""
+		self._load_data()
+
+		if self._should_build_interps(fill_value, **kwargs):
+			self.fill_value = fill_value
+			self.kwargs = kwargs
+			self.interpolators = {}
+			for metric in self.metrics:
+				self.interpolators[metric] = {}
+				for suburb in self.df['Site_suburb'].unique():
+					self.interpolators[metric][suburb] = self.build_interpolator(suburb, metric, fill_value=fill_value, **kwargs)
+
+		
+	
+	def get_seifa_interpolation(self,year_values: Union[int,float,np.array, list], suburb: str,metric: str, fill_value: Union[str, np.array, tuple]  = 'null', **kwargs )-> Union[float, np.array]:
 		"""method to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data
 
 		Args:
@@ -70,6 +120,25 @@ class SeifaVic:
 		assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.array, pd.Series))
 		self._load_data()
 		return self.build_interpolator(suburb, metric, fill_value=fill_value, **kwargs)(year_values)
+
+	def get_seifa_interpolation_batch(self,year_values: Union[int,float,np.array, list], suburb: str,metric: str, fill_value: Union[str, np.array, tuple]  = 'null', **kwargs )-> Union[float, np.array]:
+		assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.array, pd.Series))
+		self._load_data()
+		self._build_interps(fill_value=fill_value, **kwargs)
+		interps = self.interpolators[metric]
+		if type(suburb) == list:
+			suburb = np.array(suburb)
+		suburb = np.char.upper(suburb)
+		input_df = pd.DataFrame({'suburb': suburb, 'years':year_values})
+		input_df['interpolated'] = 0.
+
+		for sub in input_df.suburb.unique():
+			sub_mask = input_df['suburb']==sub
+			input_df.loc[sub_mask, 'interpolated'] = interps[sub](input_df.loc[sub_mask, 'years'])
+
+		
+		return input_df['interpolated'].values
+
 
 
 
@@ -88,9 +157,12 @@ def interpolate_vic_suburb_seifa(year_values,suburb, metric, fill_value='extrapo
 	Returns:
 		Union[float, np.array]: The interpolated value (s) of that seifa variable at that year(s). np.array if year_value contains multiple years.
 	"""
-	
-	out = seifa_vic.get_seifa_interpolation(year_values,suburb.upper(), metric, 
-								   fill_value=fill_value, **kwargs)
+	if type(suburb) == str:
+		out = seifa_vic.get_seifa_interpolation(year_values,suburb.upper(), metric, 
+									fill_value=fill_value, **kwargs)
+	else:
+		out = seifa_vic.get_seifa_interpolation_batch(year_values,suburb, metric, 
+									fill_value=fill_value, **kwargs)
 	if out.size == 1:
 		out = out.item()
 	return out
