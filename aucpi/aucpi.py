@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 from pathlib import Path
-from appdirs import user_cache_dir
 import pandas as pd
 import modin.pandas as mpd
 from dateutil import parser
@@ -9,7 +8,7 @@ import numbers
 
 from cached_property import cached_property
 
-from aucpi.files import cached_download
+from aucpi.files import cached_download, get_cached_path
 
 
 class Aucpi:
@@ -23,9 +22,7 @@ class Aucpi:
 
         url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{quarter}-{year}/{id}.xls"
 
-        cache_dir = Path(user_cache_dir("aucpi"))
-        cache_dir.mkdir(exist_ok=True, parents=True)
-        local_path = cache_dir / f"{id}-{quarter}-{year}.xls"
+        local_path = get_cached_path(f"{id}-{quarter}-{year}.xls")
 
         cached_download(url, local_path)
         return local_path

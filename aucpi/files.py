@@ -1,5 +1,13 @@
 from pathlib import Path
+from appdirs import user_cache_dir
+
 import urllib.request
+
+
+def get_cached_path(filename):
+    cache_dir = Path(user_cache_dir("aucpi"))
+    cache_dir.mkdir(exist_ok=True, parents=True)
+    return cache_dir / filename
 
 
 def cached_download(url: str, local_path: (str, Path), attempt_download=True) -> None:
