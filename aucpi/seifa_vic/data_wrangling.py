@@ -282,37 +282,6 @@ def w_avg(df, values, weights):
     w = df[weights]
     return (d * w).sum() / w.sum()
 
-<<<<<<< HEAD
-def preprocess_victorian_datasets(force_rebuild = False):
-	preprocessed_path = get_cached_path('preprocessed_vic_seifa.csv')
-	if (preprocessed_path.exists() == False) or (force_rebuild==True):
-		df_comb =combine_victorian_abs_spreadsheets()
-		# print('df_comb max year before combining with gdf', df_comb.year.max())
-		gdf_2006 = combine_2006_dataset()
-		gdf_1986, gdf_1991, gdf_1996, gdf_2001 = get_aurin_datasets_vic()
-		suburbs_coordinates, _ = wrangle_victorian_gis_data()
-		concat_stack = []
-		for year,df in zip([1986, 1991, 1996, 2001, 2006],[gdf_1986, gdf_1991, gdf_1996, gdf_2001, gdf_2006]):
-			print(f'processing {year}')
-			df_rename = convert_cds_colnames_gdf(df)
-			df_union = gpd.overlay(df_rename.to_crs("EPSG:4326"), suburbs_coordinates.to_crs('EPSG:4326'))
-			df_union['area'] = calc_area(df_union)
-			col_dict = {}
-			for col in ['ieo_score', 'ier_score', 'irsad_score','rirsa_score', 'uirsa_score', 'irsd_score']:
-				if col in df_union.columns:
-					col_dict[col]  = df_union.groupby('Site_suburb').apply(w_avg, col, 'area')
-			
-
-			out = pd.DataFrame(col_dict).reset_index()
-			out['year'] = year
-			concat_stack.append(out)
-		combined = pd.concat(concat_stack)
-		total_df = pd.concat([combined, df_comb])
-		total_df.to_csv(preprocessed_path, index=False)
-	
-	total_df = pd.read_csv(preprocessed_path, na_values='-')
-	return total_df
-=======
 
 def preprocess_victorian_datasets(force_rebuild=False):
     preprocessed_path = get_cached_path("preprocessed_vic_seifa.csv")
@@ -353,7 +322,6 @@ def preprocess_victorian_datasets(force_rebuild=False):
         combined = pd.concat(concat_stack)
         total_df = pd.concat([combined, df_comb])
         total_df.to_csv(preprocessed_path, index=False)
-    else:
-        total_df = pd.read_csv(preprocessed_path)
+    
+    total_df = pd.read_csv(preprocessed_path, na_values=['-'])
     return total_df
->>>>>>> 1ef2760e796c1ea2de60379575252ad04f5348f4
