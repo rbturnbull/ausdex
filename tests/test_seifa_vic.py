@@ -1,15 +1,29 @@
 import unittest
 from pathlib import Path
 from unittest.mock import patch, MagicMock
+from appdirs import user_cache_dir
+import geopandas as gpd
 from aucpi.seifa_vic.data_wrangling import preprocess_victorian_datasets
 
 
+MOCKED_FILES = ['seifa_1986_aurin.geojson', 'seifa_1991_aurin.geojson', 'seifa_1996_aurin.geojson', 'seifa_2001_aurin.geojson', 'seifa_2006.geojson','victoria_councils','victoria_suburbs' ]
+
 def mock_user_cache_dir(filename):
-    return Path(__file__).parent.resolve() / "testdata" / filename
+    if filename in MOCKED_FILES:
+        return Path(__file__).parent.resolve() / "testdata" / 'aucpi'/'mock_gis'/filename
+    else:
+        cache_dir = Path(user_cache_dir("aucpi"))
+        cache_dir.mkdir(exist_ok=True, parents=True)
+        return cache_dir / filename
+
+def mock_load_shapefile_data(filename):
+    if filename == 'seifa_2006_cd_shapefile':
+        return gpd.read_file(mock_user_cache_dir('seifa_2006.geojson'))
 
 
 class TestSeifaVicSetup(unittest.TestCase):
     @patch("aucpi.files.user_cache_dir", lambda filename: mock_user_cache_dir(filename))
+    @patch("aucpi.seifa_vic.data_io.load_shapefile_data", lambda filename: mock_load_shapefile_data(filename))
     def test_preprocess_victorian_datasets(self):
         df = preprocess_victorian_datasets(force_rebuild=True)
 
@@ -28,8 +42,6 @@ class TestSeifaVicSetup(unittest.TestCase):
         self.assertEqual(df.year.max(), 2016)
         self.assertEqual(df.year.min(), 1986)
 
-
-class TestSeifaVicInterpolation(unittest.TestCase):
     def test_seifa_interpolation(self):
         from aucpi.seifa_vic.seifa_vic import interpolate_vic_suburb_seifa
 
