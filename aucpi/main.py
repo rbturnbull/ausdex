@@ -1,6 +1,6 @@
 import typer
 from pathlib import Path
-from typing import List
+from typing import List, Union
 from datetime import datetime
 import webbrowser
 
@@ -71,13 +71,13 @@ def adjust(
 
 @app.command()
 def seifa_vic(
-    year_value: float, suburb: str, metric: Metric, fill_value: str = "extrapolate"
+    year_value: str,  suburb: str, metric: Metric, fill_value: str = "null"
 ):
     """
     Interpolates suburb aggregated socioeconomic indices for a given year for a given suburb.
 
     inputs
-    year_value (int, float): The year or array of year values you want interpolated\n
+    year_value (int, float): Year values in decimal years or in a datetime format convertable by pandas.to_datetime function\n
         suburb (str): The name of the suburb that you want the data interpolated for\n
                 metric (str): the name of the seifa_score variable, options are include\n
                 `irsd_score` for index of relative socio economic disadvantage,\n
@@ -109,5 +109,5 @@ def main(
         None, "--version", "-v", callback=version_callback, is_eager=True
     ),
 ):
-    """Adjusts Australian dollars for inflation"""
+    """Adjusts Australian dollars for inflation or returns interpolated Socioeconomic indices for victorian suburbs"""
     pass
