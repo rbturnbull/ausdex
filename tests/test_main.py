@@ -19,10 +19,7 @@ class TestMain(unittest.TestCase):
         assert result.exit_code == 0
         assert "21.14" in result.stdout
     
-    def test_seifa_vic(self):
-        result = self.runner.invoke(main.app, ["seifa-vic", "1991", 'abbotsford', 'ier_score'])
-        assert result.exit_code == 0
-        assert "1005.40" in result.stdout
+   
 
 
 

@@ -6,6 +6,8 @@ from appdirs import user_cache_dir
 import geopandas as gpd
 from aucpi.seifa_vic.data_wrangling import preprocess_victorian_datasets
 import pandas as pd
+from typer.testing import CliRunner
+from aucpi import main
 
 MOCKED_FILES = ['seifa_1986_aurin.geojson', 'seifa_1991_aurin.geojson',"state_suburb_codes_2011..csv.zip",
                  'seifa_1996_aurin.geojson', 'seifa_2001_aurin.geojson', 'seifa_2006.geojson',
@@ -34,7 +36,7 @@ def mock_preproces_vic_datasets(force_rebuild=False, save_file=False):
 
 class TestSeifaVicSetup(unittest.TestCase):
     @patch("aucpi.seifa_vic.data_io.get_cached_path", lambda filename: mock_user_get_cached_path(filename))
-    @patch("aucpi.seifa_vic.data_io.load_shapefile_data", lambda filename: mock_load_shapefile_data(filename))
+    @patch("aucpi.seifa_vic.data_wrangling.load_shapefile_data", lambda filename: mock_load_shapefile_data(filename))
     def test_preprocess_victorian_datasets(self):
         df = preprocess_victorian_datasets(force_rebuild=True, save_file=False)
 
@@ -79,4 +81,9 @@ class TestSeifaVicSetup(unittest.TestCase):
             )
             self.assertAlmostEqual(value[0], value[1], places=3)
 
-        # print(value)
+    @patch('aucpi.seifa_vic.seifa_vic.preprocess_victorian_datasets', lambda force_rebuild: mock_preproces_vic_datasets(False))
+    def test_seifa_vic_cli(self):
+        runner = CliRunner()
+        result = runner.invoke(main.app, ["seifa-vic", "1991", 'abbotsford', 'ier_score'])
+        assert result.exit_code == 0
+        assert "1005.40" in result.stdout
