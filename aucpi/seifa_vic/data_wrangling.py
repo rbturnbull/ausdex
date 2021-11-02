@@ -283,7 +283,7 @@ def w_avg(df, values, weights):
     return (d * w).sum() / w.sum()
 
 
-def preprocess_victorian_datasets(force_rebuild=False):
+def preprocess_victorian_datasets(force_rebuild=False, save_file=True):
     preprocessed_path = get_cached_path("preprocessed_vic_seifa.csv")
     if (preprocessed_path.exists() == False) or (force_rebuild == True):
         df_comb = combine_victorian_abs_spreadsheets()
@@ -321,7 +321,10 @@ def preprocess_victorian_datasets(force_rebuild=False):
             concat_stack.append(out)
         combined = pd.concat(concat_stack)
         total_df = pd.concat([combined, df_comb])
-        total_df.to_csv(preprocessed_path, index=False)
+        if save_file==True:
+            total_df.to_csv(preprocessed_path, index=False)
+        else:
+            return total_df
     
     total_df = pd.read_csv(preprocessed_path, na_values=['-'])
     return total_df

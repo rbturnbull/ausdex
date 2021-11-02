@@ -91,7 +91,7 @@ class SeifaVic:
 
 			fill_value = (df[metric].values[0], df[metric].values[-1])
 		elif fill_value=='null':
-			fill_value = np.nan
+			fill_value = (np.nan, np.nan)
 		kwargs['bounds_error'] = False
 		if df.shape[0] >1:
 			return interp1d(df['year'].values, df[metric].values,fill_value=fill_value, **kwargs)
@@ -171,7 +171,7 @@ class SeifaVic:
 seifa_vic = SeifaVic()
 
 
-def interpolate_vic_suburb_seifa(year_values,suburb, metric, fill_value='extrapolate',  **kwargs )-> np.array or float:
+def interpolate_vic_suburb_seifa(year_values,suburb, metric, fill_value='null',  **kwargs )-> np.array or float:
 	"""function to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data
 
 	Args:
