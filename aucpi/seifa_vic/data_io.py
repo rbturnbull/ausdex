@@ -81,8 +81,6 @@ def load_shapefile_data(dataset="seifa_2006_cd_shapefile"):
 
 
 def make_aurin_config():
-    raise Exception("tokyo")
-
     username = input("please enter your aurin username: ")
     password = getpass("please enter your aurin password: ")
     out = {"username": username, "password": password}
