@@ -47,7 +47,7 @@ def parse_duplicates_from_victorian_councils(suburbs, councils):
         dup_suburbs_gdf.to_crs("EPSG:4326"), councils.to_crs("EPSG:4326"), how="left"
     )
     dup_suburbs_join["suburb_name_combined"] = dup_suburbs_join.apply(
-        lambda x: f'{x["vic_loca_2"]} - {x["vic_lga__2"]}', axis=1
+        lambda x: f'{x["vic_loca_2"]} - {x["vic_lga__3"]}', axis=1
     )
     # note, this was identifired
     dup_suburbs_join["fixed_multinames"] = dup_suburbs_join.apply(

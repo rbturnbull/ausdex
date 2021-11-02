@@ -1,3 +1,4 @@
+from pandas.core.arrays.sparse import dtype
 from aucpi import seifa_vic
 from .data_wrangling import preprocess_victorian_datasets
 from scipy.interpolate import interp1d
@@ -30,7 +31,7 @@ def _make_cache_key(suburb, metric, fill_value, **kwargs):
 
 
 def _dt_to_dyr(x):
-	return x.dt.year + x.dt.month/12 + x.dt.day/30
+	return x.year + x.month/12 + x.day/30
 
 def _date_time_to_decimal_year(x):
 	if type(x) != pd.Timestamp:
@@ -137,10 +138,10 @@ class SeifaVic:
 		return self.get_interpolator(suburb, metric, fill_value=fill_value, **kwargs)(year_values)
 
 	def get_seifa_interpolation_batch(self,year_values: Union[int,float,np.array, np.datetime64, list], suburb: str,metric: str, fill_value: Union[str, np.array, tuple]  = 'null', **kwargs )-> Union[float, np.array]:
-		assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.array, pd.Series))
+		# assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.array, pd.Series))
 		self._load_data()
-		if type(suburb) == list:
-			suburb = np.array(suburb)
+		if type(suburb) != np.array:
+			suburb = np.array(suburb, dtype=str)
 		suburb = np.char.upper(suburb)
 		input_df = pd.DataFrame({'suburb': suburb, 'years':year_values})
 		input_df['interpolated'] = 0.

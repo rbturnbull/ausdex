@@ -55,6 +55,7 @@ class TestSeifaVicSetup(unittest.TestCase):
         self.assertEqual(df.year.max(), 2016)
         self.assertEqual(df.year.min(), 1986)
         self.assertIn("ASCOT - BALLARAT",df.Site_suburb.unique())
+        self.assertNotIn("ASCOT - BALLARAT CITY",df.Site_suburb.unique())
 
     @patch('aucpi.seifa_vic.seifa_vic.preprocess_victorian_datasets', lambda force_rebuild: mock_preproces_vic_datasets(False))
     def test_seifa_interpolation(self):
