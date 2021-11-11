@@ -8,6 +8,13 @@ from ausdex.seifa_vic.data_wrangling import preprocess_victorian_datasets
 import pandas as pd
 from typer.testing import CliRunner
 from ausdex import main
+from ausdex.seifa_vic.data_io import (
+    make_aurin_config,
+    get_aurin_wfs,
+)
+from ausdex.files import get_cached_path
+import json
+import datetime
 
 MOCKED_FILES = [
     "seifa_1986_aurin.geojson",
@@ -145,6 +152,28 @@ class TestSeifaVicSetup(unittest.TestCase):
             self.assertAlmostEqual(value[0], 1179.648871, places=3)
             self.assertAlmostEqual(1013.1802726224083, value[1], places=3)
 
+        with self.subTest(msg="list of datetime.datetimes"):
+            value = interpolate_vic_suburb_seifa(
+                pd.Series(
+                    [datetime.datetime(1980, 7, 1), datetime.datetime(1986, 10, 31)]
+                ),
+                pd.Series(["kew", "ABBOTSFORD"]).values,
+                "ieo_score",
+                fill_value="boundary_value",
+            )
+            self.assertAlmostEqual(value[0], 1179.648871, places=3)
+            self.assertAlmostEqual(1013.1802726224083, value[1], places=3)
+
+        with self.subTest(msg="list of datetime.datetimes single"):
+            value = interpolate_vic_suburb_seifa(
+                datetime.datetime(1986, 10, 31),
+                "kew",
+                "ieo_score",
+                fill_value="boundary_value",
+            )
+            self.assertAlmostEqual(value, 1179.648871, places=3)
+            # self.assertAlmostEqual(1013.1802726224083, value[1], places=3)
+
     @patch(
         "ausdex.seifa_vic.seifa_vic.preprocess_victorian_datasets",
         lambda force_rebuild: mock_preproces_vic_datasets(False),
@@ -156,3 +185,22 @@ class TestSeifaVicSetup(unittest.TestCase):
         )
         assert result.exit_code == 0
         assert "1005.40" in result.stdout
+
+
+class TestDataIO(unittest.TestCase):
+    def setUp(self) -> None:
+        get_cached_path("aurin_creds.json").unlink()
+        return super().setUp()
+
+    @patch("ausdex.seifa_vic.data_io._get_input", lambda msg: "test_username")
+    @patch("ausdex.seifa_vic.data_io._get_getpass", lambda msg: "test_password")
+    @patch("ausdex.seifa_vic.data_io.get_config_ini", Path("does not exist"))
+    def test_make_aurin_config_as_json(self):
+        make_aurin_config()
+        with open(get_cached_path("aurin_creds.json"), "r") as file:
+            creds = json.load(file)
+        self.assertEqual(creds["username"], "test_username")
+        self.assertEqual(creds["password"], "test_password")
+
+    def test_get_aurin_wfs():
+        pass
