@@ -26,3 +26,29 @@ def convert_date(date: Union[datetime, str, pd.Series, np.ndarray]) -> np.ndarra
         date = pd.to_datetime(date)
 
     return np.array(date, dtype="datetime64[D]")
+
+
+def _dt_to_dyr(x):
+    return float(x.year + x.month / 12 + x.day / 30)
+
+
+def date_time_to_decimal_year(
+    date: Union[
+        datetime, pd.Timestamp, np.datetime64, int, float, str, pd.Series, np.ndarray
+    ]
+) -> np.ndarray:
+
+    if isinstance(date, (float, int)):
+        return date
+    elif isinstance(date, (datetime, pd.Timestamp, np.datetime64)):
+        return _dt_to_dyr(pd.to_datetime(date))
+
+    elif isinstance(date, (pd.Series, np.ndarray)):
+        if date.dtype in [float, int]:
+            return date
+    else:
+        return _dt_to_dyr(pd.to_datetime(convert_date(date)))
+
+    if type(x) != pd.Timestamp:
+        x = pd.TimeStamp(x)
+    return _dt_to_dyr(x)
