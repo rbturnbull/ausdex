@@ -1,9 +1,17 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+from io import StringIO
 import unittest
 import numpy as np
 import pandas as pd
+import modin.pandas as mpd
+
+from unittest.mock import patch
 
 from ausdex import inflation
+
+import modin.config as cfg
+
+cfg.IsDebug.put(True)
 
 
 class TestInflation(unittest.TestCase):
@@ -54,8 +62,11 @@ class TestInflation(unittest.TestCase):
         results = cpi.cpi_australia_at(dates)
         np.testing.assert_allclose(results, np.array([114.8, np.nan, 67]), atol=1e-02)
 
-    def test_pandas(self):
-        df = pd.DataFrame(
+    def test_pandas(self, pandas_module=None):
+        if pandas_module is None:
+            pandas_module = pd
+
+        df = pandas_module.DataFrame(
             data=[
                 ["June 1975", 56],
                 ["Feb 1976", 56],
@@ -71,9 +82,13 @@ class TestInflation(unittest.TestCase):
         np.testing.assert_allclose(
             results, np.array([290.99, 273.67, -240.29]), atol=1e-02
         )
+        return results
 
-    def test_pandas_evaluation_dates(self):
-        df = pd.DataFrame(
+    def test_pandas_evaluation_dates(self, pandas_module=None):
+        if pandas_module is None:
+            pandas_module = pd
+
+        df = pandas_module.DataFrame(
             data=[
                 ["Dec 1990", "Sep 1970", 34.86, 5.79],
                 ["Sep 1970", "Dec 1990", 5.79, 34.86],
@@ -87,8 +102,35 @@ class TestInflation(unittest.TestCase):
         self.assertEqual(results.size, len(df))
 
         np.testing.assert_allclose(results, df.gold, atol=1e-02)
+        return results
 
     def test_get_abs_by_date(self):
         cpi = inflation.CPI()
         file = cpi.get_abs_by_date("640101", datetime(2021, 8, 26))
         self.assertIn("640101-jun-2021.xls", str(file))
+        file = cpi.get_abs_by_date("640101", datetime(2020, 1, 12))
+        self.assertIn("640101-dec-2019.xls", str(file))
+
+    def test_get_abs_bad_quarter(self):
+        cpi = inflation.CPI()
+
+        with self.assertRaises(ValueError) as _:
+            cpi.get_abs("640101", quarter="feb", year=2006)
+
+    def test_get_abs_by_date_future(self):
+        cpi = inflation.CPI()
+        future = datetime.now() + timedelta(
+            days=100
+        )  # The next quarter is sure to not yet be released
+
+        with patch("sys.stderr", new=StringIO()) as fake_out:
+            cpi.get_abs_by_date("640101", future)
+            self.assertIn(f"CPI data for {future} not available.", fake_out.getvalue())
+
+    def test_pandas_modin(self):
+        results = self.test_pandas(pandas_module=mpd)
+        self.assertIsInstance(results, mpd.Series)
+
+    def test_pandas_evaluation_dates_modin(self):
+        results = self.test_pandas_evaluation_dates(pandas_module=mpd)
+        self.assertIsInstance(results, mpd.Series)

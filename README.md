@@ -5,11 +5,16 @@
 [<img src="https://github.com/rbturnbull/ausdex/actions/workflows/docs.yml/badge.svg">](<https://rbturnbull.github.io/ausdex/>)
 [<img src="https://img.shields.io/badge/code%20style-black-000000.svg">](<https://github.com/psf/black>)
 
-Adjusts Australian dollars for inflation.
+An interface for several Australian socio-economic indices.
+
+The Australian Bureau of Statistics (ABS) publishes a variety of indexes for the Australian
+economic environment. These include the Consumer Price Index (CPI) used for calculating inflation
+and a variety of indexes designed to measure socio-economic advantage. `ausdex` makes these data
+available in a convenient Python package with a simple programatic and command line interfaces. 
 
 ## Installation
 
-You can install the development version directly from github:
+You can install `ausdex` from the Python Package Index (PyPI):
 
 ```
 pip install ausdex
@@ -25,7 +30,7 @@ This adjust the value from the original date to the equivalent in today's dollar
 
 For example, to adjust $26 from July 21, 1991 to today run:
 ```
-$ ausdex adjust 26 "July 21 1991" 
+$ ausdex inflation 26 "July 21 1991" 
 $ 52.35
 ```
 
@@ -47,9 +52,9 @@ $ 861.68
 
 ```
 >>> import ausdex
->>> ausdex.inflation(26, "July 21 1991")
+>>> ausdex.calc_inflation(26, "July 21 1991")
 52.35254237288135
->>> ausdex.inflation(26, "July 21 1991",evaluation_date="Sep 1999")
+>>> ausdex.calc_inflation(26, "July 21 1991",evaluation_date="Sep 1999")
 30.27457627118644
 ```
 The dates can be as strings or Python datetime objects.
@@ -57,7 +62,7 @@ The dates can be as strings or Python datetime objects.
 The values, the dates and the evaluation dates can be vectors by using NumPy arrays or Pandas Series. e.g.
 ```
 >>> df = pd.DataFrame(data=[ [26, "July 21 1991"],[25,"Oct 1989"]], columns=["value","date"] )
->>> df['adjusted'] = ausdex.inflation(df.value, df.date)
+>>> df['adjusted'] = ausdex.calc_inflation(df.value, df.date)
 >>> df
    value          date   adjusted
 0     26  July 21 1991  52.352542
@@ -109,4 +114,7 @@ The tests can be run using `pytest`.
 
 ## Credits
 
-Robert Turnbull (University of Melbourne)
+* Robert Turnbull (University of Melbourne)
+* Jonathan Garber (University of Melbourne)
+
+These authors contributed equally.
