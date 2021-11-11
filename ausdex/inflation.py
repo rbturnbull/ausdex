@@ -15,10 +15,24 @@ from .dates import convert_date
 
 
 class CPI:
+    """A class to manage the Australian Consumer Index (CPI) data."""
+
     ACCEPTED_QUARTERS = ["mar", "jun", "sep", "dec"]
 
-    def get_abs(self, id, quarter, year) -> Path:
-        """Gets a CPI datafile from the Australian Burau of Statistics."""
+    def get_abs(self, id: str, quarter: str, year: Union[str, int]) -> Path:
+        """Gets a datafile from the Australian Burau of Statistics.
+
+        Args:
+            id (str): The ABS id for the datafile. For Australian Consumer Price Index the ID is 640101.
+            quarter (str): One of "mar", "jun", "sep", or "dec".
+            year (Union[str,int]): [description]
+
+        Raises:
+            ValueError: Raises this error if the quarter cannot be understood.
+
+        Returns:
+            Path: The path to the cached ABS datafile
+        """
         quarter = quarter.lower()[:3]
         if quarter not in self.ACCEPTED_QUARTERS:
             raise ValueError(f"Cannot understand quarter {quarter}.")
@@ -31,7 +45,15 @@ class CPI:
         return local_path
 
     def get_abs_by_date(self, id: str, date: datetime) -> Path:
-        """Gets the latest CPI datafile from the Australian Burau of Statistics before a specific date."""
+        """Gets a datafile from the Australian Burau of Statistics before a specific date.
+
+        Args:
+            id (str): The ABS id for the datafile. For Australian Consumer Price Index (CPI) the ID is 640101.
+            date (datetime): The date before which the CPI data should be valid.
+
+        Returns:
+            Path: The path to the cached ABS datafile.
+        """
         file = None
         while file is None and date > datetime(1948, 1, 1):
             try:
@@ -50,12 +72,24 @@ class CPI:
 
         return file
 
-    def latest_640101(self) -> Path:
+    def latest_cpi_datafile(self) -> Path:
+        """Returns the path to the latest cached file with the Australian Consumer Price Index (CPI) data.
+
+        The ABS id of this file is "640101".
+
+        Returns:
+            Path: The path to the cached datafile.
+        """
         return self.get_abs_by_date("640101", datetime.now())
 
     @cached_property
-    def latest_df(self) -> pd.DataFrame:
-        local_path = self.latest_640101()
+    def latest_cpi_df(self) -> pd.DataFrame:
+        """Returns a Pandas DataFrame with the latest Australian Consumer Price Index (CPI) data.
+
+        Returns:
+            pd.DataFrame: The latest Australian Consumer Price Index (CPI) data. The index of the series is the relevant date for each row.
+        """
+        local_path = self.latest_cpi_datafile()
         excel_file = pd.ExcelFile(local_path)
         df = excel_file.parse("Data1")
 
@@ -69,17 +103,30 @@ class CPI:
 
     @cached_property
     def cpi_australia_series(self) -> pd.Series:
-        """Returns a pandas series with the Australian CPI indexes per quarter"""
-        df = self.latest_df
+        """Returns a Pandas Series with the Australian CPI (Consumer Price Index) per quarter.
+
+        This is taken from the latest spreadsheet from the Australian Bureau of Statistics (file id '640101'). The index of the series is the relevant date.
+
+        Returns:
+            pd.Series: The CPIs per quarter.
+        """
+        df = self.latest_cpi_df
         return df["Index Numbers ;  All groups CPI ;  Australia ;"]
 
-    def cpi_australia_at(self, date: Union[datetime, str, pd.Series, np.ndarray]):
-        """
-        Returns the CPI for dates.
+    def cpi_australia_at(
+        self, date: Union[datetime, str, pd.Series, np.ndarray]
+    ) -> Union[float, np.ndarray]:
+        """Returns the CPI (Consumer Price Index) for a date (or a number of dates).
 
         If `date` is a string then it is converted to a datetime using dateutil.parser.
         If `date` is a vector then it returns a vector otherwise it returns a single scalar value.
         If `date` is before the earliest reference date (i.e. 1948-09-01) then it returns a NaN.
+
+        Args:
+            date (Union[datetime, str, pd.Series, np.ndarray]): The date(s) to get the CPI(s) for.
+
+        Returns:
+            Union[float, np.ndarray]: The CPI value(s).
         """
         date = convert_date(date)
 
@@ -103,7 +150,16 @@ class CPI:
         original_date: Union[datetime, str],
         evaluation_date: Union[datetime, str] = None,
     ):
-        """Adjusts a value for inflation."""
+        """Adjusts a value (or list of values) for inflation.
+
+        Args:
+            value (Union[numbers.Number, np.ndarray, pd.Series]): The value to be converted.
+            original_date (Union[datetime, str]): The date that the value is in relation to.
+            evaluation_date (Union[datetime, str], optional): The date to adjust the value to. Defaults to the current date.
+
+        Returns:
+            Union[float, np.ndarray]: The adjusted value.
+        """
         if evaluation_date is None:
             evaluation_date = datetime.now()
 
@@ -119,8 +175,19 @@ def calc_inflation(
     value: Union[numbers.Number, np.ndarray, pd.Series],
     original_date: Union[datetime, str],
     evaluation_date: Union[datetime, str] = None,
-):
-    """Adjusts a value for inflation."""
+) -> Union[float, np.ndarray]:
+    """Adjusts a value (or list of values) for inflation.
+
+    Args:
+        value (Union[numbers.Number, np.ndarray, pd.Series]): The value to be converted.
+        original_date (Union[datetime, str]): The date that the value is in relation to.
+        evaluation_date (Union[datetime, str], optional): The date to adjust the value to. Defaults to the current date.
+
+    Returns:
+        Union[float, np.ndarray]: The adjusted value.
+    """
     return _cpi.calc_inflation(
-        value, original_date=original_date, evaluation_date=evaluation_date
+        value,
+        original_date=original_date,
+        evaluation_date=evaluation_date,
     )

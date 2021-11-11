@@ -23,7 +23,7 @@ available in a convenient Python package with a simple programatic and command l
    installation
    seifa_vic
    inflation
-   api reference <reference>
+   reference
    citation
    
 

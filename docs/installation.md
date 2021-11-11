@@ -1,14 +1,14 @@
 # Installation
 
-You can install the development version directly from github:
+You can install `ausdex` from the Python Package Index (PyPI):
 
 ```
-pip install git+https://github.com/rbturnbull/ausdex.git
+pip install ausdex
 ```
 
 ## Development
 
-To devlop ausdex, clone the repo and install the dependencies using poetry:
+To devlop ausdex, clone the repo and install the dependencies using [poetry](https://python-poetry.org/):
 
 ```
 git clone https://github.com/rbturnbull/ausdex.git
