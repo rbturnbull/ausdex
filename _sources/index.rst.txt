@@ -7,7 +7,7 @@
 ausdex
 ======================================================================
 
-Welcome to the documentation for ausdex, a Python package for using Australian economic indexing data.
+Welcome to the documentation for ausdex, a Python interface to several Australian socio-economic indicies.
 
 The Australian Bureau of Statistics (ABS) publishes a variety of indexes for the Australian
 economic environment. These include the Consumer Price Index (CPI) used for calculating inflation
