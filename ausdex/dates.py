@@ -42,7 +42,7 @@ def date_time_to_decimal_year(
 ) -> np.ndarray:
 
     if isinstance(date, (float, int)):
-        return date
+        return np.array([date])
     elif isinstance(date, (datetime, pd.Timestamp, np.datetime64)):
         return _dt_to_dyr(pd.to_datetime(date))
 
