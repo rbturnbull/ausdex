@@ -26,15 +26,17 @@ def version_callback(value: bool):
 @app.command()
 def repo():
     """
-    Opens the repository in a web browser
+    Opens the repository in a web browser.
     """
     typer.launch("https://github.com/rbturnbull/ausdex")
 
 
 @app.command()
 def docs(live: bool = True):
-    """
-    Builds the documentation.
+    """Builds the documentation.
+
+    Args:
+        live (bool, optional): Whether or not to use sphinx-autobuild to automatically build the documentation as files are edited. Defaults to True.
     """
     root_dir = Path(__file__).parent.parent.resolve()
     docs_dir = root_dir / "docs"
@@ -59,7 +61,16 @@ def inflation(
     original_date: str,
     evaluation_date: str = None,
 ):
-    """Adjusts Australian dollars for inflation"""
+    """Adjusts Australian dollars for inflation.
+
+    Prints output to stdout.
+
+    Args:
+        value (float): The dollar value to be converted.
+        original_date (str): The date that the value is in relation to.
+        evaluation_date (str, optional): The date to adjust the value to. Defaults to the current date.
+    """
+
     result = calc_inflation(
         value=value, original_date=original_date, evaluation_date=evaluation_date
     )
@@ -104,5 +115,5 @@ def main(
         None, "--version", "-v", callback=version_callback, is_eager=True
     ),
 ):
-    """Adjusts Australian dollars for inflation or returns interpolated Socioeconomic indices for victorian suburbs"""
+    """Adjusts Australian dollars for inflation or returns interpolated socio-economic indices for Victorian suburbs."""
     pass

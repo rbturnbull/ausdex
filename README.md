@@ -79,7 +79,9 @@ array([874.14898079, 861.68112674])
 ```
 
 ## Dataset and Validation
-The Consumer Price Index dataset is taken from the Australian Bureau of Statistics (https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). It uses the nation-wide CPI value. The validation examples in the tests are taken from the Australian Reserve Bank's inflation calculator (https://www.rba.gov.au/calculator/). This will automatically update each quarter as the new datasets are released.
+
+### Inflation datasets
+The Consumer Price Index dataset is taken from the [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). It uses the nation-wide CPI value. The validation examples in the tests are taken from the [Australian Reserve Bank's inflation calculator](https://www.rba.gov.au/calculator/). This will automatically update each quarter as the new datasets are released.
 
 The CPI data goes back to 1948. Using dates before this will result in a NaN.
 
@@ -96,7 +98,7 @@ password = {aurin_api_password}
 
 ## Development
 
-To devlop ausdex, clone the repo and install the dependencies using poetry:
+To devlop ausdex, clone the repo and install the dependencies using [poetry](https://python-poetry.org/):
 
 ```
 git clone https://github.com/rbturnbull/ausdex.git
@@ -114,7 +116,10 @@ The tests can be run using `pytest`.
 
 ## Credits
 
-* Robert Turnbull (University of Melbourne)
-* Jonathan Garber (University of Melbourne)
+ausdex was written by [Dr Robert Turnbull](https://findanexpert.unimelb.edu.au/profile/877006-robert-turnbull) and [Dr Jonathan Garber](https://findanexpert.unimelb.edu.au/profile/787135-jonathan-garber) from the [Melbourne Data Analytics Platform](https://mdap.unimelb.edu.au/).
 
-These authors contributed equally.
+Please cite from the article when it is released. Details to come soon.
+
+## Acknowledgements
+
+This project came about through a research collaboration with [Dr Vidal Paton-Cole](https://findanexpert.unimelb.edu.au/profile/234417-vidal-paton-cole) and [A/Prof Robert Crawford](https://findanexpert.unimelb.edu.au/profile/174016-robert-crawford). We acknowledge the support of our colleagues at the Melbourne Data Analytics Platform: [Dr Aleksandra Michalewicz](https://findanexpert.unimelb.edu.au/profile/27349-aleks-michalewicz) and [Dr Emily Fitzgerald](https://findanexpert.unimelb.edu.au/profile/196181-emily-fitzgerald).
