@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>seif_vic api reference &mdash; ausdex 0.1.4 documentation</title>
+  <title>API Reference &mdash; ausdex 0.1.4 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
@@ -44,9 +44,14 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="seifa_vic.html">Socio Economic Advantage Calculations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="seifa_vic.html">Socio-Economic Advantage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inflation.html">Inflation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">api reference</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-ausdex.seifa_vic.seifa_vic">Socio-economic Indices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ausdex.inflation">Inflation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ausdex.main">Main</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
 </ul>
 
@@ -64,7 +69,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>seif_vic api reference</li>
+      <li>API Reference</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/reference.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -98,8 +103,10 @@
     text-align: unset;
 }
 </style>
+<section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline"></a></h1>
 <section id="module-ausdex.seifa_vic.seifa_vic">
-<span id="seif-vic-api-reference"></span><h1>seif_vic api reference<a class="headerlink" href="#module-ausdex.seifa_vic.seifa_vic" title="Permalink to this headline"></a></h1>
+<span id="socio-economic-indices"></span><h2>Socio-economic Indices<a class="headerlink" href="#module-ausdex.seifa_vic.seifa_vic" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.Metric">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">ausdex.seifa_vic.seifa_vic.</span></span><span class="sig-name descname"><span class="pre">Metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.Metric" title="Permalink to this definition"></a></dt>
@@ -196,6 +203,233 @@
 </dl>
 </dd></dl>
 
+</section>
+<section id="module-ausdex.inflation">
+<span id="inflation"></span><h2>Inflation<a class="headerlink" href="#module-ausdex.inflation" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ausdex.inflation.CPI">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">ausdex.inflation.</span></span><span class="sig-name descname"><span class="pre">CPI</span></span><a class="headerlink" href="#ausdex.inflation.CPI" title="Permalink to this definition"></a></dt>
+<dd><p>A class to manage the Australian Consumer Index (CPI) data.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ausdex.inflation.CPI.calc_inflation">
+<span class="sig-name descname"><span class="pre">calc_inflation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Number</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.inflation.CPI.calc_inflation" title="Permalink to this definition"></a></dt>
+<dd><p>Adjusts a value (or list of values) for inflation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>Union</em><em>[</em><em>numbers.Number</em><em>, </em><em>np.ndarray</em><em>, </em><em>pd.Series</em><em>]</em>) – The value to be converted.</p></li>
+<li><p><strong>original_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>]</em>) – The date that the value is in relation to.</p></li>
+<li><p><strong>evaluation_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The date to adjust the value to. Defaults to the current date.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The adjusted value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[float, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ausdex.inflation.CPI.cpi_australia_at">
+<span class="sig-name descname"><span class="pre">cpi_australia_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ausdex.inflation.CPI.cpi_australia_at" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the CPI (Consumer Price Index) for a date (or a number of dates).</p>
+<p>If <cite>date</cite> is a string then it is converted to a datetime using dateutil.parser.
+If <cite>date</cite> is a vector then it returns a vector otherwise it returns a single scalar value.
+If <cite>date</cite> is before the earliest reference date (i.e. 1948-09-01) then it returns a NaN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>pd.Series</em><em>, </em><em>np.ndarray</em><em>]</em>) – The date(s) to get the CPI(s) for.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The CPI value(s).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[float, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ausdex.inflation.CPI.cpi_australia_series">
+<span class="sig-name descname"><span class="pre">cpi_australia_series</span></span><a class="headerlink" href="#ausdex.inflation.CPI.cpi_australia_series" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a Pandas Series with the Australian CPI (Consumer Price Index) per quarter.</p>
+<p>This is taken from the latest spreadsheet from the Australian Bureau of Statistics (file id ‘640101’). The index of the series is the relevant date.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The CPIs per quarter.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ausdex.inflation.CPI.get_abs">
+<span class="sig-name descname"><span class="pre">get_abs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quarter</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="headerlink" href="#ausdex.inflation.CPI.get_abs" title="Permalink to this definition"></a></dt>
+<dd><p>Gets a datafile from the Australian Burau of Statistics.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The ABS id for the datafile. For Australian Consumer Price Index the ID is 640101.</p></li>
+<li><p><strong>quarter</strong> (<em>str</em>) – One of “mar”, “jun”, “sep”, or “dec”.</p></li>
+<li><p><strong>year</strong> (<em>Union</em><em>[</em><em>str</em><em>,</em><em>int</em><em>]</em>) – [description]</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raises this error if the quarter cannot be understood.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The path to the cached ABS datafile</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ausdex.inflation.CPI.get_abs_by_date">
+<span class="sig-name descname"><span class="pre">get_abs_by_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">datetime.datetime</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="headerlink" href="#ausdex.inflation.CPI.get_abs_by_date" title="Permalink to this definition"></a></dt>
+<dd><p>Gets a datafile from the Australian Burau of Statistics before a specific date.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The ABS id for the datafile. For Australian Consumer Price Index (CPI) the ID is 640101.</p></li>
+<li><p><strong>date</strong> (<em>datetime</em>) – The date before which the CPI data should be valid.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The path to the cached ABS datafile.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ausdex.inflation.CPI.latest_cpi_datafile">
+<span class="sig-name descname"><span class="pre">latest_cpi_datafile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="headerlink" href="#ausdex.inflation.CPI.latest_cpi_datafile" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the path to the latest cached file with the Australian Consumer Price Index (CPI) data.</p>
+<p>The ABS id of this file is “640101”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The path to the cached datafile.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ausdex.inflation.CPI.latest_cpi_df">
+<span class="sig-name descname"><span class="pre">latest_cpi_df</span></span><a class="headerlink" href="#ausdex.inflation.CPI.latest_cpi_df" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a Pandas DataFrame with the latest Australian Consumer Price Index (CPI) data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The latest Australian Consumer Price Index (CPI) data. The index of the series is the relevant date for each row.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.inflation.calc_inflation">
+<span class="sig-prename descclassname"><span class="pre">ausdex.inflation.</span></span><span class="sig-name descname"><span class="pre">calc_inflation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">numbers.Number</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">,</span> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ausdex.inflation.calc_inflation" title="Permalink to this definition"></a></dt>
+<dd><p>Adjusts a value (or list of values) for inflation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>Union</em><em>[</em><em>numbers.Number</em><em>, </em><em>np.ndarray</em><em>, </em><em>pd.Series</em><em>]</em>) – The value to be converted.</p></li>
+<li><p><strong>original_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>]</em>) – The date that the value is in relation to.</p></li>
+<li><p><strong>evaluation_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>]</em><em>, </em><em>optional</em>) – The date to adjust the value to. Defaults to the current date.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The adjusted value.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Union[float, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-ausdex.main">
+<span id="main"></span><h2>Main<a class="headerlink" href="#module-ausdex.main" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.main.docs">
+<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">docs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">live</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.docs" title="Permalink to this definition"></a></dt>
+<dd><p>Builds the documentation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>live</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether or not to use sphinx-autobuild to automatically build the documentation as files are edited. Defaults to True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.main.inflation">
+<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">inflation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">evaluation_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.inflation" title="Permalink to this definition"></a></dt>
+<dd><p>Adjusts Australian dollars for inflation.</p>
+<p>Prints output to stdout.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>float</em>) – The dollar value to be converted.</p></li>
+<li><p><strong>original_date</strong> (<em>str</em>) – The date that the value is in relation to.</p></li>
+<li><p><strong>evaluation_date</strong> (<em>str</em><em>, </em><em>optional</em>) – The date to adjust the value to. Defaults to the current date.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.main.main">
+<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">version:</span> <span class="pre">Optional[bool]</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.main" title="Permalink to this definition"></a></dt>
+<dd><p>Adjusts Australian dollars for inflation or returns interpolated socio-economic indices for Victorian suburbs.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.main.repo">
+<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">repo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.repo" title="Permalink to this definition"></a></dt>
+<dd><p>Opens the repository in a web browser.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.main.seifa_vic">
+<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">seifa_vic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year_value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suburb</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'null'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.seifa_vic" title="Permalink to this definition"></a></dt>
+<dd><p>Interpolates suburb aggregated socioeconomic indices for a given year for a given suburb.</p>
+<p>inputs
+year_value (int, float): Year values in decimal years or in a datetime format convertable by pandas.to_datetime function</p>
+<blockquote>
+<div><p>suburb (str): The name of the suburb that you want the data interpolated for</p>
+<blockquote>
+<div><p>metric (str): the name of the seifa_score variable, options are include</p>
+<p><cite>irsd_score</cite> for index of relative socio economic disadvantage,</p>
+<p><cite>ieo_score</cite> for the index of education and opportunity,</p>
+<p><cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,</p>
+<p><cite>uirsa_score</cite> for the urban index of relative socio economic advantage,</p>
+<p><cite>rirsa_score</cite> for the rural index of relative socio economic advantage</p>
+<p>fill_value (str): can be “extrapolate” to extraplate past the extent of the dataset or “boundary_value” to use the closest datapoint, or</p>
+<p>or an excepted response for scipy.interpolate.interp1D fill_value keyword argument</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="simple">
+<dt>outputs</dt><dd><p>interpolated score (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 </section>
 
 

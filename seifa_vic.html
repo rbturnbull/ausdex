@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Socio Economic Advantage Calculations &mdash; ausdex 0.1.4 documentation</title>
+  <title>Socio-Economic Advantage &mdash; ausdex 0.1.4 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
@@ -46,7 +46,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Socio Economic Advantage Calculations</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Socio-Economic Advantage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Data-access">Data access</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Storing-the-aurin-api-credentials-in-a-config.ini">Storing the aurin api credentials in a config.ini</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Entering-the-aurin-credentials-on-execution">Entering the aurin credentials on execution</a></li>
@@ -65,7 +65,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="inflation.html">Inflation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reference.html">api reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reference.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
 </ul>
 
@@ -83,7 +83,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Socio Economic Advantage Calculations</li>
+      <li>Socio-Economic Advantage</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/seifa_vic.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
@@ -363,8 +363,8 @@ div.rendered_html tbody tr:hover {
     text-align: unset;
 }
 </style>
-<section id="Socio-Economic-Advantage-Calculations">
-<h1>Socio Economic Advantage Calculations<a class="headerlink" href="#Socio-Economic-Advantage-Calculations" title="Permalink to this headline"></a></h1>
+<section id="Socio-Economic-Advantage">
+<h1>Socio-Economic Advantage<a class="headerlink" href="#Socio-Economic-Advantage" title="Permalink to this headline"></a></h1>
 <p>Within this package, the seifa_vic submodule allows for suburb level aggregation of socio economic data derived by Australian Bureau of Statistics from census data every 5 years.</p>
 <section id="Data-access">
 <h2>Data access<a class="headerlink" href="#Data-access" title="Permalink to this headline"></a></h2>
@@ -410,6 +410,16 @@ div.rendered_html tbody tr:hover {
 <section id="Using-the-seifa_vic-module:">
 <h2>Using the seifa_vic module:<a class="headerlink" href="#Using-the-seifa_vic-module:" title="Permalink to this headline"></a></h2>
 <p>Once the data is loaded and ready to go, you can start making socio economic calculations See below for a high level example of the <code class="docutils literal notranslate"><span class="pre">interpolate_vic_suburb_seifa</span></code> function.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 <section id="Calculating-one-value">
 <h3>Calculating one value<a class="headerlink" href="#Calculating-one-value" title="Permalink to this headline"></a></h3>
 <div class="nbinput nblast docutils container">
@@ -417,9 +427,7 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">ausdex.seifa_vic</span> <span class="kn">import</span> <span class="n">interpolate_vic_suburb_seifa</span>
+<span></span><span class="kn">from</span> <span class="nn">ausdex.seifa_vic</span> <span class="kn">import</span> <span class="n">interpolate_vic_suburb_seifa</span>
 </pre></div>
 </div>
 </div>
@@ -648,7 +656,7 @@ fill_value now (&#39;943.0315332534345&#39;, &#39;952&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/seifa_vic_14_0.png" src="_images/seifa_vic_14_0.png" />
+<img alt="_images/seifa_vic_15_0.png" src="_images/seifa_vic_15_0.png" />
 </div>
 </div>
 <p>Note that the above graph shows the boundary_value vs the extrapolate fill_value patterns</p>
