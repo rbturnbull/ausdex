@@ -6,10 +6,7 @@ import webbrowser
 
 import sys
 
-if sys.version_info.minor <= 7:
-    import importlib_metadata as lib_metadata
-else:
-    import importlib.metadata as lib_metadata
+import importlib_metadata as lib_metadata
 from typing import Optional
 import subprocess
 

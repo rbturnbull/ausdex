@@ -1,3 +1,4 @@
+import sys
 from datetime import datetime, timedelta
 from typing import Union
 import pandas as pd
@@ -27,7 +28,7 @@ class CPI:
         cached_download(url, local_path)
         return local_path
 
-    def get_abs_by_date(self, id, date):
+    def get_abs_by_date(self, id: str, date: datetime):
         """Gets the latest CPI datafile from the Australian Burau of Statistics before a specific date."""
         file = None
         while file is None and date > datetime(1948, 1, 1):
@@ -41,9 +42,9 @@ class CPI:
 
                 file = self.get_abs(id, quarter, year)
             except:
-                print(f"CPI data for {date} not available.")
+                print(f"CPI data for {date} not available.", file=sys.stderr)
 
-            date -= timedelta(89)  # go back approximately a quarter
+            date -= timedelta(days=89)  # go back approximately a quarter
 
         return file
 
