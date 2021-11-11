@@ -2,8 +2,11 @@
 name = "ausdex"
 version = "0.1.4"
 description = "An interface for several Australian socio-economic indices."
-authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>"]
-license = "Apache 2.0"
+authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>", "Jonathan Garber <jonathan.garber@unimelb.edu.au>"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/rbturnbull/ausdex"
+documentation = "https://rbturnbull.github.io/ausdex/"
 
 [tool.poetry.dependencies]
 python = "^3.7.1,<3.10"
