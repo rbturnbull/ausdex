@@ -80,9 +80,17 @@ def load_shapefile_data(dataset="seifa_2006_cd_shapefile"):
     return gpd.read_file(shpfile_path[0])
 
 
+def _get_input(msg):
+    return input(msg)
+
+
+def _get_getpass(msg):
+    return getpass(msg)
+
+
 def make_aurin_config():
-    username = input("please enter your aurin username: ")
-    password = getpass("please enter your aurin password: ")
+    username = _get_input("please enter your aurin username: ")
+    password = _get_getpass("please enter your aurin password: ")
     out = {"username": username, "password": password}
 
     path = get_cached_path("aurin_creds.json")
@@ -109,12 +117,16 @@ def download_aurin_dataset(wfs_aurin, dataset, links):
     return local_path
 
 
+def get_config_ini():
+    config_path = Path(__file__).parent.parent.parent / "config.ini"
+    return config_path
+
+
 def load_aurin_config():
 
-    config_path = Path(__file__).parent.parent.parent / "config.ini"
-    if config_path.exists() == False:
-        return False
-    else:
+    config_path = get_config_ini()
+
+    if config_path.exists() == True:
         print("loading credentials from config.ini")
         import configparser
 
@@ -125,6 +137,26 @@ def load_aurin_config():
         username = parser["aurin"]["username"]
         password = parser["aurin"]["password"]
         return dict(username=username, password=password)
+
+    else:
+        path = get_cached_path("aurin_creds.json")
+        if path.exists() == False:
+            make_aurin_config()
+        with open(path, "r") as file:
+            creds = json.load(file)
+        return creds
+
+
+def get_aurin_wfs():
+    creds = load_aurin_config()
+
+    wfs_aurin = WebFeatureService(
+        "http://openapi.aurin.org.au/wfs",
+        version="1.1.0",
+        username=creds["username"],
+        password=creds["password"],
+    )
+    return wfs_aurin
 
 
 def load_aurin_data(dataset: str or list):
@@ -137,20 +169,7 @@ def load_aurin_data(dataset: str or list):
     if all_downloaded == True:
         return [gpd.read_file(lp) for lp in local_paths]
     else:
-        creds = load_aurin_config()
-        if creds == False:
-            path = get_cached_path("aurin_creds.json")
-            if path.exists() == False:
-                make_aurin_config()
-            with open(path, "r") as file:
-                creds = json.load(file)
-
-        wfs_aurin = WebFeatureService(
-            "http://openapi.aurin.org.au/wfs",
-            version="1.1.0",
-            username=creds["username"],
-            password=creds["password"],
-        )
+        wfs_aurin = get_aurin_wfs()
         outs = []
         for d in dataset:
             outs.append(gpd.read_file(download_aurin_dataset(wfs_aurin, d, links)))

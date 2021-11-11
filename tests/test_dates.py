@@ -14,17 +14,23 @@ class TestDates(unittest.TestCase):
         np.testing.assert_equal(result, np.array("2006-01-01", dtype="datetime64[D]"))
 
     def test_int(self):
-        self.assertEqual(
+        np.testing.assert_equal(
             convert_date(2006), np.array("2006-01-01", dtype="datetime64[D]")
         )
 
     def test_float(self):
-        self.assertEqual(
+        np.testing.assert_equal(
             convert_date(2006.5), np.array("2006-07-02", dtype="datetime64[D]")
         )
 
     # def test_numpy_ints(self):
     #     self.assertEqual( convert_date(2006.5), np.array('2006-07-02', dtype='datetime64[D]') )
+    def test_numpy_ints(self):
+        dates = np.array([2006, 2007], dtype=np.int32)
+        np.testing.assert_equal(
+            convert_date(dates),
+            np.array(["2006-01-01", "2007-01-01"], dtype="datetime64[D]"),
+        )
 
 
 class TestDateToDecimalYear(unittest.TestCase):

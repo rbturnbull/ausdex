@@ -4,6 +4,7 @@ from .data_wrangling import preprocess_victorian_datasets
 from scipy.interpolate import interp1d
 import numpy as np
 import pandas as pd
+import datetime
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
 
 from typing import Union
@@ -32,16 +33,6 @@ def _make_cache_key(suburb, metric, fill_value, **kwargs):
         f"{str(key)}_{str(kwargs[key])}" for key in sorted(list(kwargs.keys()))
     ]
     return f"{suburb}_{metric}_{fill_value}_" + "_".join(key_val_list)
-
-
-def _dt_to_dyr(x):
-    return x.year + x.month / 12 + x.day / 30
-
-
-def _date_time_to_decimal_year(x):
-    if type(x) != pd.Timestamp:
-        x = pd.TimeStamp(x)
-    return x.year + x.month / 12 + x.day / 30
 
 
 class SeifaVic:
@@ -152,7 +143,7 @@ class SeifaVic:
         """
         # assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.ndarray, pd.Series))
         self._load_data()
-        if type(year_values) == str:
+        if type(year_values) in [str, datetime.datetime]:
             try:
                 year_values = pd.to_numeric(year_values)
 
