@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "aucpi"
+name = "ausdex"
 version = "0.1.4"
 description = "Adjusts Australian dollars for inflation."
 authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>"]
@@ -32,10 +32,11 @@ sphinx-rtd-theme = "^1.0.0"
 sphinx-autobuild = "^2021.3.14"
 myst-parser = "^0.15.2"
 pre-commit = "^2.15.0"
+sphinx-copybutton = "^0.4.0"
 
 [build-system]
 requires = ["setuptools >= 40.6.0", "poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-aucpi = 'aucpi.main:app'
+ausdex = 'ausdex.main:app'

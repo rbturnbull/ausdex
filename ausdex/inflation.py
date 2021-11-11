@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from pathlib import Path
+from typing import Union
 import pandas as pd
 import modin.pandas as mpd
 from dateutil import parser
@@ -8,10 +8,10 @@ import numbers
 
 from cached_property import cached_property
 
-from aucpi.files import cached_download, get_cached_path
+from .files import cached_download, get_cached_path
 
 
-class Aucpi:
+class CPI:
     ACCEPTED_QUARTERS = ["mar", "jun", "sep", "dec"]
 
     def get_abs(self, id, quarter, year):
@@ -70,7 +70,7 @@ class Aucpi:
         df = self.latest_df
         return df["Index Numbers ;  All groups CPI ;  Australia ;"]
 
-    def cpi_australia_at(self, date: (datetime, str, pd.Series, np.ndarray)):
+    def cpi_australia_at(self, date: Union[datetime, str, pd.Series, np.ndarray]):
         """
         Returns the CPI for dates.
 
@@ -99,14 +99,8 @@ class Aucpi:
             return cpis.item()
 
         return cpis
-        #     return self.cpi_australia_series[np.searchsorted( self.cpi_australia_series.index, date, side="right" )-1]
 
-        # try:
-        #     return self.cpi_australia_series[np.searchsorted( self.cpi_australia_series.index, date, side="right" )-1]
-        # except:
-        #     raise ValueError(f"Cannot get CPI for date '{date}'")
-
-    def adjust(
+    def calc_inflation(
         self,
         value: (numbers.Number, np.ndarray, pd.Series),
         original_date: (datetime, str),
@@ -121,15 +115,15 @@ class Aucpi:
         return value * evaluation_cpi / original_cpi
 
 
-aucpi = Aucpi()
+_cpi = CPI()
 
 
-def adjust(
+def calc_inflation(
     value: (numbers.Number, np.ndarray, pd.Series),
     original_date: (datetime, str),
     evaluation_date: (datetime, str) = None,
 ):
     """Adjusts a value for inflation."""
-    return aucpi.adjust(
+    return _cpi.calc_inflation(
         value, original_date=original_date, evaluation_date=evaluation_date
     )

@@ -1,8 +1,8 @@
-# aucpi
+# ausdex
 
-![pipline](https://github.com/rbturnbull/aucpi/actions/workflows/coverage.yml/badge.svg)
-[<img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rbturnbull/49262550cc8b0fb671d46df58de213d4/raw/coverage-badge.json">](<https://rbturnbull.github.io/aucpi/coverage/>)
-[<img src="https://github.com/rbturnbull/aucpi/actions/workflows/docs.yml/badge.svg">](<https://rbturnbull.github.io/aucpi/>)
+![pipline](https://github.com/rbturnbull/ausdex/actions/workflows/coverage.yml/badge.svg)
+[<img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rbturnbull/49262550cc8b0fb671d46df58de213d4/raw/coverage-badge.json">](<https://rbturnbull.github.io/ausdex/coverage/>)
+[<img src="https://github.com/rbturnbull/ausdex/actions/workflows/docs.yml/badge.svg">](<https://rbturnbull.github.io/ausdex/>)
 [<img src="https://img.shields.io/badge/code%20style-black-000000.svg">](<https://github.com/psf/black>)
 
 Adjusts Australian dollars for inflation.
@@ -12,33 +12,33 @@ Adjusts Australian dollars for inflation.
 You can install the development version directly from github:
 
 ```
-pip install git+https://github.com/rbturnbull/aucpi.git
+pip install ausdex
 ```
 
 ## Command Line Usage
 
 Adjust single values using the command line interface:
 ```
-aucpi VALUE ORIGINAL_DATE
+ausdex inflation VALUE ORIGINAL_DATE
 ```
 This adjust the value from the original date to the equivalent in today's dollars.
 
 For example, to adjust $26 from July 21, 1991 to today run:
 ```
-$ aucpi 26 "July 21 1991" 
+$ ausdex adjust 26 "July 21 1991" 
 $ 52.35
 ```
 
 To choose a different date for evaluation use the `--evaluation-date` option. e.g.
 ```
-$ aucpi 26 "July 21 1991"  --evaluation-date "Sep 1999"
+$ ausdex inflation 26 "July 21 1991"  --evaluation-date "Sep 1999"
 $ 30.27
 ```
 
 ### seifa_vic command line usage
 youc an use the seifa-vic command to interpolate an ABS census derived Socio economic score for a given year, suburb, and SEIFA metric
 ```
-$ aucpi seifa-vic 2020 footscray ier_score
+$ ausdex seifa-vic 2020 footscray ier_score
 $ 861.68
 
 ```
@@ -46,10 +46,10 @@ $ 861.68
 ## Module Usage
 
 ```
->>> import aucpi
->>> aucpi.adjust(26, "July 21 1991")
+>>> import ausdex
+>>> ausdex.inflation(26, "July 21 1991")
 52.35254237288135
->>> aucpi.adjust(26, "July 21 1991",evaluation_date="Sep 1999")
+>>> ausdex.inflation(26, "July 21 1991",evaluation_date="Sep 1999")
 30.27457627118644
 ```
 The dates can be as strings or Python datetime objects.
@@ -57,7 +57,7 @@ The dates can be as strings or Python datetime objects.
 The values, the dates and the evaluation dates can be vectors by using NumPy arrays or Pandas Series. e.g.
 ```
 >>> df = pd.DataFrame(data=[ [26, "July 21 1991"],[25,"Oct 1989"]], columns=["value","date"] )
->>> df['adjusted'] = aucpi.adjust(df.value, df.date)
+>>> df['adjusted'] = ausdex.inflation(df.value, df.date)
 >>> df
    value          date   adjusted
 0     26  July 21 1991  52.352542
@@ -66,7 +66,7 @@ The values, the dates and the evaluation dates can be vectors by using NumPy arr
 ### seifa_vic submodule
 
 ```python
->>> from aucpi.seifa_vic import interpolate_vic_suburb_seifa
+>>> from ausdex.seifa_vic import interpolate_vic_suburb_seifa
 >>> interpolate_vic_suburb_seifa(2007, 'FOOTSCRAY', 'ier_score')
 874.1489807920245
 >>> interpolate_vic_suburb_seifa([2007, 2020], 'FOOTSCRAY', 'ier_score', fill_value='extrapolate')
@@ -91,11 +91,11 @@ password = {aurin_api_password}
 
 ## Development
 
-To devlop aucpi, clone the repo and install the dependencies using poetry:
+To devlop ausdex, clone the repo and install the dependencies using poetry:
 
 ```
-git clone https://github.com/rbturnbull/aucpi.git
-cd aucpi
+git clone https://github.com/rbturnbull/ausdex.git
+cd ausdex
 poetry install
 ```
 

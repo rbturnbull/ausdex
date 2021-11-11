@@ -5,7 +5,7 @@ import urllib.request
 
 
 def get_cached_path(filename):
-    cache_dir = Path(user_cache_dir("aucpi"))
+    cache_dir = Path(user_cache_dir("ausdex"))
     cache_dir.mkdir(exist_ok=True, parents=True)
     return cache_dir / filename
 

@@ -13,15 +13,15 @@ else:
 from typing import Optional
 import subprocess
 
-from aucpi.seifa_vic.seifa_vic import Metric
-from aucpi import adjust as call_adjust
+from ausdex.seifa_vic.seifa_vic import Metric
+from ausdex import calc_inflation
 
 app = typer.Typer()
 
 
 def version_callback(value: bool):
     if value:
-        version = lib_metadata.version("aucpi")
+        version = lib_metadata.version("ausdex")
         typer.echo(version)
         raise typer.Exit()
 
@@ -31,7 +31,7 @@ def repo():
     """
     Opens the repository in a web browser
     """
-    typer.launch("https://github.com/rbturnbull/aucpi")
+    typer.launch("https://github.com/rbturnbull/ausdex")
 
 
 @app.command()
@@ -57,22 +57,20 @@ def docs(live: bool = True):
 
 
 @app.command()
-def adjust(
+def inflation(
     value: float,
     original_date: str,
     evaluation_date: str = None,
 ):
     """Adjusts Australian dollars for inflation"""
-    result = call_adjust(
+    result = calc_inflation(
         value=value, original_date=original_date, evaluation_date=evaluation_date
     )
     typer.echo(f"{result:.2f}")
 
 
 @app.command()
-def seifa_vic(
-    year_value: str,  suburb: str, metric: Metric, fill_value: str = "null"
-):
+def seifa_vic(year_value: str, suburb: str, metric: Metric, fill_value: str = "null"):
     """
     Interpolates suburb aggregated socioeconomic indices for a given year for a given suburb.
 

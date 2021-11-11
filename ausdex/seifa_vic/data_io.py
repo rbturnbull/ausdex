@@ -1,7 +1,7 @@
 import geopandas as gpd
 import pandas as pd
 from pathlib import Path
-from aucpi.files import cached_download, get_cached_path
+from ausdex.files import cached_download, get_cached_path
 from pathlib import Path
 import zipfile
 import os
