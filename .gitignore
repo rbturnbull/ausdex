@@ -150,3 +150,7 @@ API
 Training
 Blog
 About
+
+.DS_Store
+*.pyc
+__pycache__/*
