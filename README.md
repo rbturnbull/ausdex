@@ -5,7 +5,7 @@
 [<img src="https://github.com/rbturnbull/ausdex/actions/workflows/docs.yml/badge.svg">](<https://rbturnbull.github.io/ausdex/>)
 [<img src="https://img.shields.io/badge/code%20style-black-000000.svg">](<https://github.com/psf/black>)
 
-An interface for several Australian socio-economic indicies.
+An interface for several Australian socio-economic indices.
 
 The Australian Bureau of Statistics (ABS) publishes a variety of indexes for the Australian
 economic environment. These include the Consumer Price Index (CPI) used for calculating inflation
