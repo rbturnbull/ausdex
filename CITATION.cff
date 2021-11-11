@@ -5,6 +5,10 @@ authors:
     family-names: Turnbull
     given-names: Robert
     orcid: "https://orcid.org/0000-0003-1274-6750"
+  -
+    family-names: Garber
+    given-names: Jonathan
+    orcid: "https://orcid.org/0000-0001-6754-4748"
 cff-version: "1.1.0"
 date-released: 2021-08-26
 license: "Apache-2.0"
