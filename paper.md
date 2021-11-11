@@ -1,5 +1,5 @@
 ---
-title: 'ozdex: A Python package for using Australian economic indexing data'
+title: 'ausdex: A Python package for using Australian economic indexing data'
 tags:
   - Python
   - economics
@@ -24,13 +24,13 @@ bibliography: paper.bib
 
 The Australian Bureau of Statistics (ABS) publishes a variety of indexes for the Australian
 economic environment. These include the Consumer Price Index (CPI) used for calculating inflation
-and a variety of indexes designed to measure socio-economic advantage. `ozdex` makes these data
+and a variety of indexes designed to measure socio-economic advantage. `ausdex` makes these data
 available in a convenient Python package with a simple programatic and command line interfaces. 
 
 
 # Statement of need
 
-`ozdex` is a Python package for querying data produced by the Australian Bureau of Statistics (ABS) and returning them in a convenient format.
+`ausdex` is a Python package for querying data produced by the Australian Bureau of Statistics (ABS) and returning them in a convenient format.
 
 
 # Inflation and CPI

@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = "ozdex"
+project = "ausdex"
 copyright = "2021, Robert Turnbull and Jonathan Garber"
 author = "Robert Turnbull and Jonathan Garber"
 
