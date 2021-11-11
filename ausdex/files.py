@@ -10,6 +10,10 @@ def get_cached_path(filename):
     return cache_dir / filename
 
 
+class DownloadError(Exception):
+    pass
+
+
 def cached_download(url: str, local_path: (str, Path), attempt_download=True) -> None:
     """
     Downloads a file if a local file does not already exist.
@@ -22,14 +26,13 @@ def cached_download(url: str, local_path: (str, Path), attempt_download=True) ->
         Exception: Raises an exception if it cannot download the file.
 
     """
-
     local_path = Path(local_path)
     if (not local_path.exists() or local_path.stat().st_size == 0) and attempt_download:
         try:
             print(f"Downloading {url} to {local_path}")
             urllib.request.urlretrieve(url, local_path)
         except:
-            raise Exception(f"Error downloading {url}")
+            raise DownloadError(f"Error downloading {url}")
 
     if not local_path.exists() or local_path.stat().st_size == 0:
-        raise Exception(f"Error reading {local_path}")
+        raise IOError(f"Error reading {local_path}")
