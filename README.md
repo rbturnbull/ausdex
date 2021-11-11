@@ -114,5 +114,7 @@ The tests can be run using `pytest`.
 
 ## Credits
 
-Robert Turnbull (University of Melbourne)
-Jonathan Garber (University of Melbourne)
+* Robert Turnbull (University of Melbourne)
+* Jonathan Garber (University of Melbourne)
+
+These authors contributed equally.
