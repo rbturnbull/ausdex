@@ -7,29 +7,29 @@ Adjusts Australian dollars for inflation.
 
 Adjust single values using the command line interface:
 ```
-aucpi adjust VALUE ORIGINAL_DATE
+ausdex inflation VALUE ORIGINAL_DATE
 ```
 This adjust the value from the original date to the equivalent in today's dollars.
 
 For example, to adjust $26 from July 21, 1991 to today run:
 ```
-$ aucpi adjust 26 "July 21 1991" 
+$ ausdex inflation 26 "July 21 1991" 
 $ 52.35
 ```
 
 To choose a different date for evaluation use the `--evaluation-date` option. e.g.
 ```
-$ aucpi adjust 26 "July 21 1991"  --evaluation-date "Sep 1999"
+$ ausdex inflation 26 "July 21 1991"  --evaluation-date "Sep 1999"
 $ 30.27
 ```
 
 ## Module Usage
 
 ```
->>> import aucpi
->>> aucpi.adjust(26, "July 21 1991")
+>>> import ausdex
+>>> ausdex.inflation(26, "July 21 1991")
 52.35254237288135
->>> aucpi.adjust(26, "July 21 1991",evaluation_date="Sep 1999")
+>>> ausdex.inflation(26, "July 21 1991",evaluation_date="Sep 1999")
 30.27457627118644
 ```
 The dates can be as strings or Python datetime objects.
@@ -37,7 +37,7 @@ The dates can be as strings or Python datetime objects.
 The values, the dates and the evaluation dates can be vectors by using NumPy arrays or Pandas Series. e.g.
 ```
 >>> df = pd.DataFrame(data=[ [26, "July 21 1991"],[25,"Oct 1989"]], columns=["value","date"] )
->>> df['adjusted'] = aucpi.adjust(df.value, df.date)
+>>> df['adjusted'] = ausdex.inflation(df.value, df.date)
 >>> df
    value          date   adjusted
 0     26  July 21 1991  52.352542

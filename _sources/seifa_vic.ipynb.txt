@@ -34,7 +34,7 @@
     "The Socioeconomic data can be interpolated from the command line with the following command:\n",
     "\n",
     "```bash\n",
-    "aucpi seifa-vic [OPTIONS] YEAR_VALUE SUBURB METRIC\n",
+    "ausdex seifa-vic [OPTIONS] YEAR_VALUE SUBURB METRIC\n",
     "```\n",
     "\n",
     "where:\n",
@@ -72,7 +72,7 @@
    "source": [
     "import warnings\n",
     "warnings.filterwarnings('ignore')\n",
-    "from aucpi.seifa_vic import interpolate_vic_suburb_seifa"
+    "from ausdex.seifa_vic import interpolate_vic_suburb_seifa"
    ]
   },
   {

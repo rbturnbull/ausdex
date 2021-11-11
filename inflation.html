@@ -7,6 +7,7 @@
   <title>Inflation &mdash; ozdex 0.1.4 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -15,6 +16,8 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/clipboard.min.js"></script>
+        <script src="_static/copybutton.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -106,34 +109,34 @@
 <section id="command-line-usage">
 <h2>Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline"></a></h2>
 <p>Adjust single values using the command line interface:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">aucpi</span> <span class="n">adjust</span> <span class="n">VALUE</span> <span class="n">ORIGINAL_DATE</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ausdex</span> <span class="n">inflation</span> <span class="n">VALUE</span> <span class="n">ORIGINAL_DATE</span>
 </pre></div>
 </div>
 <p>This adjust the value from the original date to the equivalent in today’s dollars.</p>
 <p>For example, to adjust $26 from July 21, 1991 to today run:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ aucpi adjust 26 &quot;July 21 1991&quot; 
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ausdex inflation 26 &quot;July 21 1991&quot; 
 $ 52.35
 </pre></div>
 </div>
 <p>To choose a different date for evaluation use the <code class="docutils literal notranslate"><span class="pre">--evaluation-date</span></code> option. e.g.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ aucpi adjust 26 &quot;July 21 1991&quot;  --evaluation-date &quot;Sep 1999&quot;
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ausdex inflation 26 &quot;July 21 1991&quot;  --evaluation-date &quot;Sep 1999&quot;
 $ 30.27
 </pre></div>
 </div>
 </section>
 <section id="module-usage">
 <h2>Module Usage<a class="headerlink" href="#module-usage" title="Permalink to this headline"></a></h2>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">aucpi</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">aucpi</span><span class="o">.</span><span class="n">adjust</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ausdex</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ausdex</span><span class="o">.</span><span class="n">inflation</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">)</span>
 <span class="go">52.35254237288135</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">aucpi</span><span class="o">.</span><span class="n">adjust</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">,</span><span class="n">evaluation_date</span><span class="o">=</span><span class="s2">&quot;Sep 1999&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ausdex</span><span class="o">.</span><span class="n">inflation</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">,</span><span class="n">evaluation_date</span><span class="o">=</span><span class="s2">&quot;Sep 1999&quot;</span><span class="p">)</span>
 <span class="go">30.27457627118644</span>
 </pre></div>
 </div>
 <p>The dates can be as strings or Python datetime objects.</p>
 <p>The values, the dates and the evaluation dates can be vectors by using NumPy arrays or Pandas Series. e.g.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="p">[</span> <span class="p">[</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">],[</span><span class="mi">25</span><span class="p">,</span><span class="s2">&quot;Oct 1989&quot;</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">,</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;adjusted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">aucpi</span><span class="o">.</span><span class="n">adjust</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;adjusted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ausdex</span><span class="o">.</span><span class="n">inflation</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span>
 <span class="go">   value          date   adjusted</span>
 <span class="go">0     26  July 21 1991  52.352542</span>

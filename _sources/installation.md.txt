@@ -3,16 +3,16 @@
 You can install the development version directly from github:
 
 ```
-pip install git+https://github.com/rbturnbull/aucpi.git
+pip install git+https://github.com/rbturnbull/ausdex.git
 ```
 
 ## Development
 
-To devlop aucpi, clone the repo and install the dependencies using poetry:
+To devlop ausdex, clone the repo and install the dependencies using poetry:
 
 ```
-git clone https://github.com/rbturnbull/aucpi.git
-cd aucpi
+git clone https://github.com/rbturnbull/ausdex.git
+cd ausdex
 poetry install
 ```
 
