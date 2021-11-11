@@ -24,7 +24,9 @@ def convert_date(date: Union[datetime, str, pd.Series, np.ndarray]) -> np.ndarra
         days_in_year = 366 if calendar.isleap(year) else 365
         date = datetime(year, 1, 1) + timedelta(days=(date % 1) * days_in_year)
     elif isinstance(date, np.ndarray):
-        date = pd.to_datetime(date.astype(str))
+        if np.issubdtype(date.dtype, np.integer):
+            date = date.astype(str)
+        date = pd.to_datetime(date)
     elif type(date) == mpd.Series:
         date = mpd.to_datetime(date)
     else:
