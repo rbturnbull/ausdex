@@ -67,9 +67,32 @@ The CPI data goes back to 1948. Using dates before this will result in a NaN.
 The module is thoroughly documented at [https://rbturnbull.github.io/ausdex/](https://rbturnbull.github.io/ausdex/). 
 Testing coverage
 
+black
+typer
+
+Command Line usage
+
+Module usage
+
+## Notes 
+* Cite scipy for interpolation [@jones_scipy:_2001]
+* Cite numpy
+* Cite pandas [@mckinney-proc-scipy-2010]
+* Cite inflation equation source
+* Cite similar US library?
+* Cite aurin
+
+* Trewin, D. (2001), Census of population and housing: Socio-economic indexes for area’s (SEIFA), Australian Bureau of Statistics
+(ABS), Canberra.
+
+* https://aurin.org.au/legal/copyright-and-attribution/
+[Data Source Organisation], ([Year]): [Dataset Title]; accessed from [[AURIN Portal]/AURIN Workbench/[name AURIN sub-site]] on [date of access]
+
 
 # Acknowledgements
 
 This project came about through a research collaboration with Vidal Paton-Cole and Robert Crawford. We acknowledge the support of our colleagues at the Melbourne Data Analytics Platform, Aleksandra Michalewicz and Emily Fitzgerald.
 
 # References
+
+

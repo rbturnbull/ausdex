@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ausdex"
-version = "0.1.4"
+version = "0.2.0"
 description = "An interface for several Australian socio-economic indices."
 authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>", "Jonathan Garber <jonathan.garber@unimelb.edu.au>"]
 license = "Apache-2.0"
@@ -17,7 +17,7 @@ xlrd = "^2.0.1"
 cached-property = "^1.5.2"
 python-dateutil = "^2.8.2"
 typer = "^0.3.2"
-modin = "^0.11.3"
+modin = "^0.10.2"
 geopandas = "^0.10.0"
 scipy = "^1.7.1"
 OWSLib = "^0.25.0"
