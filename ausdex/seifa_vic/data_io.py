@@ -99,11 +99,7 @@ def make_aurin_config():
         json.dump(out, file)
 
 
-def download_aurin_dataset(wfs_aurin, dataset, links):
-    local_path = get_cached_path(dataset + ".geojson")
-    if local_path.exists() == True:
-        print(f"{dataset} already downloaded")
-        return local_path
+def download_from_aurin(wfs_aurin, dataset, links, local_path):
     response = wfs_aurin.getfeature(
         typename=links[dataset],
         bbox=(96.81, -43.75, 159.11, -9.14),
@@ -113,6 +109,14 @@ def download_aurin_dataset(wfs_aurin, dataset, links):
 
     with open(local_path, "w") as file:
         file.write(response.read().decode("UTF-8"))
+
+
+def get_aurin_dataset(wfs_aurin, dataset, links):
+    local_path = get_cached_path(dataset + ".geojson")
+    if local_path.exists() == True:
+        print(f"{dataset} already downloaded")
+        return local_path
+    download_from_aurin(wfs_aurin, dataset, links, local_path)
 
     return local_path
 
@@ -159,6 +163,10 @@ def get_aurin_wfs():
     return wfs_aurin
 
 
+def open_geopandas(file):
+    return gpd.read_file(file)
+
+
 def load_aurin_data(dataset: str or list):
     links = get_data_links()
 
@@ -172,7 +180,7 @@ def load_aurin_data(dataset: str or list):
         wfs_aurin = get_aurin_wfs()
         outs = []
         for d in dataset:
-            outs.append(gpd.read_file(download_aurin_dataset(wfs_aurin, d, links)))
+            outs.append(open_geopandas(get_aurin_dataset(wfs_aurin, d, links)))
         return outs
 
 

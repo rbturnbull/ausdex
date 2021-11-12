@@ -1,5 +1,6 @@
 import unittest
 import numpy as np
+import json
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 from appdirs import user_cache_dir
@@ -8,10 +9,7 @@ from ausdex.seifa_vic.data_wrangling import preprocess_victorian_datasets
 import pandas as pd
 from typer.testing import CliRunner
 from ausdex import main
-from ausdex.seifa_vic.data_io import (
-    make_aurin_config,
-    get_aurin_wfs,
-)
+from ausdex.seifa_vic.data_io import make_aurin_config, load_aurin_data
 from ausdex.files import get_cached_path
 import json
 import datetime
@@ -29,6 +27,7 @@ MOCKED_FILES = [
     "seifa_suburb_2011.xls",
     "seifa_suburb_2016.xls",
     "mock_completed.csv",
+    "aurin_schemas.json",
 ]
 
 
@@ -187,6 +186,35 @@ class TestSeifaInterpolation(unittest.TestCase):
         assert "1005.03" in result.stdout
 
 
+def patch_get_cached_path_schema(file) -> Path:
+    new_filename = "schema_" + file
+    local_path = get_cached_path(new_filename)
+    if local_path.exists() == True:
+        local_path.unlink()
+    return local_path
+
+
+def patch_download_from_aurin(wfs_aurin, dataset, links, local_path):
+    print("patching aurin download for schema")
+    schema = wfs_aurin.get_schema(links[dataset])
+    with open(local_path, "w") as file:
+        json.dump(schema, file)
+
+
+def patch_open_geopandas(file):
+    print("patching open geopandas")
+    with open(file, "r") as f:
+        out = json.load(f)
+    return out
+
+
+def load_aurin_schema():
+    fname = mock_user_get_cached_path("aurin_schemas.json")
+    with open(fname, "r") as f:
+        out = json.load(f)
+    return out
+
+
 class TestDataIO(unittest.TestCase):
     def setUp(self) -> None:
         aurin_creds = get_cached_path("aurin_creds.json")
@@ -204,5 +232,29 @@ class TestDataIO(unittest.TestCase):
         self.assertEqual(creds["username"], "test_username")
         self.assertEqual(creds["password"], "test_password")
 
-    def test_get_aurin_wfs(self):
-        pass
+    @patch(
+        "ausdex.seifa_vic.data_io.download_from_aurin",
+        lambda wfs_aurin, dataset, links, local_path: patch_download_from_aurin(
+            wfs_aurin, dataset, links, local_path
+        ),
+    )
+    @patch(
+        "ausdex.seifa_vic.data_io.open_geopandas",
+        lambda file: patch_open_geopandas(file),
+    )
+    @patch(
+        "ausdex.seifa_vic.data_io.get_cached_path",
+        lambda filename: patch_get_cached_path_schema(filename),
+    )
+    def test_aurin_downloads(self):
+        datasets = [
+            "seifa_2001_aurin",
+            "seifa_1996_aurin",
+            "seifa_1991_aurin",
+            "seifa_1986_aurin",
+        ]
+        saved_schema = load_aurin_schema()
+        data = load_aurin_data(datasets)
+
+        for d, dset in zip(data, datasets):
+            self.assertDictEqual(saved_schema[dset], d)
