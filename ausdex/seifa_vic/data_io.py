@@ -10,6 +10,10 @@ from getpass import getpass
 from owslib.wfs import WebFeatureService
 
 
+def open_geopandas(file, **kwargs):
+    return gpd.read_file(file, **kwargs)
+
+
 def get_data_links():
     out = dict(
         victoria_suburbs="https://data.gov.au/geoserver/vic-suburb-locality-boundaries-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_af33dd8c_0534_4e18_9245_fc64440f742e&outputFormat=json",
@@ -31,19 +35,21 @@ def get_data_links():
     return out
 
 
+def unzip(local_path, new_path_name):
+    with zipfile.ZipFile(local_path, "r") as zip_ref:
+        zip_ref.extractall(new_path_name)
+    os.remove(local_path)
+
+
 def download_dataset(dataset, suffix, links, should_unzip=False):
     local_path = get_cached_path(f"{dataset}.{suffix}")
     if should_unzip == True:
         new_path_name = get_cached_path(f"{dataset}_unzipped")
         if new_path_name.exists() == True:
             return new_path_name
-
     cached_download(links[dataset], local_path)
     if should_unzip == True:
-
-        with zipfile.ZipFile(local_path, "r") as zip_ref:
-            zip_ref.extractall(new_path_name)
-        os.remove(local_path)
+        unzip(local_path, new_path_name)
         return new_path_name
     else:
         return local_path
@@ -60,7 +66,7 @@ def load_xls_data(dataset="seifa_suburb_2016", **kwargs):
     links = get_data_links()
     local_path = download_dataset(dataset, "xls", links)
 
-    return pd.read_excel(links[dataset], **kwargs)
+    return pd.read_excel(local_path, **kwargs)
 
 
 def load_csv_data(dataset="victorian_suburb_list", zipped=False, **kwargs):
@@ -77,7 +83,7 @@ def load_shapefile_data(dataset="seifa_2006_cd_shapefile"):
     links = get_data_links()
     local_path = download_dataset(dataset, "", links, should_unzip=True)
     shpfile_path = [x for x in local_path.iterdir() if "shp" in x.name]
-    return gpd.read_file(shpfile_path[0])
+    return open_geopandas(shpfile_path[0])
 
 
 def _get_input(msg):
@@ -99,7 +105,9 @@ def make_aurin_config():
         json.dump(out, file)
 
 
-def download_from_aurin(wfs_aurin, dataset, links, local_path):
+def download_from_aurin(
+    wfs_aurin, dataset, links, local_path, bbox=(96.81, -43.75, 159.11, -9.14)
+):
     response = wfs_aurin.getfeature(
         typename=links[dataset],
         bbox=(96.81, -43.75, 159.11, -9.14),
@@ -161,10 +169,6 @@ def get_aurin_wfs():
         password=creds["password"],
     )
     return wfs_aurin
-
-
-def open_geopandas(file):
-    return gpd.read_file(file)
 
 
 def load_aurin_data(dataset: str or list):

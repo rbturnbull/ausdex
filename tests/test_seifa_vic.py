@@ -1,5 +1,7 @@
 import unittest
 import numpy as np
+import os
+import shutil
 import json
 from pathlib import Path
 from unittest.mock import patch, MagicMock
@@ -9,7 +11,15 @@ from ausdex.seifa_vic.data_wrangling import preprocess_victorian_datasets
 import pandas as pd
 from typer.testing import CliRunner
 from ausdex import main
-from ausdex.seifa_vic.data_io import make_aurin_config, load_aurin_data
+from ausdex.seifa_vic.data_io import (
+    get_data_links,
+    load_aurin_config,
+    load_aurin_data,
+    download_from_aurin,
+    get_aurin_wfs,
+    load_shapefile_data,
+    load_victorian_suburbs_metadata,
+)
 from ausdex.files import get_cached_path
 import json
 import datetime
@@ -31,25 +41,21 @@ MOCKED_FILES = [
 ]
 
 
+def fake_data_cached_path(filename):
+    return (
+        Path(__file__).parent.resolve() / "testdata" / "ausdex" / "mock_gis" / filename
+    )
+
+
 def mock_user_get_cached_path(filename):
     print(f"using cached test data for {filename}")
     if filename in MOCKED_FILES:
         if filename == "state_suburb_codes_2011..csv.zip":
-            return (
-                Path(__file__).parent.resolve()
-                / "testdata"
-                / "ausdex"
-                / "mock_gis"
-                / "SSC_2011_AUST.csv"
-            )
+            return fake_data_cached_path("SSC_2011_AUST.csv")
+
         else:
-            return (
-                Path(__file__).parent.resolve()
-                / "testdata"
-                / "ausdex"
-                / "mock_gis"
-                / filename
-            )
+            return fake_data_cached_path(filename)
+
     else:
         cache_dir = Path(user_cache_dir("ausdex"))
         cache_dir.mkdir(exist_ok=True, parents=True)
@@ -215,6 +221,16 @@ def load_aurin_schema():
     return out
 
 
+def patch_unzip(local_path, new_path_name):
+    new_path_name.mkdir(exist_ok=True, parents=True)
+    (new_path_name / "shapefile.shp").touch()
+    (new_path_name / "shapefile.shx").touch()
+
+
+def patch_open_geopandas_2(filename):
+    return filename
+
+
 class TestDataIO(unittest.TestCase):
     def setUp(self) -> None:
         aurin_creds = get_cached_path("aurin_creds.json")
@@ -224,9 +240,9 @@ class TestDataIO(unittest.TestCase):
 
     @patch("ausdex.seifa_vic.data_io._get_input", lambda msg: "test_username")
     @patch("ausdex.seifa_vic.data_io._get_getpass", lambda msg: "test_password")
-    @patch("ausdex.seifa_vic.data_io.get_config_ini", Path("does not exist"))
+    @patch("ausdex.seifa_vic.data_io.get_config_ini", lambda: Path("does not exist"))
     def test_make_aurin_config_as_json(self):
-        make_aurin_config()
+        load_aurin_config()
         with open(get_cached_path("aurin_creds.json"), "r") as file:
             creds = json.load(file)
         self.assertEqual(creds["username"], "test_username")
@@ -246,7 +262,7 @@ class TestDataIO(unittest.TestCase):
         "ausdex.seifa_vic.data_io.get_cached_path",
         lambda filename: patch_get_cached_path_schema(filename),
     )
-    def test_aurin_downloads(self):
+    def test_aurin_data(self):
         datasets = [
             "seifa_2001_aurin",
             "seifa_1996_aurin",
@@ -258,3 +274,48 @@ class TestDataIO(unittest.TestCase):
 
         for d, dset in zip(data, datasets):
             self.assertDictEqual(saved_schema[dset], d)
+
+    @patch(
+        "ausdex.seifa_vic.data_io.get_cached_path",
+        lambda filename: mock_user_get_cached_path(filename),
+    )
+    def test_aurin_already_downloaded(self):
+        gdf = load_aurin_data("seifa_2001_aurin")
+        self.assertIn("geometry", gdf[0].columns)
+
+    def test_aurin_download(self):
+        wfs = get_aurin_wfs()
+        links = get_data_links()
+        test_aurin_dl = get_cached_path("test_aurin_dl.geojson")
+        download_from_aurin(
+            wfs,
+            "seifa_2001_aurin",
+            links,
+            test_aurin_dl,
+            bbox=(125, -42.01, 125.01, -42.0),
+        )
+
+    def test_load_victorian_suburbs_metadata(self):
+        df = load_victorian_suburbs_metadata()
+        self.assertIn("locality_pid", df.columns)
+        self.assertIn("locality_name", df.columns)
+
+    @patch(
+        "ausdex.seifa_vic.data_io.open_geopandas",
+        lambda file: patch_open_geopandas_2(file),
+    )
+    @patch(
+        "ausdex.seifa_vic.data_io.unzip",
+        lambda local_path, new_path_name: patch_unzip(local_path, new_path_name),
+    )
+    @patch("ausdex.seifa_vic.data_io.cached_download", lambda url, local_path: None)
+    @patch(
+        "ausdex.seifa_vic.data_io.get_data_links",
+        lambda: {"test_dataset": "test_dataset_folder"},
+    )
+    def test_load_shapefile_data(self):
+        out_file = load_shapefile_data("test_dataset")
+        print(out_file)
+        self.assertIn("shp", out_file.name)
+        self.assertIn("unzipped", out_file.parent.name)
+        shutil.rmtree(out_file.parent)
