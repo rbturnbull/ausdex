@@ -96,100 +96,102 @@ class TestSeifaVicSetup(unittest.TestCase):
         self.assertIn("ASCOT - BALLARAT", df.Site_suburb.unique())
         self.assertNotIn("ASCOT - BALLARAT CITY", df.Site_suburb.unique())
 
-    @patch(
-        "ausdex.seifa_vic.seifa_vic.preprocess_victorian_datasets",
-        lambda force_rebuild: mock_preproces_vic_datasets(False),
-    )
-    def test_seifa_interpolation(self):
+
+@patch(
+    "ausdex.seifa_vic.seifa_vic.preprocess_victorian_datasets",
+    lambda force_rebuild: mock_preproces_vic_datasets(False),
+)
+class TestSeifaInterpolation(unittest.TestCase):
+    def setUp(self) -> None:
         from ausdex.seifa_vic.seifa_vic import interpolate_vic_suburb_seifa
 
-        with self.subTest(msg="null test"):
-            value = interpolate_vic_suburb_seifa(
-                [1980, 1987],
-                "ABBOTSFORD",
-                "ier_score",
-            )
-            # self.assertTrue(value[0] == np.nan)
-            # print(value)
-            self.assertTrue(np.isnan(value[0]))
-            self.assertAlmostEqual(value[1], 955.5048835511469, places=3)
+        self.interpolate = interpolate_vic_suburb_seifa
+        return super().setUp()
 
-        with self.subTest(msg="extrapolate test"):
-            value = interpolate_vic_suburb_seifa(
-                pd.Series([1980, 2000]),
-                "ABBOTSFORD",
-                "ier_score",
-                fill_value="extrapolate",
-            )
-            self.assertAlmostEqual(value[0], 868.1914314671592, places=3)
-            self.assertAlmostEqual(value[1], 1055.278795, places=3)
-        with self.subTest(msg="boundary_value_test"):
-            value = interpolate_vic_suburb_seifa(
-                np.array([1980, 1986]),
-                "ABBOTSFORD",
-                "ieo_score",
-                fill_value="boundary_value",
-            )
-            self.assertAlmostEqual(value[0], value[1], places=3)
+    def test_interpolation_null(self):
+        value = self.interpolate(
+            [1980, 1987],
+            "ABBOTSFORD",
+            "ier_score",
+        )
+        # self.assertTrue(value[0] == np.nan)
+        # print(value)
+        self.assertTrue(np.isnan(value[0]))
+        self.assertAlmostEqual(value[1], 955.5048835511469, places=3)
 
-        with self.subTest(msg="multiple suburbs"):
-            value = interpolate_vic_suburb_seifa(
-                ["1-7-1980", "31-10-1986"],
-                pd.Series(["kew", "ABBOTSFORD"]),
-                "ieo_score",
-                fill_value="boundary_value",
-            )
-            self.assertAlmostEqual(value[0], 1179.648871, places=3)
-            self.assertAlmostEqual(1013.1802726224083, value[1], places=3)
+    def test_interpolation_extrapolate(self):
+        value = self.interpolate(
+            pd.Series([1980, 2000]),
+            "ABBOTSFORD",
+            "ier_score",
+            fill_value="extrapolate",
+        )
+        self.assertAlmostEqual(value[0], 868.1914314671592, places=3)
+        self.assertAlmostEqual(value[1], 1055.278795, places=3)
 
-        with self.subTest(msg="multiple suburbs suburb array"):
-            value = interpolate_vic_suburb_seifa(
-                pd.Series(["1-7-1980", "31-10-1986"]),
-                pd.Series(["kew", "ABBOTSFORD"]).values,
-                "ieo_score",
-                fill_value="boundary_value",
-            )
-            self.assertAlmostEqual(value[0], 1179.648871, places=3)
-            self.assertAlmostEqual(1013.1802726224083, value[1], places=3)
+    def test_interpolate_boundary_value(self):
+        value = self.interpolate(
+            np.array([1980, 1986]),
+            "ABBOTSFORD",
+            "ieo_score",
+            fill_value="boundary_value",
+        )
+        self.assertAlmostEqual(value[0], value[1], places=3)
 
-        with self.subTest(msg="list of datetime.datetimes"):
-            value = interpolate_vic_suburb_seifa(
-                pd.Series(
-                    [datetime.datetime(1980, 7, 1), datetime.datetime(1986, 10, 31)]
-                ),
-                pd.Series(["kew", "ABBOTSFORD"]).values,
-                "ieo_score",
-                fill_value="boundary_value",
-            )
-            self.assertAlmostEqual(value[0], 1179.648871, places=3)
-            self.assertAlmostEqual(1013.1802726224083, value[1], places=3)
+    def test_interpolate_multiple_suburbs(self):
+        value = self.interpolate(
+            ["1-7-1980", "31-10-1986"],
+            pd.Series(["kew", "ABBOTSFORD"]),
+            "ieo_score",
+            fill_value="boundary_value",
+        )
+        self.assertAlmostEqual(value[0], 1179.648871, places=3)
+        self.assertAlmostEqual(994.3434, value[1], places=3)
 
-        with self.subTest(msg="list of datetime.datetimes single"):
-            value = interpolate_vic_suburb_seifa(
-                datetime.datetime(1986, 10, 31),
-                "kew",
-                "ieo_score",
-                fill_value="boundary_value",
-            )
-            self.assertAlmostEqual(value, 1179.648871, places=3)
-            # self.assertAlmostEqual(1013.1802726224083, value[1], places=3)
+    def test_interpolate_multiple_suburbs_array(self):
+        value = self.interpolate(
+            pd.Series(["1-7-1980", "31-10-1986"]),
+            pd.Series(["kew", "ABBOTSFORD"]).values,
+            "ieo_score",
+            fill_value="boundary_value",
+        )
+        self.assertAlmostEqual(value[0], 1179.648871, places=3)
+        self.assertAlmostEqual(994.3434, value[1], places=3)
 
-    @patch(
-        "ausdex.seifa_vic.seifa_vic.preprocess_victorian_datasets",
-        lambda force_rebuild: mock_preproces_vic_datasets(False),
-    )
+    def test_interpolate_list_datetimes_datetimes(self):
+        value = self.interpolate(
+            pd.Series([datetime.datetime(1980, 7, 1), datetime.datetime(1986, 10, 31)]),
+            pd.Series(["kew", "ABBOTSFORD"]).values,
+            "ieo_score",
+            fill_value="boundary_value",
+        )
+        self.assertAlmostEqual(value[0], 1179.648871, places=3)
+        self.assertAlmostEqual(994.3434, value[1], places=3)
+
+    def test_interpolate_single_datetime(self):
+        value = self.interpolate(
+            datetime.datetime(1986, 10, 31),
+            "kew",
+            "ieo_score",
+            fill_value="boundary_value",
+        )
+        self.assertAlmostEqual(value, 1179.9308, places=3)
+        # self.assertAlmostEqual(1013.1802726224083, value[1], places=3)
+
     def test_seifa_vic_cli(self):
         runner = CliRunner()
         result = runner.invoke(
             main.app, ["seifa-vic", "1991", "abbotsford", "ier_score"]
         )
         assert result.exit_code == 0
-        assert "1005.40" in result.stdout
+        assert "1005.03" in result.stdout
 
 
 class TestDataIO(unittest.TestCase):
     def setUp(self) -> None:
-        get_cached_path("aurin_creds.json").unlink()
+        aurin_creds = get_cached_path("aurin_creds.json")
+        if aurin_creds.exists() == True:
+            aurin_creds.unlink()
         return super().setUp()
 
     @patch("ausdex.seifa_vic.data_io._get_input", lambda msg: "test_username")
@@ -202,5 +204,5 @@ class TestDataIO(unittest.TestCase):
         self.assertEqual(creds["username"], "test_username")
         self.assertEqual(creds["password"], "test_password")
 
-    def test_get_aurin_wfs():
+    def test_get_aurin_wfs(self):
         pass

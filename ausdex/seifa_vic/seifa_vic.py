@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import datetime
 from pandas.api.types import is_datetime64_any_dtype as is_datetime
-
+from ..dates import date_time_to_decimal_year
 from typing import Union
 import enum
 
@@ -127,6 +127,7 @@ class SeifaVic:
         suburb: str,
         metric: str,
         fill_value: Union[str, np.array, tuple] = "null",
+        _convert_data=True,
         **kwargs,
     ) -> Union[float, np.array]:
         """method to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data
@@ -136,6 +137,7 @@ class SeifaVic:
             suburb (str): The name of the suburb that you want the data interpolated for (capitalisation doesn't matter).
             metric (str): the name of the seifa_score variable, options are include `irsd_score` for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, `rirsa_score` for the rural index of relative socio economic advantage.
             fill_value (Union[str, np.array, tuple], optional): Specifies the values returned outside the range of the ABS census datasets. It can be "null" and return np.nan values,  "extrapolate" to extraplate past the extent of the dataset or "boundary_value" to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to 'null'.
+            _convert_data (bool): if true, will convert datetime values to decimal years, only false when batching
             **kwargs(dict-like): additional keyword arguments for scipy.interpolate.interp1D object.
 
         Returns:
@@ -143,16 +145,18 @@ class SeifaVic:
         """
         # assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.ndarray, pd.Series))
         self._load_data()
-        if type(year_values) in [str, datetime.datetime]:
-            try:
-                year_values = pd.to_numeric(year_values)
+        # if type(year_values) in [str, datetime.datetime]:
+        #     try:
+        #         year_values = pd.to_numeric(year_values)
 
-            except:
-                try:
-                    year_values = pd.to_datetime(year_values)
-                    year_values = _date_time_to_decimal_year(year_values)
-                except ValueError:
-                    print("string in improper format")
+        #     except:
+        #         try:
+        #             year_values = pd.to_datetime(year_values)
+        #             year_values = _date_time_to_decimal_year(year_values)
+        #         except ValueError:
+        #             print("string in improper format")
+        if _convert_data == True:
+            year_values = date_time_to_decimal_year(year_values)
 
         return self.get_interpolator(suburb, metric, fill_value=fill_value, **kwargs)(
             year_values
@@ -173,17 +177,18 @@ class SeifaVic:
         suburb = np.char.upper(suburb)
         input_df = pd.DataFrame({"suburb": suburb, "years": year_values})
         input_df["interpolated"] = 0.0
-        if input_df["years"].dtype == object:
-            try:
-                input_df["years"] = pd.to_numeric(input_df["years"])
+        # if input_df["years"].dtype == object:
+        #     try:
+        #         input_df["years"] = pd.to_numeric(input_df["years"])
 
-            except:
-                try:
-                    input_df["years"] = pd.to_datetime(input_df["years"])
-                except ValueError:
-                    print("string in improper format")
-        if is_datetime(input_df["years"]) == True:
-            input_df["years"] = input_df["years"].apply(_dt_to_dyr)
+        #     except:
+        #         try:
+        #             input_df["years"] = pd.to_datetime(input_df["years"])
+        #         except ValueError:
+        #             print("string in improper format")
+        # if is_datetime(input_df["years"]) == True:
+        #     input_df["years"] = input_df["years"].apply(_dt_to_dyr)
+        input_df["years"] = date_time_to_decimal_year(input_df["years"])
 
         for sub in input_df.suburb.unique():
             sub_mask = input_df["suburb"] == sub
@@ -191,6 +196,7 @@ class SeifaVic:
                 input_df.loc[sub_mask, "years"].values,
                 sub,
                 metric,
+                _convert_data=False,
                 fill_value=fill_value,
                 **kwargs,
             )

@@ -86,7 +86,56 @@ class TestDateToDecimalYear(unittest.TestCase):
 
     def test_datetime_array(self):
         result = date_time_to_decimal_year(
-            np.array([np.datetime64("1995-1-1"), 1996.6])
+            np.array([np.datetime64("1995-01-01"), np.datetime64("1996-06-30")])
         )
         self.assertIsInstance(result, np.ndarray)
-        self.assertTrue(all([x == y for x, y in zip(result, [1995.5, 1996.6])]))
+        # trues = [x == y for x, y in zip(result, [1995.5, 1996.6])]
+        self.assertAlmostEqual(result[0], 1995.0833, 4)
+        self.assertEqual(result[1], 1996.5)
+
+    def test_str_array(self):
+        result = date_time_to_decimal_year(np.array(["1995-01-01", "1996-06-30"]))
+        self.assertIsInstance(result, np.ndarray)
+        # trues = [x == y for x, y in zip(result, [1995.5, 1996.6])]
+        self.assertAlmostEqual(result[0], 1995.0833, 4)
+        self.assertEqual(result[1], 1996.5)
+
+    def test_str_series(self):
+        result = date_time_to_decimal_year(
+            pd.Series(np.array(["1995-01-01", "1996-06-30"]))
+        )
+        self.assertIsInstance(result, np.ndarray)
+        # trues = [x == y for x, y in zip(result, [1995.5, 1996.6])]
+        self.assertAlmostEqual(result[0], 1995.0833, 4)
+        self.assertEqual(result[1], 1996.5)
+
+    def test_datetime_series(self):
+        result = date_time_to_decimal_year(
+            pd.Series(
+                np.array([np.datetime64("1995-01-01"), np.datetime64("1996-06-30")])
+            )
+        )
+        self.assertIsInstance(result, np.ndarray)
+        # trues = [x == y for x, y in zip(result, [1995.5, 1996.6])]
+        self.assertAlmostEqual(result[0], 1995.0833, 4)
+        self.assertEqual(result[1], 1996.5)
+
+    def test_datetime_mpdseries(self):
+        result = date_time_to_decimal_year(
+            mpd.Series(
+                np.array([np.datetime64("1995-01-01"), np.datetime64("1996-06-30")])
+            )
+        )
+        self.assertIsInstance(result, np.ndarray)
+        # trues = [x == y for x, y in zip(result, [1995.5, 1996.6])]
+        self.assertAlmostEqual(result[0], 1995.0833, 4)
+        self.assertEqual(result[1], 1996.5)
+
+    def test_str_mpdseries(self):
+        result = date_time_to_decimal_year(
+            mpd.Series(np.array(["1995-01-01", "1996-06-30"]))
+        )
+        self.assertIsInstance(result, np.ndarray)
+        # trues = [x == y for x, y in zip(result, [1995.5, 1996.6])]
+        self.assertAlmostEqual(result[0], 1995.0833, 4)
+        self.assertEqual(result[1], 1996.5)
