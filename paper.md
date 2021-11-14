@@ -50,7 +50,7 @@ For the SEIFA datasets from 1986 to 2006, we collected census district polygons 
 
 4. The SEIFA scores were aggregated for all of the census district parts within each suburb using a weighted average, with the polygon area as the weight.
 
-![Figure 1](paper_images/example_overlay.png)
+![Figure 1](paper_images/paper_output.svg)
 <p align = "center"> Figure 1: map of three suburb outlines (black lines) for Richmond (left), Burnley (center), and Hawthorne (right) overlaying 1986 Census Districts (colored polygons with white boundaries). The census districts are colored according to the census district code. Note that these districts do not line up with subur boundaries. the green district in the lower middle section falls in parts of Richmond, and cremorne. Likewise one of the Orange and Purple Census districts spans two suburbs.</p>
 
 # Inflation
