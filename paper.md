@@ -30,18 +30,18 @@ available in a convenient Python package with a simple programatic and command l
 
 # Statement of need
 
-`ausdex` is a Python package for querying data produced by the Australian Bureau of Statistics (ABS) and returning them in a convenient format.
+`ausdex` is a Python package for querying data produced by the Australian Bureau of Statistics (ABS) and returning them in a convenient format. Currently ABS data is housed typically in excel spreadsheets linked from the data catalogue. This package attempts to interface with a subset of the the data in order to provide an api to derived socio economic metrics. One metric we expose is to use ABS consumer price index data to create an inflation calculator similar to (cite the cpi function)
 
 
 # Socio-Economic Indices aggregated from census data for Victoria
 
 Since the 1986 census, the Australian Bureau of statistics (ABS) has generated "Socio Economic Indices For Areas" (SEIFA) following each census. These indices are aggregations of socio economic inputs from the census forms (ie household income, rental/mortgage price, educational level) at the "census district level" or "mesh level" (2006–current). census districts, or mesh levels, geographic areas statistically defined from the census data to be the largest scale (smallest) geographic building blocks of demographic and socioeconomic data based on population distribution. These statistical geographies are redrawn after every census. The Australian Bureau of statistics does aggregate these to other statistical "levels" of geographic area from the Australian Statistical Geography Standard (ASGS) ([Statistical Areas levels 1 - 4](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026)) suburbs and local government areas in their "Data Cube" outputs. 
 
-However, there have been several new suburbs created during the duration of the SEIFA program, and suburb aggregated datasets are not readily available for Census data before 2006.  To address this, we used the current Victorian suburb areal polygons as the constant spatial areas over which we aggregate all previous census datasets. 
+However, there have been several new suburbs created during the duration of the SEIFA program, and suburb aggregated datasets are not readily available for Census data before 2006.  To address this, we used the current Victorian suburb areal polygons [@vic_suburbs] as the constant spatial areas over which we aggregate all previous census datasets. In order to overcome suburb names that are repeated. The suburb polygons were also overlain with local government areas[@vic_lga] to make duplicate suburbs distinct.
 
 ## Spatially aggregating the 1986–2006 datasets
 
-For the SEIFA datasets from 1986 to 2006, we collected census district polygons from aurin (1986–2001) and the ABS data repository (2006), along with associated aggregated SIEFA scores. These census district level SEIFA scores were aggregated to the current suburb GIS datasets using the following steps:
+For the SEIFA datasets from 1986 to 2006, we collected census district polygons from aurin [@aurin_portal] and the ABS data repository (2006), along with associated aggregated SIEFA scores. These census district level SEIFA scores were aggregated to the current suburb GIS datasets [@vic_suburbs] using the following steps:
 
 1. Suburbs and census districts were both reprojected to [EPSG:4326](https://spatialreference.org/ref/epsg/wgs-84/)
 2. The polygons were unioned together, so the resulting polygon layer had an individual polygon for each overlapping census district and suburb (Figure 1)
@@ -61,18 +61,18 @@ For the 2011 and 2016 datasets, we used the same outline above, but started with
 
 | year | dataset type | dataset source |
 | :---- | :------------ | :-------------- |
-| 1986 | census district polygons and metrics | wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1986`| 
-| 1991 | census district polygons and metrics | wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1991`|
-| 1996 | census district polygons and metrics | wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1996`|
-| 2001 | census district polygons and metrics | wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_2001`|
-| 2006 | ABS census district shapefile | [link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&1259030002_cd06avic_shape.zip&1259.0.30.002&Data%20Cubes&D62E845F621FE8ACCA25795D002439BB&0&2006&06.12.2011&Previous)|
-| 2006 | ABS census district seifa metrics | [link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&2033055001_%20seifa,%20census%20collection%20districts,%20data%20cube%20only,%202006.xls&2033.0.55.001&Data%20Cubes&6EFDD4FA99C28C4ECA2574170011668A&0&2006&26.03.2008&Latest)|
-| 2011 | ABS SA1 Polygons | [link](https://www.abs.gov.au/ausstats/subscriber.nsf/log?openagent&1270055001_sa1_2011_aust_shape.zip&1270.0.55.001&Data%20Cubes&24A18E7B88E716BDCA257801000D0AF1&0&July%202011&23.12.2010&Latest)|
-| 2011 | ABS SA1 seifa metrics | [link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&2033.0.55.001%20sa1%20indexes.xls&2033.0.55.001&Data%20Cubes&9828E2819C30D96DCA257B43000E923E&0&2011&05.04.2013&Latest)|
-| 2016 | ABS SA1 Polygons | [link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&1270055001_sa1_2016_aust_shape.zip&1270.0.55.001&Data%20Cubes&6F308688D810CEF3CA257FED0013C62D&0&July%202016&12.07.2016&Latest)|
-| 2016 | ABS SA1 seifa metrics | [link](https://www.abs.gov.au/ausstats/subscriber.nsf/log?openagent&2033055001%20-%20sa1%20indexes.xls&2033.0.55.001&Data%20Cubes&40A0EFDE970A1511CA25825D000F8E8D&0&2016&27.03.2018&Latest)|
-| all | VicMap suburb polygons| [link](https://data.gov.au/geoserver/vic-suburb-locality-boundaries-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_af33dd8c_0534_4e18_9245_fc64440f742e&outputFormat=json)|
-| all | VicMap Local Government Area Polygons| [link](https://data.gov.au/geoserver/vic-local-government-areas-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_bdf92691_c6fe_42b9_a0e2_a4cd716fa811&outputFormat=json)|
+| 1986 | census district polygons and metrics | [@aurin_portal] wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1986`| 
+| 1991 | census district polygons and metrics | [@aurin_portal] wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1991`|
+| 1996 | census district polygons and metrics | [@aurin_portal] wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1996`|
+| 2001 | census district polygons and metrics | [@aurin_portal] wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_2001`|
+| 2006 | ABS census district shapefile| [@abs_2006_cd_shape] [download link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&1259030002_cd06avic_shape.zip&1259.0.30.002&Data%20Cubes&D62E845F621FE8ACCA25795D002439BB&0&2006&06.12.2011&Previous)|
+| 2006 | ABS census district seifa metrics | [@abs_2016_seifa]  [download link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&2033055001_%20seifa,%20census%20collection%20districts,%20data%20cube%20only,%202006.xls&2033.0.55.001&Data%20Cubes&6EFDD4FA99C28C4ECA2574170011668A&0&2006&26.03.2008&Latest)|
+| 2011 | ABS SA1 Polygons | [@abs_2011_sa1_shape] [download link](https://www.abs.gov.au/ausstats/subscriber.nsf/log?openagent&1270055001_sa1_2011_aust_shape.zip&1270.0.55.001&Data%20Cubes&24A18E7B88E716BDCA257801000D0AF1&0&July%202011&23.12.2010&Latest)|
+| 2011 | ABS SA1 seifa metrics | [@abs_2016_seifa] [download link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&2033.0.55.001%20sa1%20indexes.xls&2033.0.55.001&Data%20Cubes&9828E2819C30D96DCA257B43000E923E&0&2011&05.04.2013&Latest)|
+| 2016 | ABS SA1 Polygons | [@abs_2016_sa1_shape]  [download link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&1270055001_sa1_2016_aust_shape.zip&1270.0.55.001&Data%20Cubes&6F308688D810CEF3CA257FED0013C62D&0&July%202016&12.07.2016&Latest)|
+| 2016 | ABS SA1 seifa metrics | [@abs_2016_seifa] [download link](https://www.abs.gov.au/ausstats/subscriber.nsf/log?openagent&2033055001%20-%20sa1%20indexes.xls&2033.0.55.001&Data%20Cubes&40A0EFDE970A1511CA25825D000F8E8D&0&2016&27.03.2018&Latest)|
+| all | VicMap suburb polygons| [@vic_suburbs] [download link](https://data.gov.au/geoserver/vic-suburb-locality-boundaries-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_af33dd8c_0534_4e18_9245_fc64440f742e&outputFormat=json)|
+| all | VicMap Local Government Area Polygons| [@vic_lga]  [download link](https://data.gov.au/geoserver/vic-local-government-areas-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_bdf92691_c6fe_42b9_a0e2_a4cd716fa811&outputFormat=json)|
  
 
 
@@ -158,11 +158,12 @@ You can also feed in lists of suburbs, as well as local government areas (lga), 
 multiple times in the same state.
 
 ```python
->>> interpolate_vic_suburb_seifa(np.array(['31-05-2010', '10-03-1988', '10-03-2025']),
-                             pd.Series(['Ascot', 'Ascot', 'Abbotsford']),
-                             'ier_score',
-                             lga = ['ballarat', 'greater bendigo', 'Yarra']
-                            )
+>>> interpolate_vic_suburb_seifa(
+  np.array(['31-05-2010', '10-03-1988', '10-03-2025']),
+  pd.Series(['Ascot', 'Ascot', 'Abbotsford']),
+  'ier_score',
+  lga = ['ballarat', 'greater bendigo', 'Yarra']
+  )
 array([1084.16837443, 1052.41809538,           nan])
 ```
 
