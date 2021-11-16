@@ -38,6 +38,10 @@ MOCKED_FILES = [
     "seifa_suburb_2016.xls",
     "mock_completed.csv",
     "aurin_schemas.json",
+    "seifa_2011_sa1.xls",
+    "seifa_2016_sa1.xls",
+    "sa1_gis_2011.geojson",
+    "sa1_gis_2016.geojson",
 ]
 
 
@@ -65,6 +69,10 @@ def mock_user_get_cached_path(filename):
 def mock_load_shapefile_data(filename):
     if filename == "seifa_2006_cd_shapefile":
         return gpd.read_file(mock_user_get_cached_path("seifa_2006.geojson"))
+    elif filename == "sa1_gis_2011":
+        return gpd.read_file(mock_user_get_cached_path("sa1_gis_2011.geojson"))
+    elif filename == "sa1_gis_2016":
+        return gpd.read_file(mock_user_get_cached_path("sa1_gis_2016.geojson"))
 
 
 def mock_preproces_vic_datasets(force_rebuild=False, save_file=False):
@@ -183,6 +191,38 @@ class TestSeifaInterpolation(unittest.TestCase):
         self.assertAlmostEqual(value, 1179.9308, places=3)
         # self.assertAlmostEqual(1013.1802726224083, value[1], places=3)
 
+    def test_interpolate_lga(self):
+        value = self.interpolate(
+            datetime.datetime(1996, 10, 31),
+            "ASCOT",
+            "ieo_score",
+            lga="Greater Bendigo",
+        )
+        self.assertAlmostEqual(value, 973.18854015, places=3)
+        # self.assertAlmostEqual(1013.1802726224083, value[1], places=3
+
+    def test_interpolate_lga_list(self):
+        value = self.interpolate(
+            [datetime.datetime(1996, 10, 31), datetime.datetime(1986, 10, 31)],
+            ["ASCOT", "kew"],
+            "ieo_score",
+            lga=["Greater Bendigo", "Boroondara"],
+        )
+        self.assertAlmostEqual(value[0], 973.18854015, places=3)
+        self.assertAlmostEqual(value[1], 1179.9308, places=3)
+
+    def test_interpolate_lga_series(self):
+        value = self.interpolate(
+            pd.Series(
+                [datetime.datetime(1996, 10, 31), datetime.datetime(1986, 10, 31)]
+            ),
+            pd.Series(["ASCOT", "kew"]),
+            "ieo_score",
+            lga=pd.Series(["Greater Bendigo", "Boroondara"]),
+        )
+        self.assertAlmostEqual(value[0], 973.18854015, places=3)
+        self.assertAlmostEqual(value[1], 1179.9308, places=3)
+
     def test_seifa_vic_cli(self):
         runner = CliRunner()
         result = runner.invoke(
@@ -190,6 +230,28 @@ class TestSeifaInterpolation(unittest.TestCase):
         )
         assert result.exit_code == 0
         assert "1005.03" in result.stdout
+
+    def test_seifa_vic_cli_lga(self):
+        runner = CliRunner()
+        result = runner.invoke(
+            main.app,
+            [
+                "seifa-vic",
+                "1996-10-31",
+                "ascot",
+                "ieo_score",
+                "--lga",
+                "Greater Bendigo",
+            ],
+        )
+        assert result.exit_code == 0
+        assert "973.19" in result.stdout
+
+    def test_get_repeated_names(self):
+        from ausdex.seifa_vic.seifa_vic import get_repeated_names
+
+        names = get_repeated_names()
+        assert "ASCOT - BALLARAT" in names
 
 
 def patch_get_cached_path_schema(file) -> Path:

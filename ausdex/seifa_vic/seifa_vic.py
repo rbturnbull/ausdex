@@ -14,7 +14,6 @@ import modin.pandas as mpd
 DOUBLE_NAMES = [
     "ASCOT - BALLARAT",
     "ASCOT - GREATER BENDIGO",
-    "ASCOT - HEPBURN",
     "BELLFIELD - BANYULE",
     "BELLFIELD - GRAMPIANS",
     "BIG HILL - GREATER BENDIGO",
@@ -253,12 +252,27 @@ seifa_vic = SeifaVic()
 
 
 def interpolate_vic_suburb_seifa(
-    year_values, suburb, metric, lga=None, fill_value="null", **kwargs
+    year_values: Union[
+        int,
+        float,
+        str,
+        np.datetime64,
+        datetime.datetime,
+        np.array,
+        pd.Series,
+        mpd.Series,
+        list,
+    ],
+    suburb: Union[str, np.array, list, pd.Series, mpd.Series],
+    metric: str,
+    lga: Union[None, str, np.array, pd.Series, mpd.Series, list] = None,
+    fill_value: str = "null",
+    **kwargs,
 ) -> np.array or float:
     """function to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data
 
     Args:
-        year_values (int, float, np.ndarray like): The year or array of year values you want interpolated.
+        year_values (int, float, str, datetime.datetime, np.datetime64, np.array-like): The year or array of year values you want interpolated.
         suburb (str): The name of the suburb that you want the data interpolated for (capitalisation doesn't matter).
         metric (List['ier_score', 'irsd_score','ieo_score','irsad_score','rirsa_score', ‘uirsa_score']): the name of the seifa_score variable, options are include `irsd_score` for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, `rirsa_score` for the rural index of relative socio economic advantage.
         fill_value (str, np.array or tuple): Specifies the values returned outside the range of the ABS census datasets. It can be "null" and return np.nan values, "extrapolate" to extraplate past the extent of the dataset or "boundary_value" to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to 'null'.
@@ -282,3 +296,12 @@ def interpolate_vic_suburb_seifa(
     if out.size == 1:
         out = out.item()
     return out
+
+
+def get_repeated_names() -> list:
+    """returns the list of suburbs repeated names with their proper LGA attached
+
+    Returns:
+        list: list of repeated names, in the format of `f'{suburb} - {lga}
+    """
+    return seifa_vic.double_names
