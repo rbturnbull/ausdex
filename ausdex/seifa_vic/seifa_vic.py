@@ -9,6 +9,46 @@ from pandas.api.types import is_datetime64_any_dtype as is_datetime
 from ..dates import date_time_to_decimal_year
 from typing import Union
 import enum
+import modin.pandas as mpd
+
+DOUBLE_NAMES = [
+    "ASCOT - BALLARAT",
+    "ASCOT - GREATER BENDIGO",
+    "ASCOT - HEPBURN",
+    "BELLFIELD - BANYULE",
+    "BELLFIELD - GRAMPIANS",
+    "BIG HILL - GREATER BENDIGO",
+    "BIG HILL - SURF COAST",
+    "FAIRY DELL - CAMPASPE",
+    "FAIRY DELL - EAST GIPPSLAND",
+    "FRAMLINGHAM - MOYNE",
+    "GOLDEN POINT - BALLARAT",
+    "GOLDEN POINT - CENTRAL GOLDFIELDS",
+    "GOLDEN POINT - MOUNT ALEXANDER",
+    "HAPPY VALLEY - GOLDEN PLAINS",
+    "HAPPY VALLEY - SWAN HILL",
+    "HILLSIDE - EAST GIPPSLAND",
+    "HILLSIDE - MELTON",
+    "KILLARA - GLENELG",
+    "KILLARA - WODONGA",
+    "MERRIJIG - EAST GIPPSLAND",
+    "MERRIJIG - MANSFIELD",
+    "MERRIJIG - WANGARATTA",
+    "MOONLIGHT FLAT - CENTRAL GOLDFIELDS",
+    "MOONLIGHT FLAT - MOUNT ALEXANDER",
+    "MYALL - BULOKE",
+    "MYALL - GANNAWARRA",
+    "NEWTOWN - GOLDEN PLAINS",
+    "NEWTOWN - GREATER GEELONG",
+    "REEDY CREEK - MITCHELL",
+    "SPRINGFIELD - MACEDON RANGES",
+    "SPRINGFIELD - SWAN HILL",
+    "STONY CREEK - HEPBURN",
+    "STONY CREEK - SOUTH GIPPSLAND",
+    "THOMSON - BAW BAW",
+    "THOMSON - GREATER GEELONG",
+]
+
 
 metrics = [
     "ier_score",
@@ -52,6 +92,7 @@ class SeifaVic:
             "rirsa_score",
             "uirsa_score",
         ]
+        self.double_names = DOUBLE_NAMES
         self.force_rebuild = force_rebuild
         self.interp_cache = {}
 
@@ -62,6 +103,13 @@ class SeifaVic:
             self.df = preprocess_victorian_datasets(force_rebuild=self.force_rebuild)
             for col in ["year"] + self.metrics:
                 self.df[col] = pd.to_numeric(self.df[col], errors="coerce")
+
+    def _fix_double_suburbs(self, suburb: str, lga: str) -> str:
+        comb = f"{suburb} - {lga}"
+        if comb in self.double_names:
+            return comb
+        else:
+            return suburb
 
     def get_suburb_data(self, suburb: str):
         """returns the dataset (self.df) filtered to a suburb
@@ -104,6 +152,7 @@ class SeifaVic:
                 df["year"].values, df[metric].values, fill_value=fill_value, **kwargs
             )
         else:
+            print(f"no suburb anmed {suburb}")
             return _make_nan
 
     def get_interpolator(
@@ -126,6 +175,7 @@ class SeifaVic:
         year_values: Union[int, float, np.array, list],
         suburb: str,
         metric: str,
+        lga: Union[str, None] = None,
         fill_value: Union[str, np.array, tuple] = "null",
         _convert_data=True,
         **kwargs,
@@ -143,20 +193,15 @@ class SeifaVic:
         Returns:
             Union[float, np.array]: The interpolated value (s) of that seifa variable at that year(s). np.array if year_value contains multiple years.
         """
-        # assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.ndarray, pd.Series))
         self._load_data()
-        # if type(year_values) in [str, datetime.datetime]:
-        #     try:
-        #         year_values = pd.to_numeric(year_values)
 
-        #     except:
-        #         try:
-        #             year_values = pd.to_datetime(year_values)
-        #             year_values = _date_time_to_decimal_year(year_values)
-        #         except ValueError:
-        #             print("string in improper format")
         if _convert_data == True:
             year_values = date_time_to_decimal_year(year_values)
+
+        if type(lga) == str:
+            suburb = self._fix_double_suburbs(
+                suburb.upper().strip(), lga.upper().strip()
+            )
 
         return self.get_interpolator(suburb, metric, fill_value=fill_value, **kwargs)(
             year_values
@@ -165,29 +210,29 @@ class SeifaVic:
     def get_seifa_interpolation_batch(
         self,
         year_values: Union[int, float, np.array, np.datetime64, list],
-        suburb: str,
+        suburb: Union[list, np.array, pd.Series, mpd.Series],
         metric: str,
+        lga: Union[list, np.array, pd.Series, mpd.Series, None] = None,
         fill_value: Union[str, np.array, tuple] = "null",
         **kwargs,
     ) -> Union[float, np.array]:
-        # assert isinstance(year_values, (int, float, list, np.float32, np.int32 ,np.ndarray, pd.Series))
+
         self._load_data()
         if type(suburb) != np.array:
             suburb = np.array(suburb, dtype=str)
         suburb = np.char.upper(suburb)
-        input_df = pd.DataFrame({"suburb": suburb, "years": year_values})
-        input_df["interpolated"] = 0.0
-        # if input_df["years"].dtype == object:
-        #     try:
-        #         input_df["years"] = pd.to_numeric(input_df["years"])
 
-        #     except:
-        #         try:
-        #             input_df["years"] = pd.to_datetime(input_df["years"])
-        #         except ValueError:
-        #             print("string in improper format")
-        # if is_datetime(input_df["years"]) == True:
-        #     input_df["years"] = input_df["years"].apply(_dt_to_dyr)
+        input_df = pd.DataFrame({"suburb": suburb, "years": year_values})
+
+        if isinstance(lga, type(None)) == False:
+            if type(lga) != np.array:
+                lga = np.array(lga, dtype=str)
+            lga = np.char.upper(lga)
+            input_df["lga"] = lga
+            input_df["suburb"] = input_df.apply(
+                lambda x: self._fix_double_suburbs(x["suburb"], x["lga"]), axis=1
+            )
+        input_df["interpolated"] = 0.0
         input_df["years"] = date_time_to_decimal_year(input_df["years"])
 
         for sub in input_df.suburb.unique():
@@ -208,7 +253,7 @@ seifa_vic = SeifaVic()
 
 
 def interpolate_vic_suburb_seifa(
-    year_values, suburb, metric, fill_value="null", **kwargs
+    year_values, suburb, metric, lga=None, fill_value="null", **kwargs
 ) -> np.array or float:
     """function to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data
 
@@ -223,11 +268,16 @@ def interpolate_vic_suburb_seifa(
     """
     if type(suburb) == str:
         out = seifa_vic.get_seifa_interpolation(
-            year_values, suburb.upper(), metric, fill_value=fill_value, **kwargs
+            year_values,
+            suburb.upper(),
+            metric,
+            lga=lga,
+            fill_value=fill_value,
+            **kwargs,
         )
     else:
         out = seifa_vic.get_seifa_interpolation_batch(
-            year_values, suburb, metric, fill_value=fill_value, **kwargs
+            year_values, suburb, metric, lga=lga, fill_value=fill_value, **kwargs
         )
     if out.size == 1:
         out = out.item()
