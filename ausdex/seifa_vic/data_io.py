@@ -73,16 +73,6 @@ def load_xls_data(dataset="seifa_suburb_2016", **kwargs):
     return pd.read_excel(local_path, **kwargs)
 
 
-# def load_csv_data(dataset="victorian_suburb_list", zipped=False, **kwargs):
-#     links = get_data_links()
-#     if zipped == True:
-#         suffix = ".csv.zip"
-#     else:
-#         suffix = ".csv"
-#     local_path = download_dataset(dataset, suffix, links)
-#     return pd.read_csv(local_path, **kwargs)
-
-
 def load_shapefile_data(dataset="seifa_2006_cd_shapefile"):
     links = get_data_links()
     local_path = download_dataset(dataset, "", links, should_unzip=True)
