@@ -35,9 +35,9 @@ available in a convenient Python package with a simple programatic and command l
 
 # Socio-Economic Indices aggregated from census data for Victoria
 
-Since the 1986 census, the Australian Bureau of statistics (ABS) has generated "Socio Economic Indices For Areas" (SEIFA) following each census. These indices are aggregations of socio economic inputs from the census forms (ie household income, rental/mortgage price, educational level) at teh "census district level" or "mesh level" (2006–current). census districts, or mesh levels, geographic areas statistically defined from the census data to be the largest scale (smallest) geographic building blocks of demographic and socioeconomic data based on population distribution. The Australian Bureau of statistics does aggregate these to other statistical "levels" of geographic area as well as suburbs and local government areas in their "Data Cube" outputs.
+Since the 1986 census, the Australian Bureau of statistics (ABS) has generated "Socio Economic Indices For Areas" (SEIFA) following each census. These indices are aggregations of socio economic inputs from the census forms (ie household income, rental/mortgage price, educational level) at the "census district level" or "mesh level" (2006–current). census districts, or mesh levels, geographic areas statistically defined from the census data to be the largest scale (smallest) geographic building blocks of demographic and socioeconomic data based on population distribution. These statistical geographies are redrawn after every census. The Australian Bureau of statistics does aggregate these to other statistical "levels" of geographic area from the Australian Statistical Geography Standard (ASGS) ([Statistical Areas levels 1 - 4](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026)) suburbs and local government areas in their "Data Cube" outputs. 
 
-However, there have been several new suburbs created during the duration of the SEIFA program. To address this, we used the current suburb areal polygons as the constant spatial areas over which we aggregate previous census datasets. For the 2011 and 2016 SEIFA datasets, we used suburb aggregated data provided by the ABS.
+However, there have been several new suburbs created during the duration of the SEIFA program, and suburb aggregated datasets are not readily available for Census data before 2006.  To address this, we used the current Victorian suburb areal polygons as the constant spatial areas over which we aggregate all previous census datasets. 
 
 ## Spatially aggregating the 1986–2006 datasets
 
@@ -52,6 +52,30 @@ For the SEIFA datasets from 1986 to 2006, we collected census district polygons 
 
 ![Figure 1](paper_images/paper_output.svg)
 <p align = "center"> Figure 1: map of three suburb outlines (black lines) for Richmond (left), Burnley (center), and Hawthorne (right) overlaying 1986 Census Districts (colored polygons with white boundaries). The census districts are colored according to the census district code. Note that these districts do not line up with subur boundaries. the green district in the lower middle section falls in parts of Richmond, and cremorne. Likewise one of the Orange and Purple Census districts spans two suburbs.</p>
+
+## Spatially aggregating the 2011 and 2016 datasets
+
+For the 2011 and 2016 datasets, we used the same outline above, but started with a different statistical geographic dataset.  We used statistical srea one (SA1) aggregated estimates of the seifa variables published as an ABS data cube, and GIS polygons of SA1 boundaries from the ASGS created for 2011 and 2016 to derive suburb aggregated datasets.
+
+## List of data sources for seifa vic submodule
+
+| year | dataset type | dataset source |
+| :---- | :------------ | :-------------- |
+| 1986 | census district polygons and metrics | wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1986`| 
+| 1991 | census district polygons and metrics | wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1991`|
+| 1996 | census district polygons and metrics | wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1996`|
+| 2001 | census district polygons and metrics | wfs id: `AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_2001`|
+| 2006 | ABS census district shapefile | [link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&1259030002_cd06avic_shape.zip&1259.0.30.002&Data%20Cubes&D62E845F621FE8ACCA25795D002439BB&0&2006&06.12.2011&Previous)|
+| 2006 | ABS census district seifa metrics | [link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&2033055001_%20seifa,%20census%20collection%20districts,%20data%20cube%20only,%202006.xls&2033.0.55.001&Data%20Cubes&6EFDD4FA99C28C4ECA2574170011668A&0&2006&26.03.2008&Latest)|
+| 2011 | ABS SA1 Polygons | [link](https://www.abs.gov.au/ausstats/subscriber.nsf/log?openagent&1270055001_sa1_2011_aust_shape.zip&1270.0.55.001&Data%20Cubes&24A18E7B88E716BDCA257801000D0AF1&0&July%202011&23.12.2010&Latest)|
+| 2011 | ABS SA1 seifa metrics | [link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&2033.0.55.001%20sa1%20indexes.xls&2033.0.55.001&Data%20Cubes&9828E2819C30D96DCA257B43000E923E&0&2011&05.04.2013&Latest)|
+| 2016 | ABS SA1 Polygons | [link](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&1270055001_sa1_2016_aust_shape.zip&1270.0.55.001&Data%20Cubes&6F308688D810CEF3CA257FED0013C62D&0&July%202016&12.07.2016&Latest)|
+| 2016 | ABS SA1 seifa metrics | [link](https://www.abs.gov.au/ausstats/subscriber.nsf/log?openagent&2033055001%20-%20sa1%20indexes.xls&2033.0.55.001&Data%20Cubes&40A0EFDE970A1511CA25825D000F8E8D&0&2016&27.03.2018&Latest)|
+| all | VicMap suburb polygons| [link](https://data.gov.au/geoserver/vic-suburb-locality-boundaries-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_af33dd8c_0534_4e18_9245_fc64440f742e&outputFormat=json)|
+| all | VicMap Local Government Area Polygons| [link](https://data.gov.au/geoserver/vic-local-government-areas-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_bdf92691_c6fe_42b9_a0e2_a4cd716fa811&outputFormat=json)|
+ 
+
+
 
 # Inflation
 
@@ -70,9 +94,77 @@ Testing coverage
 black
 typer
 
-Command Line usage
+## Command Line Usage
 
-Module usage
+Adjust single values using the command line interface:
+```
+ausdex inflation VALUE ORIGINAL_DATE
+```
+This adjust the value from the original date to the equivalent in today's dollars.
+
+For example, to adjust $26 from July 21, 1991 to today run:
+```
+$ ausdex inflation 26 "July 21 1991" 
+$ 52.35
+```
+
+To choose a different date for evaluation use the `--evaluation-date` option. e.g.
+```
+$ ausdex inflation 26 "July 21 1991"  --evaluation-date "Sep 1999"
+$ 30.27
+```
+
+### seifa_vic command line usage
+you can use the seifa-vic command to interpolate an ABS census derived Socio economic score for a given year, suburb, and SEIFA metric
+```
+$ ausdex seifa-vic 2020 footscray ier_score
+$ 861.68
+
+```
+
+## Module Usage
+
+```
+>>> import ausdex
+>>> ausdex.calc_inflation(26, "July 21 1991")
+52.35254237288135
+>>> ausdex.calc_inflation(26, "July 21 1991",evaluation_date="Sep 1999")
+30.27457627118644
+```
+The dates can be as strings or Python datetime objects.
+
+The values, the dates and the evaluation dates can be vectors by using NumPy arrays or Pandas Series. e.g.
+```
+>>> df = pd.DataFrame(data=[ [26, "July 21 1991"],[25,"Oct 1989"]], columns=["value","date"] )
+>>> df['adjusted'] = ausdex.calc_inflation(df.value, df.date)
+>>> df
+   value          date   adjusted
+0     26  July 21 1991  52.352542
+1     25      Oct 1989  54.797048
+```
+### seifa_vic submodule
+
+Like using the `calc_inflation` function, the `interpolate_vic_suburb_seifa` takes in a date argument (integer, str, datetime.datetime, np.datetime64 ) that can be in a series (list, np.array, pd.Series, modin.pandas.Series). Likewise, the suburb input can be a single string, or a series of strings (list, np.array, pd.Series, modin.pandas.Series) associated with each date value in the date input. The name of the SEIFA score is also specified. 
+
+```python
+>>> from ausdex.seifa_vic import interpolate_vic_suburb_seifa
+>>> interpolate_vic_suburb_seifa(2007, 'FOOTSCRAY', 'ier_score')
+874.1489807920245
+>>> interpolate_vic_suburb_seifa([2007, 2020], 'FOOTSCRAY', 'ier_score', fill_value='extrapolate')
+array([874.14898079, 861.68112674])
+```
+
+You can also feed in lists of suburbs, as well as local government areas (lga), to account for suburb names that are used
+multiple times in the same state.
+
+```python
+>>> interpolate_vic_suburb_seifa(np.array(['31-05-2010', '10-03-1988', '10-03-2025']),
+                             pd.Series(['Ascot', 'Ascot', 'Abbotsford']),
+                             'ier_score',
+                             lga = ['ballarat', 'greater bendigo', 'Yarra']
+                            )
+array([1084.16837443, 1052.41809538,           nan])
+```
 
 ## Notes 
 * Cite scipy for interpolation [@jones_scipy:_2001]
@@ -92,6 +184,8 @@ Module usage
 # Acknowledgements
 
 This project came about through a research collaboration with Vidal Paton-Cole and Robert Crawford. We acknowledge the support of our colleagues at the Melbourne Data Analytics Platform, Aleksandra Michalewicz and Emily Fitzgerald.
+
+This app uses the NCRIS-enabled Australian Urban Research Infrastructure Network (AURIN) Portal e-Infrastructure to access the following datasets:  AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1986, AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1991, AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_1996, and AU_Govt_ABS-UoM_AURIN_DB_3_seifa_cd_2001.
 
 # References
 
