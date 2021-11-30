@@ -1,7 +1,7 @@
 from pandas.io.pytables import SeriesFixed
 from .data_io import (
     load_gis_data,
-    load_csv_data,
+    # load_csv_data,
     load_xls_data,
     load_shapefile_data,
     load_victorian_suburbs_metadata,
@@ -10,6 +10,7 @@ from .data_io import (
 from geopandas.tools import sjoin
 import geopandas as gpd
 import pandas as pd
+import numpy as np
 
 from ..files import get_cached_path
 
@@ -70,6 +71,9 @@ def parse_duplicates_from_victorian_councils(suburbs, councils):
 
     suburbs["fixed_names"] = suburbs.apply(change_multinames, axis=1)
     suburbs.rename(columns={"fixed_names": "Site_suburb"}, inplace=True)
+    suburbs.loc[
+        suburbs.Site_suburb == "ASCOT - HEPBURN", "Site_suburb"
+    ] = "ASCOT - BALLARAT"
     return suburbs
 
 
@@ -85,8 +89,8 @@ def convert_spreadsheet_colnames(df):
     name_change = {}
     drop_cols = []
     for col in df.columns:
-        if ("Suburb (SSC) Code" in col) or ("state suburb code (ssc)" in col.lower()):
-            name_change[col] = "suburb_code"
+        if "Statistical Area Level 1  (SA1) 7-Digit" in col:
+            name_change[col] = "sa1_7d_code"
         elif "Suburb (SSC) Name" in col:
             name_change[col] = "suburb_name"
         elif "Economic Resources - Score" in col:
@@ -107,15 +111,6 @@ def convert_spreadsheet_colnames(df):
     return df.rename(columns=name_change).drop(columns=drop_cols)
 
 
-def suburb_name_fix(x):
-    if type(x) == str:
-        if "(" in x:
-            x = x.split("(")[0]
-        return x.upper().strip()
-    else:
-        return x
-
-
 def wrangle_abs_spreadsheet_datasets(dataset):
     df = load_xls_data(dataset, sheet_name="Table 1", header=[4, 5])
     df.columns = [" - ".join(i) for i in df.columns]
@@ -123,92 +118,51 @@ def wrangle_abs_spreadsheet_datasets(dataset):
     return df
 
 
-def get_2016_vic_suburb_name_fixer():
-    name_fixer_dict_2016 = {
-        # 2016
-        "Ascot (Ballarat - Vic.)": "ASCOT - BALLARAT",
-        "Ascot (Greater Bendigo - Vic.)": "ASCOT - GREATER BENDIGO",
-        "Bellfield (Banyule - Vic.)": "BELLFIELD - BANYULE",
-        "Big Hill (Greater Bendigo - Vic.)": "BIG HILL - GREATER BENDIGO",
-        "Big Hill (Surf Coast - Vic.)": "BIG HILL - SURF COAST",
-        "Fairy Dell (Campaspe - Vic.)": "FAIRY DELL - CAMPASPE",
-        "Golden Point (Ballarat - Vic.)": "GOLDEN POINT - BALLARAT",
-        "Golden Point (Mount Alexander - Vic.)": "GOLDEN POINT - MOUNT ALEXANDER",
-        "Happy Valley (Golden Plains - Vic.)": "HAPPY VALLEY - GOLDEN PLAINS",
-        "Happy Valley (Swan Hill - Vic.)": "HAPPY VALLEY - SWAN HILL",
-        "Hillside (East Gippsland - Vic.)": "HILLSIDE - EAST GIPPSLAND",
-        "Hillside (Melton - Vic.)": "HILLSIDE - MELTON",
-        "Killara (Wodonga - Vic.)": "KILLARA - WODONGA",
-        "Merrijig (Mansfield - Vic.)": "MERRIJIG - MANSFIELD",
-        "Moonlight Flat (Central Goldfields - Vic.)": "MOONLIGHT FLAT - CENTRAL GOLDFIELDS",
-        "Moonlight Flat (Mount Alexander - Vic.)": "MOONLIGHT FLAT - MOUNT ALEXANDER",
-        "Myall (Gannawarra - Vic.)": "MYALL - GANNAWARRA",
-        "Newtown (Golden Plains - Vic.)": "NEWTOWN - GOLDEN PLAINS",
-        "Newtown (Greater Geelong - Vic.)": "NEWTOWN - GREATER GEELONG",
-        "Springfield (Macedon Ranges - Vic.)": "SPRINGFIELD - MACEDON RANGES",
-        "Stony Creek (South Gippsland - Vic.)": "STONY CREEK - SOUTH GIPPSLAND",
-        "Thomson (Greater Geelong - Vic.)": "THOMSON - GREATER GEELONG",
-    }
-    return name_fixer_dict_2016
-
-
-def get_ssc_2011(code_begin, code_end):
-    ssc_2011 = load_csv_data("state_suburb_codes_2011", zipped=True)
-    ssc_2011 = ssc_2011[
-        (ssc_2011["SSC_CODE_2011"] >= code_begin)
-        & (ssc_2011["SSC_CODE_2011"] < code_end)
-    ]
-    ssc_2011 = ssc_2011.drop_duplicates(subset="SSC_CODE_2011")
-    return ssc_2011
-
-
 def get_victorian_abs_spreadsheets():
-    df_2011 = wrangle_abs_spreadsheet_datasets("seifa_suburb_2011")
-    df_2016 = wrangle_abs_spreadsheet_datasets("seifa_suburb_2016")
+    df_2011 = wrangle_abs_spreadsheet_datasets("seifa_2011_sa1")
+    df_2016 = wrangle_abs_spreadsheet_datasets("seifa_2016_sa1")
     return df_2011, df_2016
+
+
+def get_sa1_gis_dataset(dataset, sa1_code, state_code, state_number):
+    gdf = load_shapefile_data(dataset)
+    gdf = gdf[["geometry", sa1_code, state_code]]
+    gdf[state_code] = pd.to_numeric(
+        gdf[state_code], downcast="integer", errors="coerce"
+    )
+
+    gdf = gdf[gdf[state_code] == state_number]
+    gdf[sa1_code] = pd.to_numeric(gdf[sa1_code], downcast="integer", errors="coerce")
+    return gdf
 
 
 def combine_victorian_abs_spreadsheets(df_2011=None, df_2016=None):
     if (type(df_2011) == type(None)) | (type(df_2016) == type(None)):
         df_2011, df_2016 = get_victorian_abs_spreadsheets()
-    ssc_2011 = get_ssc_2011(20000, 30000)
-    df_out_l = []
+    gdf_2016 = get_sa1_gis_dataset("sa1_gis_2016", "SA1_7DIG16", "STE_CODE16", 2)
+    gdf_2011 = get_sa1_gis_dataset("sa1_gis_2011", "SA1_7DIG11", "STE_CODE11", 2)
+    df_l = []
     for year, df_rename in zip([2016, 2011], [df_2016, df_2011]):
         print(f"processing year {year}")
-        df_rename["suburb_code"] = pd.to_numeric(
-            df_rename["suburb_code"], downcast="integer", errors="coerce"
+        df_rename["sa1_7d_code"] = pd.to_numeric(
+            df_rename["sa1_7d_code"], downcast="integer", errors="coerce"
         )
-        df_rename.dropna(subset=["suburb_code"], inplace=True)
+        df_rename.dropna(subset=["sa1_7d_code"], inplace=True)
         df_rename = df_rename[
-            (df_rename["suburb_code"] < 30000) & (df_rename["suburb_code"] > 19999)
+            (df_rename["sa1_7d_code"] < 3000000) & (df_rename["sa1_7d_code"] >= 2000000)
         ]
+        scores = [x for x in df_rename.columns if "score" in x]
+        for score in scores:
+            df_rename[score] = pd.to_numeric(df_rename[score], errors="coerce")
+        df_l.append(df_rename)
+    gdf_2016 = gdf_2016.merge(
+        df_l[0], left_on="SA1_7DIG16", right_on="sa1_7d_code", how="left"
+    )
+    gdf_2011 = gdf_2011.merge(
+        df_l[1], left_on="SA1_7DIG11", right_on="sa1_7d_code", how="left"
+    )
 
-        if year == 2011:
-            df_rename = df_rename.merge(
-                ssc_2011[["SSC_CODE_2011", "SSC_NAME_2011"]],
-                left_on="suburb_code",
-                right_on="SSC_CODE_2011",
-                how="left",
-            )
-            df_rename.rename(columns={"SSC_NAME_2011": "suburb_name"}, inplace=True)
-
-        df_rename["year"] = year
-        df_out_l.append(df_rename)
-
-    df_comb = pd.concat(df_out_l)
-    name_fixer_dict_2016 = get_2016_vic_suburb_name_fixer()
-
-    def fix_2016_multisuburbs(x, cdict=name_fixer_dict_2016):
-        if x["suburb_name"] in cdict:
-            return cdict[x["suburb_name"]]
-        else:
-            return x["suburb_name"]
-
-    df_comb["suburb_name_fix"] = df_comb.apply(fix_2016_multisuburbs, axis=1)
-
-    df_comb["Site_suburb"] = df_comb.suburb_name_fix.apply(suburb_name_fix)
-
-    return df_comb
+    return gdf_2016, gdf_2011
 
 
 def combine_2006_dataset():
@@ -280,28 +234,51 @@ def w_avg(df, values, weights):
 
     d = df[values]
     w = df[weights]
-    return (d * w).sum() / w.sum()
+
+    out = (d * w).sum() / w.sum()
+    return out
 
 
 def preprocess_victorian_datasets(force_rebuild=False, save_file=True):
     preprocessed_path = get_cached_path("preprocessed_vic_seifa.csv")
     if (preprocessed_path.exists() == False) or (force_rebuild == True):
-        df_comb = combine_victorian_abs_spreadsheets()
+        print("downloading and assembling victorian data, this may take a moment")
+        gdf_2016, gdf_2011 = combine_victorian_abs_spreadsheets()
         # print('df_comb max year before combining with gdf', df_comb.year.max())
         gdf_2006 = combine_2006_dataset()
         gdf_1986, gdf_1991, gdf_1996, gdf_2001 = get_aurin_datasets_vic()
         suburbs_coordinates, _ = wrangle_victorian_gis_data()
         concat_stack = []
         for year, df in zip(
-            [1986, 1991, 1996, 2001, 2006],
-            [gdf_1986, gdf_1991, gdf_1996, gdf_2001, gdf_2006],
+            [
+                2011,
+                2016,
+                1986,
+                1991,
+                1996,
+                2001,
+                2006,
+            ],
+            [
+                gdf_2011,
+                gdf_2016,
+                gdf_1986,
+                gdf_1991,
+                gdf_1996,
+                gdf_2001,
+                gdf_2006,
+            ],
         ):
             print(f"Processing {year}")
-            df_rename = convert_cds_colnames_gdf(df)
+            if year < 2011:
+                df_rename = convert_cds_colnames_gdf(df)
+            else:
+                df_rename = df
             df_union = gpd.overlay(
                 df_rename.to_crs("EPSG:4326"), suburbs_coordinates.to_crs("EPSG:4326")
             )
             df_union["area"] = calc_area(df_union)
+            df_union["area"] = df_union["area"].fillna(0)
             col_dict = {}
             for col in [
                 "ieo_score",
@@ -319,8 +296,7 @@ def preprocess_victorian_datasets(force_rebuild=False, save_file=True):
             out = pd.DataFrame(col_dict).reset_index()
             out["year"] = year
             concat_stack.append(out)
-        combined = pd.concat(concat_stack)
-        total_df = pd.concat([combined, df_comb])
+        total_df = pd.concat(concat_stack)
         if save_file == True:
             total_df.to_csv(preprocessed_path, index=False)
         else:

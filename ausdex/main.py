@@ -3,6 +3,9 @@ from pathlib import Path
 from typing import List, Union
 from datetime import datetime
 import webbrowser
+import numpy as np
+import pandas as pd
+import modin.pandas as mpd
 
 import sys
 
@@ -78,12 +81,18 @@ def inflation(
 
 
 @app.command()
-def seifa_vic(year_value: str, suburb: str, metric: Metric, fill_value: str = "null"):
+def seifa_vic(
+    year_value: str,
+    suburb: str,
+    metric: Metric,
+    lga: Union[str, None] = None,
+    fill_value: str = "null",
+):
     """
     Interpolates suburb aggregated socioeconomic indices for a given year for a given suburb.
 
     inputs
-    year_value (int, float): Year values in decimal years or in a datetime format convertable by pandas.to_datetime function\n
+    year_value (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function\n
         suburb (str): The name of the suburb that you want the data interpolated for\n
                 metric (str): the name of the seifa_score variable, options are include\n
                 `irsd_score` for index of relative socio economic disadvantage,\n
@@ -93,6 +102,7 @@ def seifa_vic(year_value: str, suburb: str, metric: Metric, fill_value: str = "n
                 `rirsa_score` for the rural index of relative socio economic advantage\n
                 fill_value (str): can be "extrapolate" to extraplate past the extent of the dataset or "boundary_value" to use the closest datapoint, or \n
                 or an excepted response for scipy.interpolate.interp1D fill_value keyword argument\n
+    lga (str None): local government area. Only necessary for suburb names that are repeated in the state
     outputs
         interpolated score (float)
 
@@ -104,7 +114,7 @@ def seifa_vic(year_value: str, suburb: str, metric: Metric, fill_value: str = "n
     from .seifa_vic import interpolate_vic_suburb_seifa
 
     result = interpolate_vic_suburb_seifa(
-        year_value, suburb.upper(), metric.value, fill_value=fill_value
+        year_value, suburb.upper(), metric.value, lga=lga, fill_value=fill_value
     )
     typer.echo(f"{result:.2f}")
 
