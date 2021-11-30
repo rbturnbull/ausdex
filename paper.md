@@ -76,7 +76,9 @@ For the 2011 and 2016 datasets, we used the same outline above, but started with
 
 # Inflation
 
-The Consumer Price Index (CPI) is a weighted average price of a basket of goods and services for urban consumers [@ABS_CPI_Methods]. The ABS issues to the Australian CPI [every quarter](https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). The data are available from September 1948 onwards. To adjust prices for inflation, we can assume that the ratio of prices for two dates is equal to ratio of the CPIs for those dates.[@parkin_macroeconomics_2019, p. 188] This gives the formula:
+The Consumer Price Index (CPI) is a weighted average price of a basket of goods and services for urban consumers [@ABS_CPI_Methods]. The ABS issues to the Australian CPI [every quarter](https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). The data are available from September 1948 onwards. The CPI values before decimalization of the Australian currency on Febrary 14, 1966 are in understood according to the conversion rates specified in the 1965 Year Book of Australia such that £1 is equivalent to $2 [@yearbook1965, p. 810].
+
+To adjust prices for inflation, we can assume that the ratio of prices for two dates is equal to ratio of the CPIs for those dates.[@parkin_macroeconomics_2019, p. 811] This gives the formula:
 
 $$ \textrm{Price at time B} = \textrm{Price at time A} \times \frac{\textrm{CPI at time B}}{\textrm{CPI at time A}} $$
 
