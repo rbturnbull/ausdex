@@ -148,7 +148,7 @@
 <li><p><strong>year_values</strong> (<em>Union</em><em>[</em><em>int</em><em>,</em><em>float</em><em>,</em><em>np.array</em><em>, </em><em>list</em><em>]</em>) – The year or array of year values you want interpolated.</p></li>
 <li><p><strong>suburb</strong> (<em>str</em>) – The name of the suburb that you want the data interpolated for (capitalisation doesn’t matter).</p></li>
 <li><p><strong>metric</strong> (<em>str</em>) – the name of the seifa_score variable, options are include <cite>irsd_score</cite> for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, <cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, <cite>rirsa_score</cite> for the rural index of relative socio economic advantage.</p></li>
-<li><p><strong>fill_value</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>np.array</em><em>, </em><em>tuple</em><em>]</em><em>, </em><em>optional</em>) – Specifies the values returned outside the range of the ABS census datasets. It can be “null” and return np.nan values,  “extrapolate” to extraplate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to ‘null’.</p></li>
+<li><p><strong>fill_value</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>np.array</em><em>, </em><em>tuple</em><em>]</em><em>, </em><em>optional</em>) – Specifies the values returned outside the range of the ABS census datasets. It can be “null” and return np.nan values,  “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to ‘null’.</p></li>
 <li><p><strong>_convert_data</strong> (<em>bool</em>) – if true, will convert datetime values to decimal years, only false when batching</p></li>
 <li><p><strong>**kwargs</strong> (<em>dict-like</em>) – additional keyword arguments for scipy.interpolate.interp1D object.</p></li>
 </ul>
@@ -205,7 +205,7 @@
 <li><p><strong>year_values</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>str</em><em>, </em><em>datetime.datetime</em><em>, </em><em>np.datetime64</em><em>, </em><em>np.array-like</em>) – The year or array of year values you want interpolated.</p></li>
 <li><p><strong>suburb</strong> (<em>str</em>) – The name of the suburb that you want the data interpolated for (capitalisation doesn’t matter).</p></li>
 <li><p><strong>metric</strong> (<em>List</em><em>[</em><em>'ier_score'</em><em>, </em><em>'irsd_score'</em><em>,</em><em>'ieo_score'</em><em>,</em><em>'irsad_score'</em><em>,</em><em>'rirsa_score'</em><em>, </em><em>‘uirsa_score'</em><em>]</em>) – the name of the seifa_score variable, options are include <cite>irsd_score</cite> for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, <cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, <cite>rirsa_score</cite> for the rural index of relative socio economic advantage.</p></li>
-<li><p><strong>fill_value</strong> (<em>str</em><em>, </em><em>np.array</em><em> or </em><em>tuple</em>) – Specifies the values returned outside the range of the ABS census datasets. It can be “null” and return np.nan values, “extrapolate” to extraplate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to ‘null’.</p></li>
+<li><p><strong>fill_value</strong> (<em>str</em><em>, </em><em>np.array</em><em> or </em><em>tuple</em>) – Specifies the values returned outside the range of the ABS census datasets. It can be “null” and return np.nan values, “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to ‘null’.</p></li>
 <li><p><strong>**kwargs</strong> (<em>dict-like</em>) – additional keyword arguments for scipy.interpolate.interp1D object.</p></li>
 </ul>
 </dd>
@@ -422,19 +422,19 @@ If <cite>date</cite> is before the earliest reference date (i.e. 1948-09-01) the
 <dl class="py function">
 <dt class="sig sig-object py" id="ausdex.main.seifa_vic">
 <span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">seifa_vic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year_value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suburb</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lga</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'null'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.seifa_vic" title="Permalink to this definition"></a></dt>
-<dd><p>Interpolates suburb aggregated socioeconomic indices for a given year for a given suburb.</p>
+<dd><p>Interpolates suburb aggregated socio-economic indices for a given year for a given suburb.</p>
 <p>inputs
 year_value (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function</p>
 <blockquote>
 <div><p>suburb (str): The name of the suburb that you want the data interpolated for</p>
 <blockquote>
 <div><p>metric (str): the name of the seifa_score variable, options are include</p>
-<p><cite>irsd_score</cite> for index of relative socio economic disadvantage,</p>
+<p><cite>irsd_score</cite> for index of relative socio-economic disadvantage,</p>
 <p><cite>ieo_score</cite> for the index of education and opportunity,</p>
-<p><cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,</p>
-<p><cite>uirsa_score</cite> for the urban index of relative socio economic advantage,</p>
-<p><cite>rirsa_score</cite> for the rural index of relative socio economic advantage</p>
-<p>fill_value (str): can be “extrapolate” to extraplate past the extent of the dataset or “boundary_value” to use the closest datapoint, or</p>
+<p><cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio-economic advantage and disadvantage,</p>
+<p><cite>uirsa_score</cite> for the urban index of relative socio-economic advantage,</p>
+<p><cite>rirsa_score</cite> for the rural index of relative socio-economic advantage</p>
+<p>fill_value (str): can be “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or</p>
 <p>or an excepted response for scipy.interpolate.interp1D fill_value keyword argument</p>
 </div></blockquote>
 </div></blockquote>
@@ -443,6 +443,30 @@ outputs</p>
 <blockquote>
 <div><p>interpolated score (float)</p>
 </div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.main.seifa_vic_gis">
+<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">seifa_vic_gis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">pathlib.Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'null'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.seifa_vic_gis" title="Permalink to this definition"></a></dt>
+<dd><p>Interpolates aggregated socio-economic indices for a given date for all suburbs and saves them to a GIS file.</p>
+<dl>
+<dt>inputs</dt><dd><p>date (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function</p>
+<p>suburb (str): The name of the suburb that you want the data interpolated for</p>
+<blockquote>
+<div><p>metric (str): the name of the seifa_score variable, options are include</p>
+<p><cite>irsd_score</cite> for index of relative socio-economic disadvantage,</p>
+<p><cite>ieo_score</cite> for the index of education and opportunity,</p>
+<p><cite>ier_score</cite> for an index of economic resources,</p>
+<p><cite>irsad_score</cite> for index of socio-economic advantage and disadvantage,</p>
+<p><cite>uirsa_score</cite> for the urban index of relative socio-economic advantage,</p>
+<p><cite>rirsa_score</cite> for the rural index of relative socio-economic advantage</p>
+<p>fill_value (str): can be “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or</p>
+<p>or an excepted response for scipy.interpolate.interp1D fill_value keyword argument</p>
+</div></blockquote>
+</dd>
+<dt>outputs</dt><dd><p>interpolated score (float)</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
