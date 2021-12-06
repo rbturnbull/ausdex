@@ -1,18 +1,15 @@
-from pandas.io.pytables import SeriesFixed
+import pandas as pd
+from geopandas.tools import sjoin
+import geopandas as gpd
+
+from ..files import get_cached_path
 from .data_io import (
     load_gis_data,
-    # load_csv_data,
     load_xls_data,
     load_shapefile_data,
     load_victorian_suburbs_metadata,
     load_aurin_data,
 )
-from geopandas.tools import sjoin
-import geopandas as gpd
-import pandas as pd
-import numpy as np
-
-from ..files import get_cached_path
 
 
 def group_repeat_names_vic(x):
