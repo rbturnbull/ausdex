@@ -89,18 +89,18 @@ def seifa_vic(
     fill_value: str = "null",
 ):
     """
-    Interpolates suburb aggregated socioeconomic indices for a given year for a given suburb.
+    Interpolates suburb aggregated socio-economic indices for a given year for a given suburb.
 
     inputs
     year_value (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function\n
         suburb (str): The name of the suburb that you want the data interpolated for\n
                 metric (str): the name of the seifa_score variable, options are include\n
-                `irsd_score` for index of relative socio economic disadvantage,\n
+                `irsd_score` for index of relative socio-economic disadvantage,\n
                 `ieo_score` for the index of education and opportunity,\n
-                `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,\n
-                `uirsa_score` for the urban index of relative socio economic advantage,\n
-                `rirsa_score` for the rural index of relative socio economic advantage\n
-                fill_value (str): can be "extrapolate" to extraplate past the extent of the dataset or "boundary_value" to use the closest datapoint, or \n
+                `ier_score` for an index of economic resources, `irsad_score` for index of socio-economic advantage and disadvantage,\n
+                `uirsa_score` for the urban index of relative socio-economic advantage,\n
+                `rirsa_score` for the rural index of relative socio-economic advantage\n
+                fill_value (str): can be "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or \n
                 or an excepted response for scipy.interpolate.interp1D fill_value keyword argument\n
     lga (str None): local government area. Only necessary for suburb names that are repeated in the state
     outputs
@@ -117,6 +117,54 @@ def seifa_vic(
         year_value, suburb.upper(), metric.value, lga=lga, fill_value=fill_value
     )
     typer.echo(f"{result:.2f}")
+
+
+@app.command()
+def seifa_vic_gis(
+    date: str,
+    metric: Metric,
+    out: Path,
+    fill_value: str = "null",
+):
+    """
+    Interpolates aggregated socio-economic indices for a given date for all suburbs and saves them to a GIS file.
+
+    inputs
+        date (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function\n
+        suburb (str): The name of the suburb that you want the data interpolated for\n
+                metric (str): the name of the seifa_score variable, options are include\n
+                `irsd_score` for index of relative socio-economic disadvantage,\n
+                `ieo_score` for the index of education and opportunity,\n
+                `ier_score` for an index of economic resources,\n
+                `irsad_score` for index of socio-economic advantage and disadvantage,\n
+                `uirsa_score` for the urban index of relative socio-economic advantage,\n
+                `rirsa_score` for the rural index of relative socio-economic advantage\n
+                fill_value (str): can be "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or \n
+                or an excepted response for scipy.interpolate.interp1D fill_value keyword argument\n
+
+    outputs
+        interpolated score (float)
+
+    """
+    import warnings
+
+    warnings.filterwarnings("ignore")
+
+    from .seifa_vic import interpolate_vic_suburb_seifa
+    from .seifa_vic.data_wrangling import wrangle_victorian_gis_data
+
+    suburbs_df, _ = wrangle_victorian_gis_data()
+    suburbs_df[metric.value] = interpolate_vic_suburb_seifa(
+        date,
+        suburbs_df["Site_suburb"].str.upper(),
+        metric.value,
+        fill_value=fill_value,
+    )
+    # Write file
+    directory = out.parent
+    directory.mkdir(exist_ok=True, parents=True)
+    suburbs_df.to_file(out)
+    return suburbs_df
 
 
 @app.callback()
