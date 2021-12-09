@@ -140,7 +140,10 @@ class SeifaVic:
         """
         df = self.get_suburb_data(suburb).dropna(subset=[metric]).sort_values("year")
         if fill_value == "boundary_value":
-            fill_value = (df[metric].values[0], df[metric].values[-1])
+            if len(df[metric]) == 0:
+                fill_value = (np.nan, np.nan)
+            else:
+                fill_value = (df[metric].values[0], df[metric].values[-1])
         elif fill_value == "null":
             fill_value = (np.nan, np.nan)
         kwargs["bounds_error"] = False
@@ -149,7 +152,11 @@ class SeifaVic:
                 df["year"].values, df[metric].values, fill_value=fill_value, **kwargs
             )
         else:
-            print(f"no suburb named {suburb}")
+            from difflib import get_close_matches
+
+            close_matches = get_close_matches(suburb, self.df["Site_suburb"].unique())
+            print(f"No suburb named: '{suburb}'. Did you mean one of: {close_matches}")
+
             return _make_nan
 
     def get_interpolator(
