@@ -1,14 +1,17 @@
 import enum
 import datetime
 from typing import Union
-
+import geopandas as gpd
 import numpy as np
 import pandas as pd
 from scipy.interpolate import interp1d
 import modin.pandas as mpd
-
+from ..data_viz import create_choropleth_from_geodf, create_line_plot
+from ..gis_utils import clip_gdf
+import plotly
 from ..dates import date_time_to_decimal_year
-from .data_wrangling import preprocess_victorian_datasets
+from .data_wrangling import preprocess_victorian_datasets, wrangle_victorian_gis_data
+import warnings
 
 DOUBLE_NAMES = [
     "ASCOT - BALLARAT",
@@ -60,6 +63,7 @@ Metric = enum.Enum("Metric", {metric: metric for metric in metrics})
 
 
 def _make_nan(x):
+
     if type(x) != np.array:
         x = np.array(x)
     return x * np.nan
@@ -101,6 +105,11 @@ class SeifaVic:
             self.df = preprocess_victorian_datasets(force_rebuild=self.force_rebuild)
             for col in ["year"] + self.metrics:
                 self.df[col] = pd.to_numeric(self.df[col], errors="coerce")
+
+    def _load_gis(self):
+        if "suburbs" not in self.__dict__:
+            suburbs, _ = wrangle_victorian_gis_data()
+            self.suburbs = suburbs
 
     def _fix_double_suburbs(self, suburb: str, lga: str) -> str:
         comb = f"{suburb} - {lga}"
@@ -148,8 +157,23 @@ class SeifaVic:
             return interp1d(
                 df["year"].values, df[metric].values, fill_value=fill_value, **kwargs
             )
+        elif df.shape[0] == 1:
+            if fill_value in ["extrapolate", "boundary"]:
+                warnings.warn(
+                    f"suburb {suburb} only has one value for {metric}, assuming flat line"
+                )
+
+                def flat_interpolate(x):
+                    if type(x) != np.array:
+                        x = np.array(x)
+                    return x * 0 + df[metric][0].item()
+
+                return flat_interpolate
+            else:
+                return _make_nan
+
         else:
-            print(f"no suburb named {suburb}")
+            warnings.warn(f"no suburb named {suburb}, returning nans")
             return _make_nan
 
     def get_interpolator(
@@ -171,7 +195,7 @@ class SeifaVic:
         self,
         year_values: Union[int, float, np.array, list],
         suburb: str,
-        metric: str,
+        metric: Union[Metric, str],
         lga: Union[str, None] = None,
         fill_value: Union[str, np.array, tuple] = "null",
         _convert_data=True,
@@ -182,7 +206,7 @@ class SeifaVic:
         Args:
             year_values (Union[int,float,np.array, list]): The year or array of year values you want interpolated.
             suburb (str): The name of the suburb that you want the data interpolated for (capitalisation doesn't matter).
-            metric (str): the name of the seifa_score variable, options are include `irsd_score` for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, `rirsa_score` for the rural index of relative socio economic advantage.
+            metric (Union[Metric, str]): the name of the seifa_score variable, options are include `irsd_score` for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, `rirsa_score` for the rural index of relative socio economic advantage.
             fill_value (Union[str, np.array, tuple], optional): Specifies the values returned outside the range of the ABS census datasets. It can be "null" and return np.nan values,  "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to 'null'.
             _convert_data (bool): if true, will convert datetime values to decimal years, only false when batching
             **kwargs(dict-like): additional keyword arguments for scipy.interpolate.interp1D object.
@@ -191,6 +215,8 @@ class SeifaVic:
             Union[float, np.array]: The interpolated value (s) of that seifa variable at that year(s). np.array if year_value contains multiple years.
         """
         self._load_data()
+        if type(metric) == Metric:
+            metric = metric.value
 
         if _convert_data == True:
             year_values = date_time_to_decimal_year(year_values)
@@ -199,21 +225,26 @@ class SeifaVic:
             suburb = self._fix_double_suburbs(
                 suburb.upper().strip(), lga.upper().strip()
             )
-
-        return self.get_interpolator(suburb, metric, fill_value=fill_value, **kwargs)(
+        out = self.get_interpolator(suburb, metric, fill_value=fill_value, **kwargs)(
             year_values
         )
+
+        out[out < 0] = 0
+
+        return out
 
     def get_seifa_interpolation_batch(
         self,
         year_values: Union[int, float, np.array, np.datetime64, list],
         suburb: Union[list, np.array, pd.Series, mpd.Series],
-        metric: str,
+        metric: Union[Metric, str],
         lga: Union[list, np.array, pd.Series, mpd.Series, None] = None,
         fill_value: Union[str, np.array, tuple] = "null",
         **kwargs,
     ) -> Union[float, np.array]:
 
+        if type(metric) == Metric:
+            metric = metric.value
         self._load_data()
         if type(suburb) != np.array:
             suburb = np.array(suburb, dtype=str)
@@ -242,8 +273,172 @@ class SeifaVic:
                 fill_value=fill_value,
                 **kwargs,
             )
-
         return input_df["interpolated"].values
+
+    def get_gis(
+        self,
+        date: str,
+        metric: Union[Metric, str],
+        fill_value: str = "null",
+    ) -> gpd.GeoDataFrame:
+        """This method interpolates the metric specified to the date specified for all years, and returns a geopandas vector dataset with the metric values as a field
+
+        Args:
+            date (str): datetime that can be a year, or any datettime parseable string to interpolate map data.
+            metric (Metric, or List['ier_score', 'irsd_score','ieo_score','irsad_score','rirsa_score', ‘uirsa_score']): the name of the seifa_score variable, options are include `irsd_score` for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, `rirsa_score` for the rural index of relative socio economic advantage.
+            fill_value (str, optional): (Union[str, np.array, tuple], optional): Specifies the values returned outside the range of the ABS census datasets. It can be "null" and return np.nan values,  "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to 'null'.
+
+        Returns:
+            gpd.GeoDataFrame: geodataframe of victorian suburbs with seifa score values for "metric" applied to each suburb as a column with the same name of the metric.
+        """
+
+        self._load_gis()
+        if type(metric) == Metric:
+            metric = metric.value
+
+        suburbs_df = self.suburbs.copy()
+        suburbs_df[metric] = self.get_seifa_interpolation_batch(
+            date,
+            suburbs_df["Site_suburb"].str.upper(),
+            metric,
+            fill_value=fill_value,
+        )
+        return suburbs_df
+
+    def get_plotly_map(
+        self,
+        date: str,
+        metric: Union[Metric, str],
+        fill_value: str = "null",
+        simplify: float = 0,
+        min_x: Union[None, float] = None,
+        min_y: Union[None, float] = None,
+        max_x: Union[None, float] = None,
+        max_y: Union[None, float] = None,
+        clip_mask: Union[None, gpd.GeoDataFrame, gpd.GeoSeries] = None,
+        **kwargs,
+    ) -> plotly.graph_objects.Figure:
+        """This method creates an interactive plotly choropleth map for each suburb for a give seifa score and date.
+
+
+        The dataset can be simplified using the simplify command in map units, and clipped using min_x, min_y, max_x, and max_y bounds
+        as well as a clipping polygons in clip mask
+
+        Args:
+            date (str): datetime that can be a year, or any datettime parseable string to interpolate map data
+            metric (Metric, or List['ier_score', 'irsd_score','ieo_score','irsad_score','rirsa_score', ‘uirsa_score']): the name of the seifa_score variable, options are include `irsd_score` for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, `rirsa_score` for the rural index of relative socio economic advantage.
+            fill_value (Union[str, np.array, tuple], optional): Specifies the values returned outside the range of the ABS census datasets. It can be "null" and return np.nan values,  "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to 'null'.
+            simplify (float, optional): map value to simplify polygons too according to gpd.GeoSeries.simplify method. if 0, does not simplify Defaults to 0.001.
+            min_x (Union[None,float], optional):  minimum x coordinate boundary of intersecting polygons to plot. Defaults to None.
+            min_y (Union[None,float], optional): maximum x coordinate boundary of intersecting polygons to plot. Defaults to None.
+            max_x (Union[None,float], optional): minimum y coordinate boundary of intersecting polygons to plot Defaults to None.
+            max_y (Union[None,float], optional): maximum y coordinate boundary of intersecting polygons to plot. Defaults to None.
+            clip_mask (Union[None, gpd.GeoDataFrame, gpd.GeoSeries], optional): mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.
+            kwargs (dict, option): optional additional parameters to feed into plotly.express.choropleth function.
+
+        Returns:
+            plotly.graph_objects.Figure: choropleth map of victorian suburbs with seifa_scores for each suburb
+        """
+        gdf = self.get_gis(date, metric, fill_value)
+        return make_suburb_map(
+            gdf,
+            metric,
+            date,
+            simplify=simplify,
+            min_x=min_x,
+            max_x=max_x,
+            min_y=min_y,
+            max_y=max_y,
+            clip_mask=clip_mask,
+            **kwargs,
+        )
+
+    def create_timeseries_chart(
+        self,
+        suburbs: Union[list, np.array, pd.Series, str],
+        metric: Union[Metric, str],
+        **kwargs,
+    ) -> plotly.graph_objects.Figure:
+        """Creates a time series of seifa metrics for a given suburb or set of suburbs as a plotly line graph
+
+        Args:
+            suburbs (Union[list, np.array, pd.Series, str]): list of suburbs to include in the time series
+            metric (Union[Metric, str]): metric to plot along the time series
+            kwargs (dict, optional): optional arguments to pass into plotly.express.lineplot
+
+        Returns:
+            plotly.graph_objects.Figure: plotly line plot of metric time series for a give set of suburbs
+        """
+        if type(metric) == Metric:
+            metric = metric.value
+        if type(suburbs) == str:
+            suburbs = [suburbs.upper()]
+        else:
+            suburbs = [x.upper() for x in list(suburbs)]
+        self._load_data()
+        df_plot = self.df[self.df.Site_suburb.apply(lambda x: x in suburbs)].copy()
+        df_plot["year"] = pd.to_datetime(df_plot["year"].apply(lambda x: f"01-01-{x}"))
+
+        fig = create_line_plot(
+            df_plot.sort_values("year"),
+            x_col="year",
+            y_col=metric,
+            color_col="Site_suburb",
+            **kwargs,
+        )
+        return fig
+
+
+def make_suburb_map(
+    gdf: gpd.GeoDataFrame,
+    metric: Union[Metric, str],
+    date: str = "",
+    simplify: float = 0,
+    min_x: Union[None, float] = None,
+    min_y: Union[None, float] = None,
+    max_x: Union[None, float] = None,
+    max_y: Union[None, float] = None,
+    clip_mask: Union[None, gpd.GeoDataFrame, gpd.GeoSeries] = None,
+    **kwargs,
+) -> plotly.graph_objects.Figure:
+    """This function will take in a gdf and create a plotly choropleth map with the column defined by the metric argument.
+
+    The dataset can be simplified using the simplify command in map units, and clipped using min_x, min_y, max_x, and max_y bounds
+    as well as a clipping polygons in clip mask
+
+    Args:
+        gdf (gpd.GeoDataFrame): suburbs geodataframe with attached seifa scores
+        metric (Metric, List['ier_score', 'irsd_score','ieo_score','irsad_score','rirsa_score', ‘uirsa_score']): the seifa score metric used as the color scale in the choropleth map. However it could be any column in gdf.
+        date (str, optional): Date the scores were interpolated too, optional as only appears in the title if not "". Defaults to ''.
+        simplify (float, optional): map scale value to simplify polygons too according to gpd.GeoSeries.simplify method. if 0, does not simplify Defaults to 0.
+        min_x (Union[None,float], optional):  minimum x coordinate boundary of intersecting polygons to plot. Defaults to None.
+        min_y (Union[None,float], optional): maximum x coordinate boundary of intersecting polygons to plot. Defaults to None.
+        max_x (Union[None,float], optional): minimum y coordinate boundary of intersecting polygons to plot Defaults to None.
+        max_y (Union[None,float], optional): maximum y coordinate boundary of intersecting polygons to plot. Defaults to None.
+        clip_mask (Union[None, gpd.GeoDataFrame, gpd.GeoSeries], optional): mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.
+        kwargs (dict, option): optional additional parameters to feed into plotly.express.choropleth function.
+
+    Returns:
+        plotly.graph_objects.Figure: choropleth map of victorian suburbs with seifa_scores for each suburb
+    """
+    if type(metric) == Metric:
+        metric = metric.value
+    if date != "":
+        title = f"map for date: {date} and metric: {metric}"
+    clips = [x != None for x in [min_x, min_y, max_x, max_y, clip_mask]]
+
+    if any(clips):
+        gdf = clip_gdf(gdf, min_x, max_x, min_y, max_y, clip_mask)
+
+    fig = create_choropleth_from_geodf(
+        gdf,
+        metric,
+        title=title,
+        hover_data=["Site_suburb", metric],
+        simplify=simplify,
+        **kwargs,
+    )
+    return fig
 
 
 seifa_vic = SeifaVic()
@@ -262,7 +457,7 @@ def interpolate_vic_suburb_seifa(
         list,
     ],
     suburb: Union[str, np.array, list, pd.Series, mpd.Series],
-    metric: str,
+    metric: Union[Metric, str],
     lga: Union[None, str, np.array, pd.Series, mpd.Series, list] = None,
     fill_value: str = "null",
     **kwargs,
@@ -278,6 +473,8 @@ def interpolate_vic_suburb_seifa(
     Returns:
         Union[float, np.array]: The interpolated value (s) of that seifa variable at that year(s). np.array if year_value contains multiple years.
     """
+    if type(metric) == Metric:
+        metric = metric.value
     if type(suburb) == str:
         out = seifa_vic.get_seifa_interpolation(
             year_values,
@@ -303,3 +500,87 @@ def get_repeated_names() -> list:
         list: list of repeated names, in the format of `f'{suburb} - {lga}
     """
     return seifa_vic.double_names
+
+
+def get_seifa_gis(
+    date: str,
+    metric: Union[Metric, str],
+    fill_value: str = "null",
+) -> gpd.GeoDataFrame:
+    """This function interpolates the metric specified to the date specified for all years, and returns a geopandas vector dataset with the metric values as a field
+
+    Args:
+        date (str): datetime that can be a year, or any datettime parseable string to interpolate map data.
+        metric (Metric, or List['ier_score', 'irsd_score','ieo_score','irsad_score','rirsa_score', ‘uirsa_score']): the name of the seifa_score variable, options are include `irsd_score` for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, `rirsa_score` for the rural index of relative socio economic advantage.
+        fill_value (str, optional): (Union[str, np.array, tuple], optional): Specifies the values returned outside the range of the ABS census datasets. It can be "null" and return np.nan values,  "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to 'null'.
+
+    Returns:
+        gpd.GeoDataFrame: geodataframe of victorian suburbs with seifa score values for "metric" applied to each suburb as a column with the same name of the metric.
+    """
+
+    return seifa_vic.get_gis(date, metric, fill_value)
+
+
+def get_seifa_map(
+    date: str,
+    metric: Union[Metric, str],
+    fill_value: str = "null",
+    simplify: float = 0.001,
+    min_x: Union[None, float] = None,
+    min_y: Union[None, float] = None,
+    max_x: Union[None, float] = None,
+    max_y: Union[None, float] = None,
+    clip_mask: Union[None, gpd.GeoDataFrame, gpd.GeoSeries] = None,
+    **kwargs,
+) -> plotly.graph_objects.Figure:
+    """This function creates an interactive plotly choropleth map for each suburb for a give seifa score and date.
+
+
+    The dataset can be simplified using the simplify command in map units, and clipped using min_x, min_y, max_x, and max_y bounds
+    as well as a clipping polygons in clip mask
+
+    Args:
+        date (str): datetime that can be a year, or any datettime parseable string to interpolate map data.
+        metric (Metric, or List['ier_score', 'irsd_score','ieo_score','irsad_score','rirsa_score', ‘uirsa_score']): the name of the seifa_score variable, options are include `irsd_score` for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, `rirsa_score` for the rural index of relative socio economic advantage.
+        fill_value (Union[str, np.array, tuple], optional): Specifies the values returned outside the range of the ABS census datasets. It can be "null" and return np.nan values,  "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to 'null'.
+        simplify (float, optional): map value to simplify polygons too according to gpd.GeoSeries.simplify method. if 0, does not simplify Defaults to 0.001.
+        min_x (Union[None,float], optional):  minimum x coordinate boundary of intersecting polygons to plot. Defaults to None.
+        min_y (Union[None,float], optional): maximum x coordinate boundary of intersecting polygons to plot. Defaults to None.
+        max_x (Union[None,float], optional): minimum y coordinate boundary of intersecting polygons to plot Defaults to None.
+        max_y (Union[None,float], optional): maximum y coordinate boundary of intersecting polygons to plot. Defaults to None.
+        clip_mask (Union[None, gpd.GeoDataFrame, gpd.GeoSeries], optional): mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.
+        kwargs (dict, optional): optional additional parameters to feed into plotly.express.choropleth function.
+
+    Returns:
+        plotly.graph_objects.Figure: choropleth map of victorian suburbs with seifa_scores for each suburb
+    """
+
+    return seifa_vic.get_plotly_map(
+        date,
+        metric,
+        fill_value=fill_value,
+        simplify=simplify,
+        min_x=min_x,
+        max_x=max_x,
+        min_y=min_y,
+        max_y=max_y,
+        clip_mask=clip_mask,
+        **kwargs,
+    )
+
+
+def create_timeseries_chart(
+    suburbs: Union[list, np.array, pd.Series, str], metric: Union[Metric, str], **kwargs
+) -> plotly.graph_objects.Figure:
+    """Creates a time series of seifa metrics for a given suburb or set of suburbs as a plotly line graph
+
+    Args:
+        suburbs (Union[list, np.array, pd.Series, str]): list of suburbs to include in the time series
+        metric (Union[Metric, str]): metric to plot along the time series
+        kwargs (dict, optional): optional arguments to pass into plotly.express.lineplot
+
+    Returns:
+        plotly.graph_objects.Figure: plotly line plot of metric time series for a give set of suburbs
+    """
+    fig = seifa_vic.create_timeseries_chart(suburbs, metric, **kwargs)
+    return fig

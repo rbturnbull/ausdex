@@ -23,6 +23,7 @@ scipy = "^1.7.1"
 OWSLib = "^0.25.0"
 pygeos = "^0.10.2"
 importlib-metadata = "<4.3"
+plotly = "^5.4.0"
 
 [tool.poetry.dev-dependencies]
 ipykernel = "^6.2.0"
