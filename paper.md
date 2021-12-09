@@ -34,9 +34,20 @@ available in a convenient Python package with a simple programatic and command l
 
 
 # Socio-Economic Indices aggregated from census data for Victoria
-Since the 1986 census, the Australian Bureau of statistics (ABS) has generated "Socio-Economic Indices For Areas" (SEIFA) following each census[@seifa2016]. These indices are aggregations of socio-economic inputs from the census forms (ie household income, rental/mortgage price, educational level) at the "census district level" or "mesh level" (2006–current). census districts, or mesh levels, geographic areas statistically defined from the census data to be the largest scale (smallest) geographic building blocks of demographic and socio-economic data based on population distribution. These statistical geographies are redrawn after every census. The Australian Bureau of statistics does aggregate these to other statistical "levels" of geographic area from the Australian Statistical Geography Standard (ASGS) ([Statistical Areas Levels 1–4](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026)) suburbs and local government areas in their "Data Cube" outputs. 
+Since the 1986 census, the ABS has generated "Socio-Economic Indexes For Areas" (SEIFA) following each census[@seifa2016]. These indices are aggregations of socio-economic inputs from the census forms (ie household income, rental/mortgage price, educational level) at the "census district level" or "mesh level" (2006–current). census districts, or mesh levels, geographic areas statistically defined from the census data to be the largest scale (smallest) geographic building blocks of demographic and socio-economic data based on population distribution. These statistical geographies are redrawn after every census. The Australian Bureau of Statistics does aggregate these to other statistical "levels" of geographic area from the Australian Statistical Geography Standard (ASGS) ([Statistical Areas Levels 1–4](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026)) suburbs and local government areas in their "Data Cube" outputs. 
 
-However, there have been several new suburbs created during the duration of the SEIFA program, and suburb aggregated datasets are not readily available for Census data before 2006.  To address this, we used the current Victorian suburb areal polygons [@vic_suburbs] as the constant spatial areas over which we aggregate all previous census datasets. In order to overcome suburb names that are repeated. The suburb polygons were also overlain with local government areas[@vic_lga] to make duplicate suburbs distinct.
+However, there have been several new suburbs created during the duration of the SEIFA program, and suburb aggregated datasets are not readily available for census data before 2006.  To address this, we used the current Victorian suburb areal polygons [@vic_suburbs] as the constant spatial areas over which we aggregate all previous census datasets. In order to overcome suburb names that are repeated. The suburb polygons were also overlain with local government areas [@vic_lga] to make duplicate suburbs distinct.
+
+## List of SEIFA Indices
+
+| Index | Name | Years Published |
+| :---- | :------------ | :-------------- |
+| IEO | Index of Education and Occupation | 1986, 1991, 1996, 2001, 2006, 2011, 2016 |
+| IER | Index of Economic Resources | 1986, 1991, 1996, 2001, 2006, 2011, 2016 |
+| IRSD | Index of Relative Socio-economic Disadvantage | 2006, 2011, 2016 |
+| IRSAD | Index of Relative Socio-economic Advantage and Disadvantage | 2001, 2006, 2011, 2016 |
+| UIRSA | Urban Index of Relative Socio-economic Advantage | 1991, 1996 |
+| RIRSA | Rural Index of Relative Socio-economic Advantage | 1991, 1996 |
 
 ## Spatially aggregating the 1986–2006 datasets
 
@@ -45,7 +56,7 @@ For the SEIFA datasets from 1986 to 2006, we collected census district polygons 
 1. Suburbs and census districts were both reprojected to [EPSG:4326](https://spatialreference.org/ref/epsg/wgs-84/).
 2. The polygons were unioned together, so the resulting polygon layer had an individual polygon for each overlapping census district and suburb (Figure 1).
 
-3. The merged polygons were reprojected to a utm projected coordinate system [EPSG:32756](https://epsg.io/32756). Note that this utm coordinate system does not overlay the state of victoria perfectly, but we are assuming that locally the measured areas are relatively accurate to each other.
+3. The merged polygons were reprojected to a UTM projected coordinate system [EPSG:32756](https://epsg.io/32756). Note that this UTM coordinate system does not overlay the state of Victoria perfectly, but we are assuming that locally the measured areas are relatively accurate to each other.
 
 4. The SEIFA scores were aggregated for all of the census district parts within each suburb using a weighted average, with the polygon area as the weight.
 
@@ -54,7 +65,7 @@ For the SEIFA datasets from 1986 to 2006, we collected census district polygons 
 
 ## Spatially aggregating the 2011 and 2016 datasets
 
-For the 2011 and 2016 datasets, we used the same outline above, but started with a different statistical geographic dataset. We used statistical srea one (SA1) aggregated estimates of the seifa variables published as an ABS data cube, and GIS polygons of SA1 boundaries from the ASGS created for 2011 and 2016 to derive suburb aggregated datasets.
+For the 2011 and 2016 datasets, we used the same outline above, but started with a different statistical geographic dataset. We used statistical srea one (SA1) aggregated estimates of the SEIFA variables published as an ABS data cube, and GIS polygons of SA1 boundaries from the ASGS created for 2011 and 2016 to derive suburb aggregated datasets.
 
 ## List of data sources for seifa vic submodule
 
