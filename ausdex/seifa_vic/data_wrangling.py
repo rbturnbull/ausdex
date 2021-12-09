@@ -208,7 +208,7 @@ def get_aurin_datasets_vic():
 def convert_cds_colnames_gdf(df):
     name_change = {}
     drop_cols = []
-    keep_cols = ["geometry", "ier_score", "ieo_score", "irsd_score"]
+    keep_cols = ["geometry", "ier_score", "ieo_score", "irsd_score", "irsad_score"]
     for col in list(df.columns):
         # print(col)
         if "index_of_economic_resources" in col:
@@ -216,15 +216,16 @@ def convert_cds_colnames_gdf(df):
 
         elif "index_of_education_and_occupation" in col:
             name_change[col] = "ieo_score"
-        elif "index_of_relative_socio_economic_disadvantage" in col:
-            name_change[col] = "irsd_score"
+
         elif "rural_index_of_relative_socio_economic_advantag" in col:
             name_change[col] = "rirsa_score"
         elif "urban_index_of_relative_socio_economic_advantag" in col:
             name_change[col] = "uirsa_score"
+        elif "index_of_relative_socio_economic_disadvantage" in col:
+            name_change[col] = "irsd_score"
         elif "_population" in col:
             name_change[col] = "population"
-        elif "isad_score" in col:
+        elif "isad" in col:
             name_change[col] = "irsad_score"
         elif col not in keep_cols:
             drop_cols.append(col)
