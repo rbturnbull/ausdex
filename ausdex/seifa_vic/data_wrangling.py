@@ -181,7 +181,16 @@ def combine_2006_dataset():
         (seifa_2006["cd_code"] > 2000000) & (seifa_2006["cd_code"] < 3000000)
     ]
     CD_2006 = CD_2006.merge(
-        seifa_2006[["cd_code", "ier_score", "ieo_score", "population"]],
+        seifa_2006[
+            [
+                "cd_code",
+                "ier_score",
+                "ieo_score",
+                "irsad_score",
+                "irsd_score",
+                "population",
+            ]
+        ],
         left_on="CD_CODE06",
         right_on="cd_code",
         how="left",
@@ -199,7 +208,7 @@ def get_aurin_datasets_vic():
 def convert_cds_colnames_gdf(df):
     name_change = {}
     drop_cols = []
-    keep_cols = ["geometry", "ier_score", "ieo_score"]
+    keep_cols = ["geometry", "ier_score", "ieo_score", "irsd_score"]
     for col in list(df.columns):
         # print(col)
         if "index_of_economic_resources" in col:
