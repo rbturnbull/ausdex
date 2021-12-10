@@ -152,20 +152,21 @@ class SeifaVic:
             scipy.interpolate.interp1d: interpolator object for the suburb and metric
         """
         df = self.get_suburb_data(suburb).dropna(subset=[metric]).sort_values("year")
+
         if len(df) == 0:
             close_matches = get_close_matches(suburb, self.df["Site_suburb"].unique())
             if guess_misspelt and close_matches:
                 warnings.warn(f"No suburb named '{suburb}'. Using '{close_matches[0]}'")
-
                 df = (
                     self.get_suburb_data(close_matches[0])
                     .dropna(subset=[metric])
                     .sort_values("year")
                 )
             else:
-                warnings.warn(
-                    f"No suburb named '{suburb}'. Returning NaN. Did you mean one of '{close_matches}'"
-                )
+                message = f"No suburb named '{suburb}'. Returning NaN."
+                if close_matches:
+                    message += f" Did you mean one of {close_matches}?"
+                warnings.warn(message)
                 return _make_nan
 
         if fill_value == "boundary_value":
@@ -510,26 +511,22 @@ def interpolate_vic_suburb_seifa(
     """
     if type(metric) == Metric:
         metric = metric.value
-    if type(suburb) == str:
-        out = seifa_vic.get_seifa_interpolation(
-            year_values,
-            suburb.upper(),
-            metric,
-            lga=lga,
-            fill_value=fill_value,
-            guess_misspelt=guess_misspelt,
-            **kwargs,
-        )
+    if isinstance(suburb, str):
+        suburb = suburb.upper()
+        interpolate = seifa_vic.get_seifa_interpolation
     else:
-        out = seifa_vic.get_seifa_interpolation_batch(
-            year_values,
-            suburb,
-            metric,
-            lga=lga,
-            fill_value=fill_value,
-            guess_misspelt=guess_misspelt,
-            **kwargs,
-        )
+        interpolate = seifa_vic.get_seifa_interpolation_batch
+
+    out = interpolate(
+        year_values,
+        suburb,
+        metric,
+        lga=lga,
+        fill_value=fill_value,
+        guess_misspelt=guess_misspelt,
+        **kwargs,
+    )
+
     if out.size == 1:
         out = out.item()
     return out

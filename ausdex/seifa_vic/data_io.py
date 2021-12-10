@@ -88,13 +88,16 @@ def _get_getpass(msg):
     return getpass(msg)
 
 
+def get_aurin_creds_path():
+    return get_cached_path("aurin_creds.json")
+
+
 def make_aurin_config():
-    username = _get_input("please enter your aurin username: ")
-    password = _get_getpass("please enter your aurin password: ")
+    username = _get_input("Please enter your AURIN username: ")
+    password = _get_getpass("Please enter your AURIN password: ")
     out = {"username": username, "password": password}
 
-    path = get_cached_path("aurin_creds.json")
-
+    path = get_aurin_creds_path()
     with open(path, "w") as file:
         json.dump(out, file)
 
@@ -145,7 +148,7 @@ def load_aurin_config():
         return dict(username=username, password=password)
 
     else:
-        path = get_cached_path("aurin_creds.json")
+        path = get_aurin_creds_path()
         if path.exists() == False:
             make_aurin_config()
         with open(path, "r") as file:

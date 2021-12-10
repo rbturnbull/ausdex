@@ -170,6 +170,16 @@ class TestSeifaInterpolation(unittest.TestCase):
         self.assertTrue(np.isnan(value[0]))
         self.assertAlmostEqual(value[1], 955.5048835511469, places=3)
 
+    def test_suburb_guess_misspelt(self):
+        value = self.interpolate(
+            [1980, 1987],
+            "ABBOTSFORDXX",
+            "ier_score",
+            guess_misspelt=True,
+        )
+        self.assertTrue(np.isnan(value[0]))
+        self.assertAlmostEqual(value[1], 955.5048835511469, places=3)
+
     def test_interpolation_negative(self):
         value = self.interpolate(
             2200, "ASCOT - BALLARAT", Metric["ier_score"], fill_value="extrapolate"
@@ -198,7 +208,7 @@ class TestSeifaInterpolation(unittest.TestCase):
             self.assertEqual(36.4, out)
             assert len(w) == 1
             assert (
-                "suburb TEST_SUB1 only has one value for ier_score, assuming flat line"
+                "Suburb 'TEST_SUB1' only has one value for ier_score, assuming flat line"
                 in str(w[-1].message)
             )
 
@@ -213,7 +223,7 @@ class TestSeifaInterpolation(unittest.TestCase):
             # print(value)
             self.assertTrue(np.isnan(value))
             assert len(w) == 1
-            assert "no suburb named FAKE, returning nans" in str(w[-1].message)
+            assert "No suburb named 'FAKE'. Returning NaN." in str(w[-1].message)
 
     def test_interpolation_extrapolate(self):
         value = self.interpolate(
@@ -340,8 +350,8 @@ class TestSeifaInterpolation(unittest.TestCase):
 def patch_get_cached_path_schema(file) -> Path:
     new_filename = "schema_" + file
     local_path = get_cached_path(new_filename)
-    if local_path.exists() == True:
-        local_path.unlink()
+    # if local_path.exists() == True:
+    #     local_path.unlink()
     return local_path
 
 
@@ -376,9 +386,15 @@ def patch_open_geopandas_2(filename):
     return filename
 
 
+@patch(
+    "ausdex.seifa_vic.data_io.get_aurin_creds_path",
+    lambda: Path(__file__).parent / "testdata/aurin_creds_dummy.json",
+)
 class TestDataIO(unittest.TestCase):
     def setUp(self) -> None:
-        aurin_creds = get_cached_path("aurin_creds.json")
+        from ausdex.seifa_vic.data_io import get_aurin_creds_path
+
+        aurin_creds = get_aurin_creds_path()
         if aurin_creds.exists() == True:
             aurin_creds.unlink()
         return super().setUp()
@@ -387,8 +403,10 @@ class TestDataIO(unittest.TestCase):
     @patch("ausdex.seifa_vic.data_io._get_getpass", lambda msg: "test_password")
     @patch("ausdex.seifa_vic.data_io.get_config_ini", lambda: Path("does not exist"))
     def test_make_aurin_config_as_json(self):
+        from ausdex.seifa_vic.data_io import get_aurin_creds_path
+
         load_aurin_config()
-        with open(get_cached_path("aurin_creds.json"), "r") as file:
+        with open(get_aurin_creds_path(), "r") as file:
             creds = json.load(file)
         self.assertEqual(creds["username"], "test_username")
         self.assertEqual(creds["password"], "test_password")
