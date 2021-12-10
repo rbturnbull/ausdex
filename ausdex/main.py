@@ -305,7 +305,7 @@ def seifa_vic_assemble():
 
     seifa_vic = SeifaVic(True)
     seifa_vic._load_data()
-    typer.echo("data loaded")
+    typer.echo("Data loaded")
 
 
 @app.callback()

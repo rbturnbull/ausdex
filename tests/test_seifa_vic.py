@@ -158,7 +158,7 @@ class TestSeifaVicSetup(unittest.TestCase):
         result = runner.invoke(main.app, ["seifa-vic-assemble"])
 
         assert result.exit_code == 0
-        assert "data loaded" in result.stdout
+        assert "Data loaded" in result.stdout
 
 
 @patch(
@@ -362,9 +362,9 @@ class TestSeifaInterpolation(unittest.TestCase):
 
 def patch_get_cached_path_schema(file) -> Path:
     new_filename = "schema_" + file
-    local_path = get_cached_path(new_filename)
-    # if local_path.exists() == True:
-    #     local_path.unlink()
+    local_path = Path(__file__).parent / "testdata" / "tmp" / new_filename
+    if local_path.exists() == True:
+        local_path.unlink()
     return local_path
 
 
@@ -401,7 +401,7 @@ def patch_open_geopandas_2(filename):
 
 @patch(
     "ausdex.seifa_vic.data_io.get_aurin_creds_path",
-    lambda: Path(__file__).parent / "testdata/aurin_creds_dummy.json",
+    lambda: Path(__file__).parent / "testdata/tmp/aurin_creds_dummy.json",
 )
 class TestDataIO(unittest.TestCase):
     def setUp(self) -> None:
@@ -626,7 +626,7 @@ class TestSeifaGisViz(unittest.TestCase):
 
         gdf_clip_one = clip_gdf(gdf, min_y=-37.5)
 
-        self.assertEquals(gdf_clip_one.shape[0], 1)
+        self.assertEqual(gdf_clip_one.shape[0], 1)
         self.assertIn("ASCOT", gdf_clip_one.Site_suburb[0])
         from shapely.geometry import Polygon
 
@@ -644,6 +644,6 @@ class TestSeifaGisViz(unittest.TestCase):
 
         gdf_clip_two = clip_gdf(gdf, clip_mask=clip_gs)
         print(gdf_clip_two)
-        self.assertEquals(gdf_clip_two.shape[0], 1)
+        self.assertEqual(gdf_clip_two.shape[0], 1)
         self.assertIn("ier_score", gdf_clip_two.columns)
         self.assertIn("ALFREDTON", gdf_clip_two.Site_suburb.item())

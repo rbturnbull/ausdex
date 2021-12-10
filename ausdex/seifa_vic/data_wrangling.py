@@ -249,7 +249,7 @@ def w_avg(df, values, weights):
 def preprocess_victorian_datasets(force_rebuild=False, save_file=True):
     preprocessed_path = get_cached_path("preprocessed_vic_seifa.csv")
     if (preprocessed_path.exists() == False) or (force_rebuild == True):
-        print("downloading and assembling victorian data, this may take a moment")
+        print("Downloading and assembling Victorian data. This may take a moment.")
         gdf_2016, gdf_2011 = combine_victorian_abs_spreadsheets()
         # print('df_comb max year before combining with gdf', df_comb.year.max())
         gdf_2006 = combine_2006_dataset()
