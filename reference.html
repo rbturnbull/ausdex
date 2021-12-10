@@ -528,6 +528,50 @@ If <cite>date</cite> is before the earliest reference date (i.e. 1948-09-01) the
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="ausdex.inflation.CPI.plot_cpi_timeseries">
+<span class="sig-name descname"><span class="pre">plot_cpi_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.inflation.CPI.plot_cpi_timeseries" title="Permalink to this definition"></a></dt>
+<dd><p>method to plot the Australian CPI vs time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.</p></li>
+<li><p><strong>end_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.</p></li>
+<li><p><strong>kwargs</strong> – (Optional(dict)): additional parameters to feed into plotly.express.line function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>plot of cpi vs time</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ausdex.inflation.CPI.plot_inflation_timeseries">
+<span class="sig-name descname"><span class="pre">plot_inflation_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compare_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.inflation.CPI.plot_inflation_timeseries" title="Permalink to this definition"></a></dt>
+<dd><p>method plot a time series of dollar values attached to a particular date’s dollar value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>compare_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>]</em>) – Date to set relative value of the dollars too.</p></li>
+<li><p><strong>start_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.</p></li>
+<li><p><strong>end_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.</p></li>
+<li><p><strong>value</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>, </em><em>optional</em>) – Value you in <cite>compare_date</cite> dollars to plot on the time series. Defaults to 1.</p></li>
+<li><p><strong>kwargs</strong> – (Optional(dict)): additional parameters to feed into plotly.express.line function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>line graph of inflated dollar values vs time</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -547,6 +591,50 @@ If <cite>date</cite> is before the earliest reference date (i.e. 1948-09-01) the
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>Union[float, np.ndarray]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.inflation.plot_cpi_timeseries">
+<span class="sig-prename descclassname"><span class="pre">ausdex.inflation.</span></span><span class="sig-name descname"><span class="pre">plot_cpi_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.inflation.plot_cpi_timeseries" title="Permalink to this definition"></a></dt>
+<dd><p>function to plot the Australian CPI vs time</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.</p></li>
+<li><p><strong>end_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.</p></li>
+<li><p><strong>kwargs</strong> – (Optional(dict)): additional parameters to feed into plotly.express.line function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>plot of cpi vs time</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.inflation.plot_inflation_timeseries">
+<span class="sig-prename descclassname"><span class="pre">ausdex.inflation.</span></span><span class="sig-name descname"><span class="pre">plot_inflation_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compare_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.inflation.plot_inflation_timeseries" title="Permalink to this definition"></a></dt>
+<dd><p>function to plot a time series of dollar values attached to a particular date’s dollar value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>compare_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>]</em>) – Date to set relative value of the dollars too.</p></li>
+<li><p><strong>start_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.</p></li>
+<li><p><strong>end_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.</p></li>
+<li><p><strong>value</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>, </em><em>optional</em>) – Value you in <cite>compare_date</cite> dollars to plot on the time series. Defaults to 1.</p></li>
+<li><p><strong>kwargs</strong> – (Optional(dict)): additional parameters to feed into plotly.express.line function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>line graph of inflated dollar values vs time</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
 </dd>
 </dl>
 </dd></dl>
@@ -588,6 +676,40 @@ If <cite>date</cite> is before the earliest reference date (i.e. 1948-09-01) the
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="ausdex.main.plot_cpi">
+<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">plot_cpi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">out:</span> <span class="pre">pathlib.Path</span></em>, <em class="sig-param"><span class="pre">start_date:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">end_date:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.plot_cpi" title="Permalink to this definition"></a></dt>
+<dd><p>function to plot the Australian CPI vs time</p>
+<p>Saves plot as html in out</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>out</strong> (<em>Path</em>) – Path to html file where plot will be saved.</p></li>
+<li><p><strong>start_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.</p></li>
+<li><p><strong>end_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.main.plot_inflation">
+<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">plot_inflation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">compare_date:</span> <span class="pre">str</span></em>, <em class="sig-param"><span class="pre">out:</span> <span class="pre">pathlib.Path</span></em>, <em class="sig-param"><span class="pre">start_date:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">end_date:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">value:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.plot_inflation" title="Permalink to this definition"></a></dt>
+<dd><p>function to plot a time series of dollar values attached to a particular date’s dollar value.</p>
+<p>saves output to html file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>compare_date</strong> (<em>str</em>) – Date to set relative value of the dollars too.</p></li>
+<li><p><strong>out</strong> (<em>Path</em>) – Path to html file where plot will be saved.</p></li>
+<li><p><strong>start_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.</p></li>
+<li><p><strong>end_date</strong> (<em>Union</em><em>[</em><em>datetime</em><em>, </em><em>str</em><em>, </em><em>None</em><em>]</em><em>, </em><em>optional</em>) – Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.</p></li>
+<li><p><strong>value</strong> (<em>Union</em><em>[</em><em>float</em><em>, </em><em>int</em><em>]</em><em>, </em><em>optional</em>) – Value you in <cite>compare_date</cite> dollars to plot on the time series. Defaults to 1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="ausdex.main.repo">
 <span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">repo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.repo" title="Permalink to this definition"></a></dt>
 <dd><p>Opens the repository in a web browser.</p>
@@ -617,6 +739,12 @@ outputs</p>
 <blockquote>
 <div><p>interpolated score (float)</p>
 </div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.main.seifa_vic_assemble">
+<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">seifa_vic_assemble</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.seifa_vic_assemble" title="Permalink to this definition"></a></dt>
+<dd><p>This function re-assembles the victorian dataset from Aurin and Seifa data</p>
 </dd></dl>
 
 <dl class="py function">
