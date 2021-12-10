@@ -3,15 +3,18 @@ from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Union
 import pandas as pd
+from pandas._config import config
 import modin.pandas as mpd
 from dateutil import parser
 import numpy as np
 import numbers
+import plotly
 
 from cached_property import cached_property
 
 from .files import cached_download, get_cached_path
 from .dates import convert_date
+from .data_viz import create_line_plot
 
 
 class CPI:
@@ -167,6 +170,79 @@ class CPI:
         evaluation_cpi = self.cpi_australia_at(evaluation_date)
         return value * evaluation_cpi / original_cpi
 
+    def calc_inflation_timeseries(
+        self,
+        compare_date: Union[datetime, str],
+        start_date: Union[datetime, str, None] = None,
+        end_date: Union[datetime, str, None] = None,
+        value=1,
+    ) -> pd.Series:
+        compare_date = convert_date(compare_date)
+        if start_date != None:
+            start_date = convert_date(start_date).item()
+        if end_date != None:
+            end_date = convert_date(end_date).item()
+
+        cpi_ts = self.cpi_australia_series[start_date:end_date].copy()
+        evaluation_cpi = self.cpi_australia_at(compare_date)
+        inflation = value * (evaluation_cpi / cpi_ts)
+        return inflation
+
+    def plot_inflation_timeseries(
+        self,
+        compare_date: Union[datetime, str],
+        start_date: Union[datetime, str, None] = None,
+        end_date: Union[datetime, str, None] = None,
+        value: Union[float, int] = 1,
+        **kwargs,
+    ) -> plotly.graph_objects.Figure:
+
+        inflation = self.calc_inflation_timeseries(
+            compare_date, start_date, end_date, value=value
+        ).reset_index()
+        new_col_name = f"price of $ {value} in {str(compare_date)} dollars"
+        if "title" not in kwargs:
+            kwargs[
+                "title"
+            ] = f"Inflation time series for ${value} at evaluated in {str(compare_date)} dollars"
+        inflation.rename(
+            columns={"Index Numbers ;  All groups CPI ;  Australia ;": new_col_name},
+            inplace=True,
+        )
+        fig = create_line_plot(
+            inflation, x_col="Date", y_col=new_col_name, color_col=None, **kwargs
+        )
+        return fig
+
+    def plot_cpi_timeseries(
+        self,
+        start_date: Union[datetime, str, None] = None,
+        end_date: Union[datetime, str, None] = None,
+        **kwargs,
+    ) -> plotly.graph_objects.Figure:
+        if start_date != None:
+            start_date = convert_date(start_date).item()
+        if end_date != None:
+            end_date = convert_date(end_date).item()
+        cpi_ts = self.cpi_australia_series[start_date:end_date].copy()
+        cpi_ts = cpi_ts.reset_index()
+        cpi_ts.rename(
+            columns={
+                "Index Numbers ;  All groups CPI ;  Australia ;": "Australian Consumer Price Index"
+            },
+            inplace=True,
+        )
+        if "title" not in kwargs:
+            kwargs["title"] = f"Australian Consumer Price Index time series"
+        fig = create_line_plot(
+            cpi_ts,
+            x_col="Date",
+            y_col="Australian Consumer Price Index",
+            color_col=None,
+            **kwargs,
+        )
+        return fig
+
 
 _cpi = CPI()
 
@@ -191,3 +267,23 @@ def calc_inflation(
         original_date=original_date,
         evaluation_date=evaluation_date,
     )
+
+
+def plot_inflation_timeseries(
+    compare_date: Union[datetime, str],
+    start_date: Union[datetime, str, None] = None,
+    end_date: Union[datetime, str, None] = None,
+    value: Union[float, int] = 1,
+    **kwargs,
+) -> plotly.graph_objects.Figure:
+    return _cpi.plot_inflation_timeseries(
+        compare_date, start_date=start_date, end_date=end_date, value=value, **kwargs
+    )
+
+
+def plot_cpi_timeseries(
+    start_date: Union[datetime, str, None] = None,
+    end_date: Union[datetime, str, None] = None,
+    **kwargs,
+) -> plotly.graph_objects.Figure:
+    return _cpi.plot_cpi_timeseries(start_date=start_date, end_date=end_date, **kwargs)

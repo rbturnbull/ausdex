@@ -126,20 +126,19 @@ def seifa_vic_gis(
     out: Path,
     fill_value: str = "null",
 ):
-    """
-    Interpolates aggregated socio-economic indices for a given date for all suburbs and saves them to a GIS file.
+    """Interpolates aggregated socio-economic indices for a given date for all suburbs and saves them to a GIS file.
 
     inputs
         date (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function\n
-        suburb (str): The name of the suburb that you want the data interpolated for\n
-                metric (str): the name of the seifa_score variable, options are include\n
+        metric (str): the name of the seifa_score variable, options are include\n
                 `irsd_score` for index of relative socio-economic disadvantage,\n
                 `ieo_score` for the index of education and opportunity,\n
                 `ier_score` for an index of economic resources,\n
                 `irsad_score` for index of socio-economic advantage and disadvantage,\n
                 `uirsa_score` for the urban index of relative socio-economic advantage,\n
                 `rirsa_score` for the rural index of relative socio-economic advantage\n
-                fill_value (str): can be "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or \n
+        out (Path): Path to save html graph to.\n
+        fill_value (str): can be "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or \n
                 or an excepted response for scipy.interpolate.interp1D fill_value keyword argument\n
 
     outputs
@@ -150,21 +149,102 @@ def seifa_vic_gis(
 
     warnings.filterwarnings("ignore")
 
-    from .seifa_vic import interpolate_vic_suburb_seifa
-    from .seifa_vic.data_wrangling import wrangle_victorian_gis_data
+    from .seifa_vic import get_seifa_gis
 
-    suburbs_df, _ = wrangle_victorian_gis_data()
-    suburbs_df[metric.value] = interpolate_vic_suburb_seifa(
+    suburbs_df = get_seifa_gis(
         date,
-        suburbs_df["Site_suburb"].str.upper(),
         metric.value,
         fill_value=fill_value,
     )
+
     # Write file
     directory = out.parent
     directory.mkdir(exist_ok=True, parents=True)
     suburbs_df.to_file(out)
-    return suburbs_df
+
+
+@app.command()
+def seifa_vic_map(
+    date: str,
+    metric: Metric,
+    out: Path,
+    fill_value: str = "null",
+    min_x: float = typer.Option(None),
+    min_y: float = typer.Option(None),
+    max_x: float = typer.Option(None),
+    max_y: float = typer.Option(None),
+    clip_mask: Path = typer.Option(None),
+):
+    """Interpolates aggregated socio-economic indices for a given date for all suburbs and saves them to a a plotly map html file.
+
+    inputs
+        date (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function\n
+        metric (str): the name of the seifa_score variable, options are include\n
+                `irsd_score` for index of relative socio-economic disadvantage,\n
+                `ieo_score` for the index of education and opportunity,\n
+                `ier_score` for an index of economic resources,\n
+                `irsad_score` for index of socio-economic advantage and disadvantage,\n
+                `uirsa_score` for the urban index of relative socio-economic advantage,\n
+                `rirsa_score` for the rural index of relative socio-economic advantage\n
+        out (Path): Path to save html graph to.\n
+        fill_value (str): can be "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or \n
+                or an excepted response for scipy.interpolate.interp1D fill_value keyword argument\n
+        min_x (Union[None,float], optional):  minimum x coordinate boundary of intersecting polygons to plot. Defaults to None.\n
+        min_y (Union[None,float], optional): maximum x coordinate boundary of intersecting polygons to plot. Defaults to None.\n
+        max_x (Union[None,float], optional): minimum y coordinate boundary of intersecting polygons to plot Defaults to None.\n
+        max_y (Union[None,float], optional): maximum y coordinate boundary of intersecting polygons to plot. Defaults to None.\n
+        clip_mask (Union[None, gpd.GeoDataFrame, gpd.GeoSeries], optional): mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.
+
+
+    outputs
+
+
+    """
+    import warnings
+
+    warnings.filterwarnings("ignore")
+
+    from .seifa_vic import get_seifa_map
+
+    if type(clip_mask) == Path:
+        import geopandas as gpd
+
+        clip_mask = gpd.read_file(clip_mask)
+
+    out_fig = get_seifa_map(
+        date,
+        metric.value,
+        fill_value=fill_value,
+        min_x=min_x,
+        min_y=min_y,
+        max_x=max_x,
+        max_y=max_y,
+        clip_mask=clip_mask,
+    )
+
+    # Write file
+    directory = out.parent
+    directory.mkdir(exist_ok=True, parents=True)
+
+    out_fig.write_html(out)
+
+
+@app.command()
+def seifa_vic_plot(metric: Metric, out: Path, suburbs: List[str]):
+    """Creates a time series of seifa metrics for a given suburb or set of suburbs as a plotly line graph and saves the html file.
+
+    Args:
+        metric (Union[Metric, str]): metric to plot along the time series.\n
+        suburbs (Union[list, np.array, pd.Series, str]): list of suburbs to include in the time series
+    """
+    from .seifa_vic import create_timeseries_chart
+
+    out_fig = create_timeseries_chart(suburbs=suburbs, metric=metric)
+    # Write file
+    directory = out.parent
+    directory.mkdir(exist_ok=True, parents=True)
+
+    out_fig.write_html(out)
 
 
 @app.callback()

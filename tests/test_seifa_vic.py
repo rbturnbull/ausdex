@@ -7,7 +7,10 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 from appdirs import user_cache_dir
 import geopandas as gpd
+import warnings
+
 from ausdex.seifa_vic.data_wrangling import preprocess_victorian_datasets
+from ausdex.seifa_vic.seifa_vic import Metric
 import pandas as pd
 from typer.testing import CliRunner
 from ausdex import main
@@ -33,6 +36,8 @@ MOCKED_FILES = [
     "seifa_2006.geojson",
     "victoria_councils",
     "victoria_suburbs",
+    "victoria_councils.geojson",
+    "victoria_suburbs.geojson",
     "seifa_2006_cd.xls",
     "seifa_suburb_2011.xls",
     "seifa_suburb_2016.xls",
@@ -55,10 +60,14 @@ def mock_user_get_cached_path(filename):
     print(f"using cached test data for {filename}")
     if filename in MOCKED_FILES:
         if filename == "state_suburb_codes_2011..csv.zip":
-            return fake_data_cached_path("SSC_2011_AUST.csv")
+            fcp = fake_data_cached_path("SSC_2011_AUST.csv")
+            print(f"loading test file from {fcp}")
+            return fcp
 
         else:
-            return fake_data_cached_path(filename)
+            fcp = fake_data_cached_path(filename)
+            print(f"loading test file from {fcp}")
+            return fcp
 
     else:
         cache_dir = Path(user_cache_dir("ausdex"))
@@ -109,6 +118,35 @@ class TestSeifaVicSetup(unittest.TestCase):
         self.assertIn("ASCOT - BALLARAT", df.Site_suburb.unique())
         self.assertNotIn("ASCOT - BALLARAT CITY", df.Site_suburb.unique())
 
+    def test_group_repeat_names_vic(self):
+        from ausdex.seifa_vic.data_wrangling import group_repeat_names_vic
+
+        ids = [
+            "VIC2961",
+            "VIC2967",
+            "VIC2976",
+            "VIC2984",
+            "VIC2990",
+            "VIC2969",
+            "VIC2963",
+        ]
+        fixed_suburbs = [
+            "BELLFIELD - GRAMPIANS",
+            "BELLFIELD - BANYULE",
+            "HAPPY VALLEY - SWAN HILL",
+            "HILLSIDE - MELTON",
+            "REEDY CREEK - MITCHELL",
+            "SPRINGFIELD - MACEDON RANGES",
+            "STONY CREEK - HEPBURN",
+        ]
+        for id, suburb in zip(ids, fixed_suburbs):
+            x = {"loc_pid": id, "suburb_name_combined": "test_failed"}
+            value = group_repeat_names_vic(x)
+            self.assertAlmostEqual(value, suburb)
+        x = {"loc_pid": "wrong", "suburb_name_combined": "test_failed"}
+        value = group_repeat_names_vic(x)
+        self.assertEqual(value, "test_failed")
+
 
 @patch(
     "ausdex.seifa_vic.seifa_vic.preprocess_victorian_datasets",
@@ -131,6 +169,51 @@ class TestSeifaInterpolation(unittest.TestCase):
         # print(value)
         self.assertTrue(np.isnan(value[0]))
         self.assertAlmostEqual(value[1], 955.5048835511469, places=3)
+
+    def test_interpolation_negative(self):
+        value = self.interpolate(
+            2200, "ASCOT - BALLARAT", Metric["ier_score"], fill_value="extrapolate"
+        )
+        # self.assertTrue(value[0] == np.nan)
+        # print(value)
+        self.assertTrue(value == 0)
+
+    def test_interpolation_onevalue(self):
+        from ausdex.seifa_vic import SeifaVic
+
+        seifa_vic = SeifaVic(False)
+        seifa_vic.df = pd.DataFrame(
+            {
+                "Site_suburb": ["TEST_SUB1", "test_sub2"],
+                "ier_score": [36.4, 38.5],
+                "year": [2000, 2011],
+            }
+        )
+        with warnings.catch_warnings(record=True) as w:
+            # Cause all warnings to always be triggered.
+            warnings.simplefilter("always")
+            out = seifa_vic.get_seifa_interpolation(
+                2011, "TEST_SUB1", "ier_score", fill_value="extrapolate"
+            )
+            self.assertEqual(36.4, out)
+            assert len(w) == 1
+            assert (
+                "suburb TEST_SUB1 only has one value for ier_score, assuming flat line"
+                in str(w[-1].message)
+            )
+
+    def test_interpolation_novalue(self):
+        with warnings.catch_warnings(record=True) as w:
+            # Cause all warnings to always be triggered.
+            warnings.simplefilter("always")
+            value = self.interpolate(
+                2200, "Fake", "ier_score", fill_value="extrapolate"
+            )
+            # self.assertTrue(value[0] == np.nan)
+            # print(value)
+            self.assertTrue(np.isnan(value))
+            assert len(w) == 1
+            assert "no suburb named FAKE, returning nans" in str(w[-1].message)
 
     def test_interpolation_extrapolate(self):
         value = self.interpolate(
@@ -381,3 +464,149 @@ class TestDataIO(unittest.TestCase):
         self.assertIn("shp", out_file.name)
         self.assertIn("unzipped", out_file.parent.name)
         shutil.rmtree(out_file.parent)
+
+
+@patch(
+    "ausdex.seifa_vic.data_io.get_cached_path",
+    lambda filename: mock_user_get_cached_path(filename),
+)
+@patch(
+    "ausdex.seifa_vic.data_wrangling.load_shapefile_data",
+    lambda filename: mock_load_shapefile_data(filename),
+)
+@patch(
+    "ausdex.seifa_vic.seifa_vic.preprocess_victorian_datasets",
+    lambda force_rebuild: mock_preproces_vic_datasets(False),
+)
+class TestSeifaGisViz(unittest.TestCase):
+    def setUp(self) -> None:
+        from ausdex import seifa_vic
+
+        self.seifa_vic = seifa_vic
+        self.tmp = Path("tmp")
+        self.tmp.mkdir(exist_ok=True)
+        return super().setUp()
+
+    def test_seifa_gis(self):
+        from ausdex.seifa_vic import get_seifa_gis
+
+        gdf = get_seifa_gis("05-11-2015", "ier_score", fill_value="extrapolate")
+        print(gdf.shape)
+        self.assertEqual(type(gdf), gpd.GeoDataFrame)
+        self.assertIn("Site_suburb", gdf.columns)
+        self.assertIn("ier_score", gdf.columns)
+
+    def test_seifa_map(self):
+        from ausdex.seifa_vic import get_seifa_map
+
+        fig = get_seifa_map(
+            "05-11-2015", Metric["ier_score"], fill_value="extrapolate", simplify=0.001
+        )
+        # fig.write_json('tests/testdata/ausdex/mock_gis/test_map.json')
+        fig.write_json(self.tmp / "test_map.json")
+        import filecmp
+
+        self.assertTrue(
+            filecmp.cmp(
+                "tests/testdata/ausdex/mock_gis/test_map.json",
+                self.tmp / "test_map.json",
+            )
+        )
+
+    def test_seifa_plot(self):
+        from ausdex.seifa_vic import create_timeseries_chart
+
+        fig = create_timeseries_chart(
+            ["abbotsford", "ASCOT - BALLARAT"], Metric["irsd_score"]
+        )
+        # fig.write_json('tests/testdata/ausdex/mock_gis/test_fig.json')
+        fig.write_json(self.tmp / "test_fig.json")
+
+        import filecmp
+
+        self.assertTrue(
+            filecmp.cmp(
+                "tests/testdata/ausdex/mock_gis/test_fig.json",
+                self.tmp / "test_fig.json",
+            )
+        )
+
+    def test_seifa_vic_gis_cli(self):
+        runner = CliRunner()
+        result = runner.invoke(
+            main.app,
+            [
+                "seifa-vic-gis",
+                "05-11-2015",
+                "ier_score",
+                str(self.tmp / "tmp_gis.geojson"),
+            ],
+        )
+        assert result.exit_code == 0
+        gdf = gpd.read_file(self.tmp / "tmp_gis.geojson")
+        self.assertEqual(type(gdf), gpd.GeoDataFrame)
+        self.assertIn("Site_suburb", gdf.columns)
+        self.assertIn("ier_score", gdf.columns)
+
+    def test_seifa_vic_map_cli(self):
+        runner = CliRunner()
+        result = runner.invoke(
+            main.app,
+            [
+                "seifa-vic-map",
+                "05-11-2015",
+                "ier_score",
+                str(self.tmp / "test_map.html"),
+                "--fill-value",
+                "extrapolate",
+                "--min-y",
+                "-37.5",
+            ],
+        )
+        assert result.exit_code == 0
+        assert (self.tmp / "test_map.html").exists()
+
+    def test_seifa_vic_plot_cli(self):
+        runner = CliRunner()
+        result = runner.invoke(
+            main.app,
+            [
+                "seifa-vic-plot",
+                "ier_score",
+                str(self.tmp / "test_plot.html"),
+                "abbotsford",
+                "ASCOT - BALLARAT",
+            ],
+        )
+        assert result.exit_code == 0
+        assert (self.tmp / "test_plot.html").exists()
+
+    def test_gis_clipping(self):
+        from ausdex.gis_utils import clip_gdf
+        from ausdex.seifa_vic import get_seifa_gis
+
+        gdf = get_seifa_gis("05-11-2015", "ier_score", fill_value="extrapolate")
+
+        gdf_clip_one = clip_gdf(gdf, min_y=-37.5)
+
+        self.assertEquals(gdf_clip_one.shape[0], 1)
+        self.assertIn("ASCOT", gdf_clip_one.Site_suburb[0])
+        from shapely.geometry import Polygon
+
+        clip_gs = gpd.GeoSeries(
+            Polygon(
+                [
+                    [143.805, -37.5],
+                    [143.805, -37.575],
+                    [143.800, -37.575],
+                    [143.800, -37.5],
+                ]
+            )
+        )
+        clip_gs.crs = gdf.crs
+
+        gdf_clip_two = clip_gdf(gdf, clip_mask=clip_gs)
+        print(gdf_clip_two)
+        self.assertEquals(gdf_clip_two.shape[0], 1)
+        self.assertIn("ier_score", gdf_clip_two.columns)
+        self.assertIn("ALFREDTON", gdf_clip_two.Site_suburb.item())
