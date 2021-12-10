@@ -1,5 +1,6 @@
 import enum
 import datetime
+from difflib import get_close_matches
 from typing import Union
 
 import numpy as np
@@ -125,6 +126,7 @@ class SeifaVic:
         suburb: str,
         metric: str,
         fill_value: Union[str, np.array, tuple],
+        guess_misspelt: bool = False,
         **kwargs,
     ) -> interp1d:
         """this function builds an interpolator with the "year" column as the x, and the metric column as the y
@@ -139,6 +141,20 @@ class SeifaVic:
             scipy.interpolate.interp1d: interpolator object for the suburb and metric
         """
         df = self.get_suburb_data(suburb).dropna(subset=[metric]).sort_values("year")
+        if len(df) == 0:
+            print(f"No suburb named: '{suburb}'. ", end="")
+            close_matches = get_close_matches(suburb, self.df["Site_suburb"].unique())
+            if guess_misspelt and close_matches:
+                print(f"Using: {close_matches[0]}")
+                df = (
+                    self.get_suburb_data(close_matches[0])
+                    .dropna(subset=[metric])
+                    .sort_values("year")
+                )
+            else:
+                print(f"Did you mean one of: {close_matches}")
+                return _make_nan
+
         if fill_value == "boundary_value":
             if len(df[metric]) == 0:
                 fill_value = (np.nan, np.nan)
@@ -152,11 +168,6 @@ class SeifaVic:
                 df["year"].values, df[metric].values, fill_value=fill_value, **kwargs
             )
         else:
-            from difflib import get_close_matches
-
-            close_matches = get_close_matches(suburb, self.df["Site_suburb"].unique())
-            print(f"No suburb named: '{suburb}'. Did you mean one of: {close_matches}")
-
             return _make_nan
 
     def get_interpolator(
@@ -164,13 +175,18 @@ class SeifaVic:
         suburb: str,
         metric: str,
         fill_value: Union[str, np.array, tuple],
+        guess_misspelt: bool = False,
         **kwargs,
     ) -> interp1d:
         cache_name = _make_cache_key(suburb, metric, fill_value, **kwargs)
         if cache_name not in self.interp_cache:
 
             self.interp_cache[cache_name] = self.build_interpolator(
-                suburb, metric, fill_value=fill_value, **kwargs
+                suburb,
+                metric,
+                fill_value=fill_value,
+                guess_misspelt=guess_misspelt,
+                **kwargs,
             )
         return self.interp_cache[cache_name]
 
@@ -182,6 +198,7 @@ class SeifaVic:
         lga: Union[str, None] = None,
         fill_value: Union[str, np.array, tuple] = "null",
         _convert_data=True,
+        guess_misspelt: bool = False,
         **kwargs,
     ) -> Union[float, np.array]:
         """method to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data
@@ -207,9 +224,13 @@ class SeifaVic:
                 suburb.upper().strip(), lga.upper().strip()
             )
 
-        return self.get_interpolator(suburb, metric, fill_value=fill_value, **kwargs)(
-            year_values
-        )
+        return self.get_interpolator(
+            suburb,
+            metric,
+            fill_value=fill_value,
+            guess_misspelt=guess_misspelt,
+            **kwargs,
+        )(year_values)
 
     def get_seifa_interpolation_batch(
         self,
@@ -218,6 +239,7 @@ class SeifaVic:
         metric: str,
         lga: Union[list, np.array, pd.Series, mpd.Series, None] = None,
         fill_value: Union[str, np.array, tuple] = "null",
+        guess_misspelt: bool = False,
         **kwargs,
     ) -> Union[float, np.array]:
 
@@ -247,6 +269,7 @@ class SeifaVic:
                 metric,
                 _convert_data=False,
                 fill_value=fill_value,
+                guess_misspelt=guess_misspelt,
                 **kwargs,
             )
 
@@ -272,6 +295,7 @@ def interpolate_vic_suburb_seifa(
     metric: str,
     lga: Union[None, str, np.array, pd.Series, mpd.Series, list] = None,
     fill_value: str = "null",
+    guess_misspelt: bool = False,
     **kwargs,
 ) -> np.array or float:
     """function to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data
@@ -281,6 +305,7 @@ def interpolate_vic_suburb_seifa(
         suburb (str): The name of the suburb that you want the data interpolated for (capitalisation doesn't matter).
         metric (List['ier_score', 'irsd_score','ieo_score','irsad_score','rirsa_score', ‘uirsa_score']): the name of the seifa_score variable, options are include `irsd_score` for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, `rirsa_score` for the rural index of relative socio economic advantage.
         fill_value (str, np.array or tuple): Specifies the values returned outside the range of the ABS census datasets. It can be "null" and return np.nan values, "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to 'null'.
+        guess_misspelt (bool): Tries to guess the suburb if the particular spelling is not found in the dataset. Otherwise it returns a NaN.
         **kwargs(dict-like): additional keyword arguments for scipy.interpolate.interp1D object.
     Returns:
         Union[float, np.array]: The interpolated value (s) of that seifa variable at that year(s). np.array if year_value contains multiple years.
@@ -292,11 +317,18 @@ def interpolate_vic_suburb_seifa(
             metric,
             lga=lga,
             fill_value=fill_value,
+            guess_misspelt=guess_misspelt,
             **kwargs,
         )
     else:
         out = seifa_vic.get_seifa_interpolation_batch(
-            year_values, suburb, metric, lga=lga, fill_value=fill_value, **kwargs
+            year_values,
+            suburb,
+            metric,
+            lga=lga,
+            fill_value=fill_value,
+            guess_misspelt=guess_misspelt,
+            **kwargs,
         )
     if out.size == 1:
         out = out.item()

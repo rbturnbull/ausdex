@@ -44,7 +44,7 @@ However, there have been several new suburbs created during the duration of the 
 | :---- | :------------ | :-------------- |
 | IEO | Index of Education and Occupation | 1986, 1991, 1996, 2001, 2006, 2011, 2016 |
 | IER | Index of Economic Resources | 1986, 1991, 1996, 2001, 2006, 2011, 2016 |
-| IRSD | Index of Relative Socio-economic Disadvantage | 2006, 2011, 2016 |
+| IRSD | Index of Relative Socio-economic Disadvantage | 1986, 1991, 1996, 2001, 2006, 2011, 2016 |
 | IRSAD | Index of Relative Socio-economic Advantage and Disadvantage | 2001, 2006, 2011, 2016 |
 | UIRSA | Urban Index of Relative Socio-economic Advantage | 1991, 1996 |
 | RIRSA | Rural Index of Relative Socio-economic Advantage | 1991, 1996 |
