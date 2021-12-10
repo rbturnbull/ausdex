@@ -147,6 +147,19 @@ class TestSeifaVicSetup(unittest.TestCase):
         value = group_repeat_names_vic(x)
         self.assertEqual(value, "test_failed")
 
+    @patch(
+        "ausdex.seifa_vic.seifa_vic.preprocess_victorian_datasets",
+        lambda force_rebuild: mock_preproces_vic_datasets(False)
+        if force_rebuild == True
+        else None,
+    )
+    def test_assemble_data_cli(self):
+        runner = CliRunner()
+        result = runner.invoke(main.app, ["seifa-vic-assemble"])
+
+        assert result.exit_code == 0
+        assert "data loaded" in result.stdout
+
 
 @patch(
     "ausdex.seifa_vic.seifa_vic.preprocess_victorian_datasets",
@@ -486,6 +499,12 @@ class TestSeifaGisViz(unittest.TestCase):
         self.tmp = Path("tmp")
         self.tmp.mkdir(exist_ok=True)
         return super().setUp()
+
+    def tearDown(self) -> None:
+        import shutil
+
+        shutil.rmtree(self.tmp)
+        return super().tearDown()
 
     def test_seifa_gis(self):
         from ausdex.seifa_vic import get_seifa_gis

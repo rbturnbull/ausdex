@@ -4,6 +4,7 @@ import unittest
 import numpy as np
 import pandas as pd
 import modin.pandas as mpd
+from pathlib import Path
 
 from unittest.mock import patch
 
@@ -134,3 +135,83 @@ class TestInflation(unittest.TestCase):
     def test_pandas_evaluation_dates_modin(self):
         results = self.test_pandas_evaluation_dates(pandas_module=mpd)
         self.assertIsInstance(results, mpd.Series)
+
+
+class TestInflationPlot(unittest.TestCase):
+    def setUp(self) -> None:
+        self.tmp = Path("tmp")
+        self.tmp.mkdir(exist_ok=True, parents=True)
+        return super().setUp()
+
+    def tearDown(self) -> None:
+        import shutil
+
+        shutil.rmtree(self.tmp)
+        return super().tearDown()
+
+    def test_inflation_graph(self):
+        fig = inflation.plot_inflation_timeseries(
+            "01-01-2019", start_date="06-06-1949", end_date=2020
+        )
+        # fig.write_json("tests/testdata/ausdex/mock_gis/test_inflation_fig.json")
+        fig.write_json(self.tmp / "test_inflation_fig.json")
+
+        import filecmp
+
+        self.assertTrue(
+            filecmp.cmp(
+                "tests/testdata/ausdex/mock_gis/test_inflation_fig.json",
+                self.tmp / "test_inflation_fig.json",
+            )
+        )
+
+    def test_cpi_graph(self):
+        fig = inflation.plot_cpi_timeseries(start_date="06-06-1949", end_date=2020)
+        # fig.write_json("tests/testdata/ausdex/mock_gis/test_cpi_fig.json")
+        fig.write_json(self.tmp / "test_cpi_fig.json")
+
+        import filecmp
+
+        self.assertTrue(
+            filecmp.cmp(
+                "tests/testdata/ausdex/mock_gis/test_cpi_fig.json",
+                self.tmp / "test_cpi_fig.json",
+            )
+        )
+
+    def test_inflation_graph_cli(self):
+
+        from typer.testing import CliRunner
+        from ausdex import main
+
+        runner = CliRunner()
+
+        runner.invoke(
+            main.app,
+            [
+                "plot-inflation",
+                "01-01-2019",
+                str(self.tmp / "test_inflation_plot.html"),
+                "--start-date",
+                "06-06-1949",
+            ],
+        )
+        assert (self.tmp / "test_inflation_plot.html").exists()
+
+    def test_cpi_graph_cli(self):
+
+        from typer.testing import CliRunner
+        from ausdex import main
+
+        runner = CliRunner()
+
+        runner.invoke(
+            main.app,
+            [
+                "plot-cpi",
+                str(self.tmp / "test_cpi_plot.html"),
+                "--start-date",
+                "06-06-1949",
+            ],
+        )
+        assert (self.tmp / "test_cpi_plot.html").exists()
