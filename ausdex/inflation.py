@@ -196,6 +196,18 @@ class CPI:
         value: Union[float, int] = 1,
         **kwargs,
     ) -> plotly.graph_objects.Figure:
+        """method plot a time series of dollar values attached to a particular date's dollar value
+
+        Args:
+            compare_date (Union[datetime, str]): Date to set relative value of the dollars too.
+            start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+            end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
+            value (Union[float, int], optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
+            kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
+
+        Returns:
+            plotly.graph_objects.Figure: line graph of inflated dollar values vs time
+        """
 
         inflation = self.calc_inflation_timeseries(
             compare_date, start_date, end_date, value=value
@@ -220,6 +232,16 @@ class CPI:
         end_date: Union[datetime, str, None] = None,
         **kwargs,
     ) -> plotly.graph_objects.Figure:
+        """method to plot the Australian CPI vs time
+
+        Args:
+            start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+            end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
+            kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
+
+        Returns:
+            plotly.graph_objects.Figure: plot of cpi vs time
+        """
         if start_date != None:
             start_date = convert_date(start_date).item()
         if end_date != None:
@@ -276,6 +298,18 @@ def plot_inflation_timeseries(
     value: Union[float, int] = 1,
     **kwargs,
 ) -> plotly.graph_objects.Figure:
+    """function to plot a time series of dollar values attached to a particular date's dollar value
+
+    Args:
+        compare_date (Union[datetime, str]): Date to set relative value of the dollars too.
+        start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+        end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
+        value (Union[float, int], optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
+        kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
+
+    Returns:
+        plotly.graph_objects.Figure: line graph of inflated dollar values vs time
+    """
     return _cpi.plot_inflation_timeseries(
         compare_date, start_date=start_date, end_date=end_date, value=value, **kwargs
     )
@@ -286,4 +320,14 @@ def plot_cpi_timeseries(
     end_date: Union[datetime, str, None] = None,
     **kwargs,
 ) -> plotly.graph_objects.Figure:
+    """function to plot the Australian CPI vs time
+
+    Args:
+        start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+        end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
+        kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
+
+    Returns:
+        plotly.graph_objects.Figure: plot of cpi vs time
+    """
     return _cpi.plot_cpi_timeseries(start_date=start_date, end_date=end_date, **kwargs)

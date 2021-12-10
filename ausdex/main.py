@@ -81,6 +81,57 @@ def inflation(
 
 
 @app.command()
+def plot_inflation(
+    compare_date: str,
+    out: Path,
+    start_date: str = typer.Option(None),
+    end_date: str = typer.Option(None),
+    value: float = typer.Option(1.0),
+):
+    """function to plot a time series of dollar values attached to a particular date's dollar value.
+
+    saves output to html file
+
+    Args:
+        compare_date (str): Date to set relative value of the dollars too.
+        out (Path): Path to html file where plot will be saved.
+        start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+        end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
+        value (Union[float, int], optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
+
+
+    """
+    from ausdex.inflation import plot_inflation_timeseries
+
+    fig = plot_inflation_timeseries(
+        compare_date=compare_date, start_date=start_date, end_date=end_date, value=value
+    )
+    fig.write_html(out)
+
+
+@app.command()
+def plot_cpi(
+    out: Path,
+    start_date: str = typer.Option(None),
+    end_date: str = typer.Option(None),
+):
+    """function to plot the Australian CPI vs time
+
+    Saves plot as html in out
+
+    Args:
+        out (Path): Path to html file where plot will be saved.
+        start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+        end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
+
+    """
+    from ausdex.inflation import plot_cpi_timeseries
+
+    fig = plot_cpi_timeseries(start_date=start_date, end_date=end_date)
+    fig.write_html(out)
+
+
+@app.command()
 def seifa_vic(
     year_value: str,
     suburb: str,
@@ -245,6 +296,16 @@ def seifa_vic_plot(metric: Metric, out: Path, suburbs: List[str]):
     directory.mkdir(exist_ok=True, parents=True)
 
     out_fig.write_html(out)
+
+
+@app.command()
+def seifa_vic_assemble():
+    """This function re-assembles the victorian dataset from Aurin and Seifa data"""
+    from .seifa_vic import SeifaVic
+
+    seifa_vic = SeifaVic(True)
+    seifa_vic._load_data()
+    typer.echo("data loaded")
 
 
 @app.callback()
