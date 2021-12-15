@@ -63,9 +63,15 @@
 <li class="toctree-l3"><a class="reference internal" href="#Different-methods-of-extrapolation">Different methods of extrapolation</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#Getting-seifa-gis-data:">Getting seifa gis data:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Via-the-command-line:">Via the command line:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#Getting-GIS-data-from-the-module:">Getting GIS data from the module:</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="inflation.html">Inflation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_viz.html">Data visualisations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference.html">API Reference</a></li>
 <li class="toctree-l1"><a class="reference internal" href="citation.html">Citation</a></li>
 </ul>
@@ -364,7 +370,9 @@ div.rendered_html tbody tr:hover {
     text-align: unset;
 }
 </style>
-<section id="Socio-Economic-Advantage">
+<script src='http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js'></script>
+<script>require=requirejs;</script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script><section id="Socio-Economic-Advantage">
 <h1>Socio-Economic Advantage<a class="headerlink" href="#Socio-Economic-Advantage" title="Permalink to this headline"></a></h1>
 <p>Within this package, the seifa_vic submodule allows for suburb level aggregation of socio economic data derived by Australian Bureau of Statistics from census data every 5 years.</p>
 <section id="Data-access">
@@ -727,6 +735,240 @@ array([1084.16837443, 1052.41809538,           nan])
 </div>
 <p>Note that the above graph shows the boundary_value vs the extrapolate fill_value patterns</p>
 </section>
+</section>
+<section id="Getting-seifa-gis-data:">
+<h2>Getting seifa gis data:<a class="headerlink" href="#Getting-seifa-gis-data:" title="Permalink to this headline"></a></h2>
+<p>Additional functions have been created to suburb vector files with interpolated seifa values for a given date time.</p>
+<section id="Via-the-command-line:">
+<h3>Via the command line:<a class="headerlink" href="#Via-the-command-line:" title="Permalink to this headline"></a></h3>
+<p>You can create and save gis files for a given time period using the following command line function:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ausdex seifa-vic-gis <span class="o">[</span>OPTIONS<span class="o">]</span> DATE METRIC:<span class="o">[</span>ier_score<span class="p">|</span>irsd_score<span class="p">|</span>ieo_sc
+                            ore<span class="p">|</span>irsad_score<span class="p">|</span>rirsa_score<span class="p">|</span>uirsa_score<span class="o">]</span> OUT
+</pre></div>
+</div>
+<p>with the following inputs and options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DATE</span></code> (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">METRIC</span></code>: is the name of the metric to interpolate:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">irsd_score</span></code> for index of relative socio economic disadvantage,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ieo_score</span></code> for the index of education and opportunity,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ier_score</span></code> for an index of economic resources</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">irsad_score</span></code> for index of socio economic advantage and disadvantage,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">uirsa_score</span></code> for the urban index of relative socio economic advantage,</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rirsa_score</span></code> for the rural index of relative socio economic advantage</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OUT</span></code> (Path): Path to save html graph to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--fill-value</span></code> (str): optional input that dictates how the data are extrapolated outside the year range of the dataset. default is <code class="docutils literal notranslate"><span class="pre">null</span></code> which returns <code class="docutils literal notranslate"><span class="pre">np.nan</span></code> values. Other options include <code class="docutils literal notranslate"><span class="pre">extrapolate</span></code>, which extrapolates the data, <code class="docutils literal notranslate"><span class="pre">boundary_value</span></code> which takes the nearest data point, and options defined in the <a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.interp1d.html">scipy.interpolate.interp1d</a> <code class="docutils literal notranslate"><span class="pre">fill_value</span></code> optional argument.</p></li>
+</ul>
+</section>
+</section>
+<section id="Getting-GIS-data-from-the-module:">
+<h2>Getting GIS data from the module:<a class="headerlink" href="#Getting-GIS-data-from-the-module:" title="Permalink to this headline"></a></h2>
+<p>You can also create vector datasets within python, this will return a pandas geodataframe with the interpolated value for each suburb</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">ausdex.seifa_vic</span> <span class="kn">import</span> <span class="n">get_seifa_gis</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">gdf</span> <span class="o">=</span> <span class="n">get_seifa_gis</span><span class="p">(</span><span class="s1">&#39;12-12-2015&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">gdf</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>lc_ply_pid</th>
+      <th>dt_create</th>
+      <th>dt_retire</th>
+      <th>loc_pid</th>
+      <th>vic_locali</th>
+      <th>vic_loca_1</th>
+      <th>vic_loca_2</th>
+      <th>vic_loca_3</th>
+      <th>vic_loca_4</th>
+      <th>vic_loca_5</th>
+      <th>vic_loca_6</th>
+      <th>vic_loca_7</th>
+      <th>geometry</th>
+      <th>Site_suburb</th>
+      <th>ier_score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>ckan_af33dd8c_0534_4e18_9245_fc64440f742e.1</td>
+      <td>6670</td>
+      <td>2011-08-31</td>
+      <td>None</td>
+      <td>VIC2615</td>
+      <td>2012-04-27</td>
+      <td>None</td>
+      <td>UNDERBOOL</td>
+      <td>None</td>
+      <td>None</td>
+      <td>G</td>
+      <td>None</td>
+      <td>2</td>
+      <td>MULTIPOLYGON (((141.74552 -35.07229, 141.74552...</td>
+      <td>UNDERBOOL</td>
+      <td>1082.654948</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ckan_af33dd8c_0534_4e18_9245_fc64440f742e.2</td>
+      <td>6671</td>
+      <td>2011-08-31</td>
+      <td>None</td>
+      <td>VIC1986</td>
+      <td>2012-04-27</td>
+      <td>None</td>
+      <td>NURRAN</td>
+      <td>None</td>
+      <td>None</td>
+      <td>G</td>
+      <td>None</td>
+      <td>2</td>
+      <td>MULTIPOLYGON (((148.66877 -37.39571, 148.66876...</td>
+      <td>NURRAN</td>
+      <td>981.000134</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ckan_af33dd8c_0534_4e18_9245_fc64440f742e.3</td>
+      <td>6672</td>
+      <td>2011-08-31</td>
+      <td>None</td>
+      <td>VIC2862</td>
+      <td>2012-04-27</td>
+      <td>None</td>
+      <td>WOORNDOO</td>
+      <td>None</td>
+      <td>None</td>
+      <td>G</td>
+      <td>None</td>
+      <td>2</td>
+      <td>MULTIPOLYGON (((142.92288 -37.97886, 142.90449...</td>
+      <td>WOORNDOO</td>
+      <td>1045.190009</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>ckan_af33dd8c_0534_4e18_9245_fc64440f742e.4</td>
+      <td>6673</td>
+      <td>2011-08-31</td>
+      <td>None</td>
+      <td>VIC734</td>
+      <td>2018-08-03</td>
+      <td>None</td>
+      <td>DEPTFORD</td>
+      <td>None</td>
+      <td>None</td>
+      <td>G</td>
+      <td>None</td>
+      <td>2</td>
+      <td>MULTIPOLYGON (((147.82336 -37.66001, 147.82313...</td>
+      <td>DEPTFORD</td>
+      <td>991.000001</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>ckan_af33dd8c_0534_4e18_9245_fc64440f742e.5</td>
+      <td>6674</td>
+      <td>2011-08-31</td>
+      <td>None</td>
+      <td>VIC2900</td>
+      <td>2012-04-27</td>
+      <td>None</td>
+      <td>YANAC</td>
+      <td>None</td>
+      <td>None</td>
+      <td>G</td>
+      <td>None</td>
+      <td>2</td>
+      <td>MULTIPOLYGON (((141.27978 -35.99859, 141.27989...</td>
+      <td>YANAC</td>
+      <td>1013.999952</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;AxesSubplot:&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="_images/seifa_vic_26_1.png" src="_images/seifa_vic_26_1.png" />
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
 </section>
 </section>
 

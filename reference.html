@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Citation" href="citation.html" />
-    <link rel="prev" title="Inflation" href="inflation.html" /> 
+    <link rel="prev" title="Data visualisations" href="data_viz.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,6 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="seifa_vic.html">Socio-Economic Advantage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inflation.html">Inflation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data_viz.html">Data visualisations</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-ausdex.seifa_vic.seifa_vic">Socio-economic Indices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ausdex.inflation">Inflation</a></li>
@@ -798,7 +799,7 @@ outputs</p>
 <p>min_y (Union[None,float], optional): maximum x coordinate boundary of intersecting polygons to plot. Defaults to None.</p>
 <p>max_x (Union[None,float], optional): minimum y coordinate boundary of intersecting polygons to plot Defaults to None.</p>
 <p>max_y (Union[None,float], optional): maximum y coordinate boundary of intersecting polygons to plot. Defaults to None.</p>
-<p>clip_mask (Union[None, gpd.GeoDataFrame, gpd.GeoSeries], optional): mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.</p>
+<p>clip_mask (Path, optional): path to mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.</p>
 </dd>
 </dl>
 <p>outputs</p>
@@ -812,6 +813,7 @@ outputs</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>metric</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><em>Metric</em></a><em>, </em><em>str</em><em>]</em>) – metric to plot along the time series.</p></li>
+<li><p><strong>out</strong> (<em>Path</em>) – Path to html file where plot will be saved</p></li>
 <li><p><strong>suburbs</strong> (<em>Union</em><em>[</em><em>list</em><em>, </em><em>np.array</em><em>, </em><em>pd.Series</em><em>, </em><em>str</em><em>]</em>) – list of suburbs to include in the time series</p></li>
 </ul>
 </dd>
@@ -825,7 +827,7 @@ outputs</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="inflation.html" class="btn btn-neutral float-left" title="Inflation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="data_viz.html" class="btn btn-neutral float-left" title="Data visualisations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="citation.html" class="btn btn-neutral float-right" title="Citation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
