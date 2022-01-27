@@ -147,6 +147,7 @@ class SeifaVic:
             metric (str): 'ier_score', 'irsd_score','ieo_score','irsad_score','rirsa_score', ‘uirsa_score', the name of the seifa_score variable, options are include `irsd_score` for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, `ier_score` for an index of economic resources, `irsad_score` for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, `rirsa_score` for the rural index of relative socio economic advantage.
 
             fill_value (Union[str, np.array, tuple]): Specifies the values returned outside the range of the ABS census datasets. It can be "null" to return np.nan values, "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument.
+            guess_misspelt (bool): Tries to guess the suburb if the particular spelling is not found in the dataset. Otherwise it returns a NaN.
 
         Returns:
             scipy.interpolate.interp1d: interpolator object for the suburb and metric

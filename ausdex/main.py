@@ -48,7 +48,7 @@ def docs(live: bool = True):
     if live:
         command = f"sphinx-autobuild {docs_dir} {docs_build_dir} --open-browser"
     else:
-        command = f"sphinx-build -b html {docs_dir} {docs_build_dir}"
+        command = f"sphinx-build -b -E html {docs_dir} {docs_build_dir}"
 
     subprocess.run(command, shell=True)
 
@@ -138,12 +138,13 @@ def seifa_vic(
     metric: Metric,
     lga: Union[str, None] = None,
     fill_value: str = "null",
+    guess_misspelt: bool = False,
 ):
     """
     Interpolates suburb aggregated socio-economic indices for a given year for a given suburb.
 
-    inputs
-    year_value (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function\n
+    Args:
+        year_value (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function\n
         suburb (str): The name of the suburb that you want the data interpolated for\n
                 metric (str): the name of the seifa_score variable, options are include\n
                 `irsd_score` for index of relative socio-economic disadvantage,\n
@@ -151,10 +152,11 @@ def seifa_vic(
                 `ier_score` for an index of economic resources, `irsad_score` for index of socio-economic advantage and disadvantage,\n
                 `uirsa_score` for the urban index of relative socio-economic advantage,\n
                 `rirsa_score` for the rural index of relative socio-economic advantage\n
-                fill_value (str): can be "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or \n
+        lga (str None): local government area. Only necessary for suburb names that are repeated in the state\n
+        fill_value (str): can be "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or \n
                 or an excepted response for scipy.interpolate.interp1D fill_value keyword argument\n
-    lga (str None): local government area. Only necessary for suburb names that are repeated in the state
-    outputs
+        guess_misspelt (bool): If true, then if it cannot find a match for the name of the suburb then it finds the closest name to it.
+    Returns:
         interpolated score (float)
 
     """
@@ -165,7 +167,12 @@ def seifa_vic(
     from .seifa_vic import interpolate_vic_suburb_seifa
 
     result = interpolate_vic_suburb_seifa(
-        year_value, suburb.upper(), metric.value, lga=lga, fill_value=fill_value
+        year_value,
+        suburb.upper(),
+        metric.value,
+        lga=lga,
+        fill_value=fill_value,
+        guess_misspelt=guess_misspelt,
     )
     typer.echo(f"{result:.2f}")
 
@@ -179,7 +186,7 @@ def seifa_vic_gis(
 ):
     """Interpolates aggregated socio-economic indices for a given date for all suburbs and saves them to a GIS file.
 
-    inputs
+    Args:
         date (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function\n
         metric (str): the name of the seifa_score variable, options are include\n
                 `irsd_score` for index of relative socio-economic disadvantage,\n
@@ -192,7 +199,7 @@ def seifa_vic_gis(
         fill_value (str): can be "extrapolate" to extrapolate past the extent of the dataset or "boundary_value" to use the closest datapoint, or \n
                 or an excepted response for scipy.interpolate.interp1D fill_value keyword argument\n
 
-    outputs
+    Returns:
         interpolated score (float)
 
     """
@@ -228,7 +235,8 @@ def seifa_vic_map(
 ):
     """Interpolates aggregated socio-economic indices for a given date for all suburbs and saves them to a a plotly map html file.
 
-    inputs
+    Args:
+
         date (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function\n
         metric (str): the name of the seifa_score variable, options are include\n
                 `irsd_score` for index of relative socio-economic disadvantage,\n
@@ -247,8 +255,8 @@ def seifa_vic_map(
         clip_mask (Path, optional): path to mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.
 
 
-    outputs
-
+    Returns:
+        None
 
     """
     import warnings
