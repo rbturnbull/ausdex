@@ -244,7 +244,7 @@ def seifa_vic_map(
         min_y (Union[None,float], optional): maximum x coordinate boundary of intersecting polygons to plot. Defaults to None.\n
         max_x (Union[None,float], optional): minimum y coordinate boundary of intersecting polygons to plot Defaults to None.\n
         max_y (Union[None,float], optional): maximum y coordinate boundary of intersecting polygons to plot. Defaults to None.\n
-        clip_mask (Union[None, gpd.GeoDataFrame, gpd.GeoSeries], optional): mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.
+        clip_mask (Path, optional): path to mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.
 
 
     outputs
@@ -286,6 +286,7 @@ def seifa_vic_plot(metric: Metric, out: Path, suburbs: List[str]):
 
     Args:
         metric (Union[Metric, str]): metric to plot along the time series.\n
+        out (Path): Path to html file where plot will be saved
         suburbs (Union[list, np.array, pd.Series, str]): list of suburbs to include in the time series
     """
     from .seifa_vic import create_timeseries_chart

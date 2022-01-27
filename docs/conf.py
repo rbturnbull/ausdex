@@ -62,3 +62,14 @@ html_theme = "sphinx_rtd_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+nbsphinx_prolog = r"""
+.. raw:: html
+
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js'></script>
+    <script>require=requirejs;</script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+
+"""

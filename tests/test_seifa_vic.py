@@ -8,7 +8,7 @@ from unittest.mock import patch, MagicMock
 from appdirs import user_cache_dir
 import geopandas as gpd
 import warnings
-
+import shutil
 from ausdex.seifa_vic.data_wrangling import preprocess_victorian_datasets
 from ausdex.seifa_vic.seifa_vic import Metric
 import pandas as pd
@@ -371,6 +371,7 @@ def patch_get_cached_path_schema(file) -> Path:
 def patch_download_from_aurin(wfs_aurin, dataset, links, local_path):
     print("patching aurin download for schema")
     schema = wfs_aurin.get_schema(links[dataset])
+    Path(local_path).parent.mkdir(exist_ok=True)
     with open(local_path, "w") as file:
         json.dump(schema, file)
 
@@ -401,16 +402,25 @@ def patch_open_geopandas_2(filename):
 
 @patch(
     "ausdex.seifa_vic.data_io.get_aurin_creds_path",
-    lambda: Path(__file__).parent / "testdata/tmp/aurin_creds_dummy.json",
+    lambda: Path(__file__).parent / "aurin_creds_dummy.json",
 )
 class TestDataIO(unittest.TestCase):
     def setUp(self) -> None:
-        from ausdex.seifa_vic.data_io import get_aurin_creds_path
 
-        aurin_creds = get_aurin_creds_path()
+        aurin_creds = Path(__file__).parent / "aurin_creds_dummy.json"
+        self.aurin_dummy_creds = aurin_creds
+        print(aurin_creds)
         if aurin_creds.exists() == True:
             aurin_creds.unlink()
+        aurin_creds.parent.mkdir(exist_ok=True, parents=True)
         return super().setUp()
+
+    def tearDown(self) -> None:
+        if self.aurin_dummy_creds.exists() == True:
+            os.remove(self.aurin_dummy_creds)
+        if (Path(__file__).parent / "testdata" / "tmp").exists() == True:
+            shutil.rmtree((Path(__file__).parent / "testdata" / "tmp"))
+        return super().tearDown()
 
     @patch("ausdex.seifa_vic.data_io._get_input", lambda msg: "test_username")
     @patch("ausdex.seifa_vic.data_io._get_getpass", lambda msg: "test_password")
@@ -519,7 +529,6 @@ class TestSeifaGisViz(unittest.TestCase):
         return super().setUp()
 
     def tearDown(self) -> None:
-        import shutil
 
         shutil.rmtree(self.tmp)
         return super().tearDown()
