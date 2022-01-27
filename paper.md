@@ -91,7 +91,13 @@ For the 2011 and 2016 datasets, we used the same outline above, but started with
 | 2016 | ABS SA1 seifa metrics | [@abs_2016_seifa] [download link](https://www.abs.gov.au/ausstats/subscriber.nsf/log?openagent&2033055001%20-%20sa1%20indexes.xls&2033.0.55.001&Data%20Cubes&40A0EFDE970A1511CA25825D000F8E8D&0&2016&27.03.2018&Latest)|
 | all | VicMap suburb polygons| [@vic_suburbs] [download link](https://data.gov.au/geoserver/vic-suburb-locality-boundaries-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_af33dd8c_0534_4e18_9245_fc64440f742e&outputFormat=json)|
 | all | VicMap Local Government Area Polygons| [@vic_lga]  [download link](https://data.gov.au/geoserver/vic-local-government-areas-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_bdf92691_c6fe_42b9_a0e2_a4cd716fa811&outputFormat=json)|
- 
+
+## Example map
+
+The seifa_vic submodule allows for the creation of socieconomic factors aggregated at the suburb level. See the following figure for an example:
+
+![Figure 2](paper_images/vic_map.svg)
+<p align = "center"> Figure 2: Choropleth map of victorian suburbs representing the interpolated Index of Economic Resources score (ier_score) in 2015. </p>
 
 # Inflation
 
