@@ -19,7 +19,7 @@
         <script src="_static/clipboard.min.js"></script>
         <script src="_static/copybutton.js"></script>
         <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
         <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -307,7 +307,7 @@ div.nboutput.container div.output_area > div[class^='highlight']{
 }
 
 /* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt a.copybtn {
+.prompt .copybtn {
     display: none;
 }
 
@@ -379,9 +379,9 @@ div.rendered_html tbody tr:hover {
 <section id="Storing-the-aurin-api-credentials-in-a-config.ini">
 <h3>Storing the aurin api credentials in a config.ini<a class="headerlink" href="#Storing-the-aurin-api-credentials-in-a-config.ini" title="Permalink to this headline"></a></h3>
 <p>The username and password can either be entered into a config file in package repository folder in the config.ini file, copying the following example:</p>
-<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[aurin]</span>
-<span class="n">username</span> <span class="o">=</span> <span class="p">{</span><span class="n">your_aurin_username</span><span class="p">}</span>
-<span class="n">password</span> <span class="o">=</span> <span class="p">{</span><span class="n">your_aurin_password</span><span class="p">}</span>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[aurin]</span><span class="w"></span>
+<span class="n">username</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">your_aurin_username</span><span class="p">}</span><span class="w"></span>
+<span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">your_aurin_password</span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
@@ -424,8 +424,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ausdex.seifa_vic</span> <span class="kn">import</span> <span class="n">interpolate_vic_suburb_seifa</span><span class="p">,</span> <span class="n">get_repeated_names</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ausdex.seifa_vic</span> <span class="kn">import</span> <span class="n">interpolate_vic_suburb_seifa</span><span class="p">,</span> <span class="n">get_repeated_names</span>
 </pre></div>
 </div>
 </div>
@@ -444,8 +443,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">interpolate_vic_suburb_seifa</span><span class="p">(</span><span class="mi">2007</span><span class="p">,</span> <span class="s1">&#39;FOOTSCRAY&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;null&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interpolate_vic_suburb_seifa</span><span class="p">(</span><span class="mi">2007</span><span class="p">,</span> <span class="s1">&#39;FOOTSCRAY&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;null&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -468,8 +466,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">interpolate_vic_suburb_seifa</span><span class="p">(</span><span class="mi">2007</span><span class="p">,</span> <span class="s1">&#39;FOOOTSCRAY&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;null&#39;</span><span class="p">,</span> <span class="n">guess_misspelt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interpolate_vic_suburb_seifa</span><span class="p">(</span><span class="mi">2007</span><span class="p">,</span> <span class="s1">&#39;FOOOTSCRAY&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;null&#39;</span><span class="p">,</span> <span class="n">guess_misspelt</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -487,8 +484,7 @@ div.rendered_html tbody tr:hover {
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">interpolate_vic_suburb_seifa</span><span class="p">([</span><span class="mi">2007</span><span class="p">,</span> <span class="mi">2020</span><span class="p">],</span> <span class="s1">&#39;FOOTSCRAY&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interpolate_vic_suburb_seifa</span><span class="p">([</span><span class="mi">2007</span><span class="p">,</span> <span class="mi">2020</span><span class="p">],</span> <span class="s1">&#39;FOOTSCRAY&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -506,8 +502,7 @@ array([872.54095463, 824.12602533])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="n">interpolate_vic_suburb_seifa</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;31-05-2010&#39;</span><span class="p">,</span> <span class="s1">&#39;10-03-1988&#39;</span><span class="p">,</span> <span class="s1">&#39;10-03-2025&#39;</span><span class="p">]),</span>
                              <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;FOOTSCRAY&#39;</span><span class="p">,</span> <span class="s1">&#39;abbotsford&#39;</span><span class="p">,</span> <span class="s1">&#39;Parkville&#39;</span><span class="p">]),</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">)</span>
@@ -529,8 +524,7 @@ array([862.77569946, 978.37269243,          nan])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">get_repeated_names</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">get_repeated_names</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -581,8 +575,7 @@ array([862.77569946, 978.37269243,          nan])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">interpolate_vic_suburb_seifa</span><span class="p">([</span><span class="mi">2007</span><span class="p">,</span> <span class="mi">2020</span><span class="p">],</span> <span class="s1">&#39;ASCOT - BALLARAT&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interpolate_vic_suburb_seifa</span><span class="p">([</span><span class="mi">2007</span><span class="p">,</span> <span class="mi">2020</span><span class="p">],</span> <span class="s1">&#39;ASCOT - BALLARAT&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -599,8 +592,7 @@ array([1099.06088154, 1026.49932655])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">interpolate_vic_suburb_seifa</span><span class="p">([</span><span class="mi">2007</span><span class="p">,</span> <span class="mi">2020</span><span class="p">],</span> <span class="s1">&#39;ASCOT&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span><span class="n">lga</span><span class="o">=</span><span class="s2">&quot;ballarat&quot;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interpolate_vic_suburb_seifa</span><span class="p">([</span><span class="mi">2007</span><span class="p">,</span> <span class="mi">2020</span><span class="p">],</span> <span class="s1">&#39;ASCOT&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span><span class="n">lga</span><span class="o">=</span><span class="s2">&quot;ballarat&quot;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -617,8 +609,7 @@ array([1099.06088154, 1026.49932655])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="c1"># it even works with an array-like of lga values</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># it even works with an array-like of lga values</span>
 <span class="n">interpolate_vic_suburb_seifa</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;31-05-2010&#39;</span><span class="p">,</span> <span class="s1">&#39;10-03-1988&#39;</span><span class="p">,</span> <span class="s1">&#39;10-03-2025&#39;</span><span class="p">]),</span>
                              <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;Ascot&#39;</span><span class="p">,</span> <span class="s1">&#39;Ascot&#39;</span><span class="p">,</span> <span class="s1">&#39;Abbotsford&#39;</span><span class="p">]),</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span>
                              <span class="n">lga</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ballarat&#39;</span><span class="p">,</span> <span class="s1">&#39;greater bendigo&#39;</span><span class="p">,</span> <span class="s1">&#39;Yarra&#39;</span><span class="p">]</span>
@@ -641,8 +632,7 @@ array([1084.16837443, 1052.41809538,           nan])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 <span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1980</span><span class="p">,</span> <span class="mi">2020</span><span class="p">))</span>
 <span class="n">abbotsford_ier</span> <span class="o">=</span> <span class="n">interpolate_vic_suburb_seifa</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="s1">&#39;abbotsford&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;boundary_value&#39;</span><span class="p">)</span>
@@ -655,10 +645,8 @@ array([1084.16837443, 1052.41809538,           nan])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-
-</pre></div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<br/></pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -728,12 +716,9 @@ array([1084.16837443, 1052.41809538,           nan])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-
-<span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;years&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ier_boundary&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_extrapolate&#39;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><br/><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;years&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ier_boundary&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_extrapolate&#39;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;ier_score&#39;</span><span class="p">);</span>
-
-</pre></div>
+<br/></pre></div>
 </div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -779,8 +764,7 @@ array([1084.16837443, 1052.41809538,           nan])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">ausdex.seifa_vic</span> <span class="kn">import</span> <span class="n">get_seifa_gis</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ausdex.seifa_vic</span> <span class="kn">import</span> <span class="n">get_seifa_gis</span>
 </pre></div>
 </div>
 </div>
@@ -788,8 +772,7 @@ array([1084.16837443, 1052.41809538,           nan])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">gdf</span> <span class="o">=</span> <span class="n">get_seifa_gis</span><span class="p">(</span><span class="s1">&#39;12-12-2015&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span> <span class="o">=</span> <span class="n">get_seifa_gis</span><span class="p">(</span><span class="s1">&#39;12-12-2015&#39;</span><span class="p">,</span> <span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="s1">&#39;extrapolate&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -797,8 +780,7 @@ array([1084.16837443, 1052.41809538,           nan])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">gdf</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -947,8 +929,7 @@ array([1084.16837443, 1052.41809538,           nan])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="s1">&#39;ier_score&#39;</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -972,8 +953,7 @@ array([1084.16837443, 1052.41809538,           nan])
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>
 </pre></div>
 </div>
 </div>
