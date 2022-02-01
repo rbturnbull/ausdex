@@ -95,6 +95,14 @@ For the 2011 and 2016 datasets, we used the same procedure set out above, but st
 | all | VicMap Local Government Area Polygons|   [[@vic_lga]](https://data.gov.au/geoserver/vic-local-government-areas-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_bdf92691_c6fe_42b9_a0e2_a4cd716fa811&outputFormat=json)|
  
 
+## Example map
+
+The seifa_vic submodule allows for the creation of socio-economic factors aggregated at the suburb level. See the following figure for an example:
+
+![Figure 2](paper_images/vic_map.svg)
+<p align = "center"> Figure 2: Choropleth map of Victorian suburbs representing the interpolated Index of Economic Resources score (ier_score) in 2015. </p>
+
+
 # Inflation
 
 The Consumer Price Index (CPI) is a weighted average price of a basket of goods and services for urban consumers [@ABS_CPI_Methods]. The ABS issues the Australian CPI [each quarter](https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). The data are available from September 1948 onwards. The CPI values before decimalization of the Australian currency on February 14, 1966 are in understood according to the conversion rates specified in the 1965 Year Book of Australia such that £1 is equivalent to $2 [@yearbook1965, p. 810].
