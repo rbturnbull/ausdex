@@ -99,7 +99,7 @@ For the 2011 and 2016 datasets, we used the same procedure set out above, but st
 
 The seifa_vic submodule allows for the creation of socio-economic factors aggregated at the suburb level. See the following figure for an example:
 
-![Figure 2](paper_images/vic_map.svg)
+![Figure 2](paper_images/vic_map2.pdf)
 <p align = "center"> Figure 2: Choropleth map of Victorian suburbs representing the interpolated Index of Economic Resources score (ier_score) in 2015. </p>
 
 
