@@ -5,7 +5,7 @@
 [<img src="https://github.com/rbturnbull/ausdex/actions/workflows/docs.yml/badge.svg">](<https://rbturnbull.github.io/ausdex/>)
 [<img src="https://img.shields.io/badge/code%20style-black-000000.svg">](<https://github.com/psf/black>)
 
-An interface for several Australian socio-economic indices.
+An interface for several Australian socio-economic indexes.
 
 The Australian Bureau of Statistics (ABS) publishes a variety of indexes for the Australian
 economic environment. These include the Consumer Price Index (CPI) used for calculating inflation
@@ -86,7 +86,7 @@ The Consumer Price Index dataset is taken from the [Australian Bureau of Statist
 The CPI data goes back to 1948. Using dates before this will result in a NaN.
 
 ### seifa_vic datasets
-Data for the socio economic scores by suburbs comes from a variety of sources, and goes between 1986 to 2016 for the index of economic resources, and the index of education and opportunity, other indices are only available for a subset of census years
+Data for the socio economic scores by suburbs comes from a variety of sources, and goes between 1986 to 2016 for the index of economic resources, and the index of education and opportunity, other indexes are only available for a subset of census years
 
 When this module is first used, data will be downloaded and preprocessed from several locations. Access to the AURIN API is necessary via this [form](https://aurin.org.au/resources/aurin-apis/sign-up/). You will be prompted to enter the username and password when you first run the submodule. This will be saved in the app user directory for future use. You can also create a config.ini file in the repository folder with the following:
 

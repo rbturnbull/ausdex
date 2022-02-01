@@ -135,7 +135,7 @@ def seifa_vic(
     guess_misspelt: bool = False,
 ):
     """
-    Interpolates suburb aggregated socio-economic indices for a given year for a given suburb.
+    Interpolates suburb aggregated socio-economic indexes for a given year for a given suburb.
 
     Args:
         year_value (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function\n
@@ -178,7 +178,7 @@ def seifa_vic_gis(
     out: Path,
     fill_value: str = "null",
 ):
-    """Interpolates aggregated socio-economic indices for a given date for all suburbs and saves them to a GIS file.
+    """Interpolates aggregated socio-economic indexes for a given date for all suburbs and saves them to a GIS file.
 
     Args:
         date (int, float, str): Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function\n
@@ -227,7 +227,7 @@ def seifa_vic_map(
     max_y: float = typer.Option(None),
     clip_mask: Path = typer.Option(None),
 ):
-    """Interpolates aggregated socio-economic indices for a given date for all suburbs and saves them to a a plotly map html file.
+    """Interpolates aggregated socio-economic indexes for a given date for all suburbs and saves them to a a plotly map html file.
 
     Args:
 
@@ -317,5 +317,5 @@ def main(
         None, "--version", "-v", callback=version_callback, is_eager=True
     ),
 ):
-    """Adjusts Australian dollars for inflation or returns interpolated socio-economic indices for Victorian suburbs."""
+    """Adjusts Australian dollars for inflation or returns interpolated socio-economic indexes for Victorian suburbs."""
     pass
