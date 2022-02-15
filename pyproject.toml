@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ausdex"
 version = "0.2.2"
-description = "An interface for several Australian socio-economic indices."
+description = "An interface for several Australian socio-economic indexes."
 authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>", "Jonathan Garber <jonathan.garber@unimelb.edu.au>"]
 license = "Apache-2.0"
 readme = "README.md"

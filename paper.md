@@ -47,6 +47,13 @@ These indexes are aggregations of socio economic inputs from the census forms (i
 
 However, there have been several new suburbs created during the SEIFA program, and datasets aggregated by suburb are not readily available for census data before 2006.  To address this, we used the current Victorian suburb areal polygons [@vic_suburbs] as the constant spatial areas over which we aggregate all previous census datasets. To overcome suburb names that are repeated, the suburb polygons were also overlaid with local government areas [@vic_lga] to distinguish duplicate suburbs.
 
+For an example, fig. 1 shows the Index of Economic Resources (IER) scores in 2015 for all suburbs in Victoria.
+
+
+![Figure 1](paper_images/vic_map2.pdf)
+<p align = "center"> Figure 1: A choropleth map of Victorian suburbs representing the interpolated IER scores in 2015.</p>
+
+
 | Index | Name | Years Published |
 | :---- | :------------ | :-------------- |
 | IEO | Index of Education and Occupation | 1986, 1991, 1996, 2001, 2006, 2011, 2016 |
@@ -61,10 +68,10 @@ However, there have been several new suburbs created during the SEIFA program, a
 
 ## Spatially aggregating the 1986–2006 datasets
 
-For the SEIFA datasets from 1986 to 2006, we collected census district polygons from AURIN [@aurin_portal] and the ABS data repository (2006), together with associated aggregated SIEFA scores. These census district level SEIFA scores were aggregated to the current suburb GIS datasets [@vic_suburbs] using the following steps:
+For the SEIFA datasets from 1986 to 2006, we collected census district polygons from AURIN [@aurin_portal] and the ABS data repository (2006), together with associated aggregated SIEFA scores. A list of the data sources is shown in table 2. These census district level SEIFA scores were aggregated to the current suburb GIS datasets [@vic_suburbs] using the following steps:
 
 1. Suburbs and census districts were both reprojected to [EPSG:4326](https://spatialreference.org/ref/epsg/wgs-84/).
-2. The polygons were unioned together, so the resulting polygon layer had an individual polygon for each overlapping census district and suburb (Figure 1).
+2. The polygons were unioned together, so the resulting polygon layer had an individual polygon for each overlapping census district and suburb (fig. 2).
 
 3. The merged polygons were reprojected to a UTM projected coordinate system [EPSG:32756](https://epsg.io/32756). Note that this UTM coordinate system does not overlay the state of Victoria perfectly, but we are assuming that locally the measured areas are relatively consistent with each other.
 
@@ -77,7 +84,7 @@ For the SEIFA datasets from 1986 to 2006, we collected census district polygons 
 
 For the 2011 and 2016 datasets, we used the same procedure set out above, but started with a different statistical geographic dataset. We used Statistical Area Level 1 (SA1) aggregated estimates of the SEIFA variables published as an ABS data cube, and GIS polygons of SA1 boundaries from the ASGS created for 2011 and 2016 to derive suburb aggregated datasets.
 
-## List of data sources for seifa vic submodule
+## Data sources
 
 | Year | Dataset type | Dataset source |
 | :---- | :------------ | :-------------- |
@@ -91,17 +98,10 @@ For the 2011 and 2016 datasets, we used the same procedure set out above, but st
 | 2011 | ABS SA1 SEIFA metrics |  [[@abs_2011_seifa]](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&2033.0.55.001%20sa1%20indexes.xls&2033.0.55.001&Data%20Cubes&9828E2819C30D96DCA257B43000E923E&0&2011&05.04.2013&Latest)|
 | 2016 | ABS SA1 Polygons |   [[@abs_2016_sa1_shape]](https://www.abs.gov.au/AUSSTATS/subscriber.nsf/log?openagent&1270055001_sa1_2016_aust_shape.zip&1270.0.55.001&Data%20Cubes&6F308688D810CEF3CA257FED0013C62D&0&July%202016&12.07.2016&Latest)|
 | 2016 | ABS SA1 SEIFA metrics |  [[@abs_2016_seifa]](https://www.abs.gov.au/ausstats/subscriber.nsf/log?openagent&2033055001%20-%20sa1%20indexes.xls&2033.0.55.001&Data%20Cubes&40A0EFDE970A1511CA25825D000F8E8D&0&2016&27.03.2018&Latest)|
-| all | VicMap suburb polygons|  [[@vic_suburbs]](https://data.gov.au/geoserver/vic-suburb-locality-boundaries-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_af33dd8c_0534_4e18_9245_fc64440f742e&outputFormat=json)|
-| all | VicMap Local Government Area Polygons|   [[@vic_lga]](https://data.gov.au/geoserver/vic-local-government-areas-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_bdf92691_c6fe_42b9_a0e2_a4cd716fa811&outputFormat=json)|
- 
+| All | VicMap suburb polygons|  [[@vic_suburbs]](https://data.gov.au/geoserver/vic-suburb-locality-boundaries-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_af33dd8c_0534_4e18_9245_fc64440f742e&outputFormat=json)|
+| All | VicMap Local Government Area Polygons|   [[@vic_lga]](https://data.gov.au/geoserver/vic-local-government-areas-psma-administrative-boundaries/wfs?request=GetFeature&typeName=ckan_bdf92691_c6fe_42b9_a0e2_a4cd716fa811&outputFormat=json)|
 
-## Example map
-
-The seifa_vic submodule allows for the creation of socio-economic factors aggregated at the suburb level. See the following figure for an example:
-
-![Figure 2](paper_images/vic_map2.pdf)
-<p align = "center"> Figure 2: Choropleth map of Victorian suburbs representing the interpolated Index of Economic Resources score (ier_score) in 2015. </p>
-
+Table 2. A list of data sources for `seifa_vic` submodule. 
 
 # Inflation
 
