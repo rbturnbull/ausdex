@@ -42,7 +42,7 @@ def docs(live: bool = True):
     if live:
         command = f"sphinx-autobuild {docs_dir} {docs_build_dir} --open-browser"
     else:
-        command = f"sphinx-build -b -E html {docs_dir} {docs_build_dir}"
+        command = f"sphinx-build -E -b html {docs_dir} {docs_build_dir}"
 
     subprocess.run(command, shell=True)
 
@@ -68,9 +68,7 @@ def inflation(
         evaluation_date (str, optional): The date to adjust the value to. Defaults to the current date.
     """
 
-    result = calc_inflation(
-        value=value, original_date=original_date, evaluation_date=evaluation_date
-    )
+    result = calc_inflation(value=value, original_date=original_date, evaluation_date=evaluation_date)
     typer.echo(f"{result:.2f}")
 
 
@@ -97,9 +95,7 @@ def plot_inflation(
     """
     from ausdex.inflation import plot_inflation_timeseries
 
-    fig = plot_inflation_timeseries(
-        compare_date=compare_date, start_date=start_date, end_date=end_date, value=value
-    )
+    fig = plot_inflation_timeseries(compare_date=compare_date, start_date=start_date, end_date=end_date, value=value)
     fig.write_html(out)
 
 
@@ -313,9 +309,7 @@ def seifa_vic_assemble():
 
 @app.callback()
 def main(
-    version: Optional[bool] = typer.Option(
-        None, "--version", "-v", callback=version_callback, is_eager=True
-    ),
+    version: Optional[bool] = typer.Option(None, "--version", "-v", callback=version_callback, is_eager=True),
 ):
     """Adjusts Australian dollars for inflation or returns interpolated socio-economic indexes for Victorian suburbs."""
     pass

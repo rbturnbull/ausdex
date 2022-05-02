@@ -26,6 +26,7 @@ available in a convenient Python package with a simple programatic and command l
    data_viz
    reference
    citation
+   contributing
    
 
 
