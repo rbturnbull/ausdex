@@ -21,16 +21,11 @@ available in a convenient Python package with a simple programatic and command l
    :caption: Contents:
 
    installation
-   seifa_vic
    inflation
-   data_viz
    reference
    citation
    contributing
    
-
-
-
 
 Indices and tables
 ==================

@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Citation" href="citation.html" />
-    <link rel="prev" title="Data visualisations" href="data_viz.html" /> 
+    <link rel="prev" title="Inflation" href="inflation.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,13 +44,8 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="seifa_vic.html">Socio-Economic Advantage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="seifa_vic.html#Guessing-Misspelt-Suburb-Names">Guessing Misspelt Suburb Names</a></li>
 <li class="toctree-l1"><a class="reference internal" href="inflation.html">Inflation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data_viz.html">Data visualisations</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-ausdex.seifa_vic.seifa_vic">Socio-economic Indices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-ausdex.inflation">Inflation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ausdex.main">Main</a></li>
 </ul>
 </li>
@@ -106,300 +101,8 @@
     text-align: unset;
 }
 </style>
-<section id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline"></a></h1>
-<section id="module-ausdex.seifa_vic.seifa_vic">
-<span id="socio-economic-indices"></span><h2>Socio-economic Indices<a class="headerlink" href="#module-ausdex.seifa_vic.seifa_vic" title="Permalink to this headline"></a></h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.Metric">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ausdex.seifa_vic.seifa_vic.</span></span><span class="sig-name descname"><span class="pre">Metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.Metric" title="Permalink to this definition"></a></dt>
-<dd><p>An enumeration.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.SeifaVic">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ausdex.seifa_vic.seifa_vic.</span></span><span class="sig-name descname"><span class="pre">SeifaVic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force_rebuild</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.SeifaVic" title="Permalink to this definition"></a></dt>
-<dd><p>This object loads, or creates the combined dataset for the SEIFA_VIC interpolations</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.SeifaVic.build_interpolator">
-<span class="sig-name descname"><span class="pre">build_interpolator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">suburb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guess_misspelt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">scipy.interpolate.interpolate.interp1d</span></span></span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.SeifaVic.build_interpolator" title="Permalink to this definition"></a></dt>
-<dd><p>this function builds an interpolator with the “year” column as the x, and the metric column as the y</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>suburb</strong> (<em>str</em>) – suburb that dataset will be filtered too(must be all caps)</p></li>
-<li><p><strong>metric</strong> (<em>str</em>) – ‘ier_score’, ‘irsd_score’,’ieo_score’,’irsad_score’,’rirsa_score’, ‘uirsa_score’, the name of the seifa_score variable, options are include <cite>irsd_score</cite> for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, <cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, <cite>rirsa_score</cite> for the rural index of relative socio economic advantage.</p></li>
-<li><p><strong>fill_value</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>np.array</em><em>, </em><em>tuple</em><em>]</em>) – Specifies the values returned outside the range of the ABS census datasets. It can be “null” to return np.nan values, “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument.</p></li>
-<li><p><strong>guess_misspelt</strong> (<em>bool</em>) – Tries to guess the suburb if the particular spelling is not found in the dataset. Otherwise it returns a NaN.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>interpolator object for the suburb and metric</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>scipy.interpolate.interp1d</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.SeifaVic.create_timeseries_chart">
-<span class="sig-name descname"><span class="pre">create_timeseries_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">suburbs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.SeifaVic.create_timeseries_chart" title="Permalink to this definition"></a></dt>
-<dd><p>Creates a time series of seifa metrics for a given suburb or set of suburbs as a plotly line graph</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>suburbs</strong> (<em>Union</em><em>[</em><em>list</em><em>, </em><em>np.array</em><em>, </em><em>pd.Series</em><em>, </em><em>str</em><em>]</em>) – list of suburbs to include in the time series</p></li>
-<li><p><strong>metric</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><em>Metric</em></a><em>, </em><em>str</em><em>]</em>) – metric to plot along the time series</p></li>
-<li><p><strong>kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – optional arguments to pass into plotly.express.lineplot</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>plotly line plot of metric time series for a give set of suburbs</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.SeifaVic.get_gis">
-<span class="sig-name descname"><span class="pre">get_gis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'null'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">geopandas.geodataframe.GeoDataFrame</span></span></span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.SeifaVic.get_gis" title="Permalink to this definition"></a></dt>
-<dd><p>This method interpolates the metric specified to the date specified for all years, and returns a geopandas vector dataset with the metric values as a field</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>str</em>) – datetime that can be a year, or any datettime parseable string to interpolate map data.</p></li>
-<li><p><strong>metric</strong> (<a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><em>Metric</em></a><em>, or </em><em>List</em><em>[</em><em>'ier_score'</em><em>, </em><em>'irsd_score'</em><em>,</em><em>'ieo_score'</em><em>,</em><em>'irsad_score'</em><em>,</em><em>'rirsa_score'</em><em>, </em><em>‘uirsa_score'</em><em>]</em>) – the name of the seifa_score variable, options are include <cite>irsd_score</cite> for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, <cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, <cite>rirsa_score</cite> for the rural index of relative socio economic advantage.</p></li>
-<li><p><strong>fill_value</strong> (<em>str</em><em>, </em><em>optional</em>) – (Union[str, np.array, tuple], optional): Specifies the values returned outside the range of the ABS census datasets. It can be “null” and return np.nan values,  “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to ‘null’.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>geodataframe of victorian suburbs with seifa score values for “metric” applied to each suburb as a column with the same name of the metric.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>gpd.GeoDataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.SeifaVic.get_plotly_map">
-<span class="sig-name descname"><span class="pre">get_plotly_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'null'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">geopandas.geodataframe.GeoDataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">geopandas.geoseries.GeoSeries</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.SeifaVic.get_plotly_map" title="Permalink to this definition"></a></dt>
-<dd><p>This method creates an interactive plotly choropleth map for each suburb for a give seifa score and date.</p>
-<p>The dataset can be simplified using the simplify command in map units, and clipped using min_x, min_y, max_x, and max_y bounds
-as well as a clipping polygons in clip mask</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>str</em>) – datetime that can be a year, or any datettime parseable string to interpolate map data</p></li>
-<li><p><strong>metric</strong> (<a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><em>Metric</em></a><em>, or </em><em>List</em><em>[</em><em>'ier_score'</em><em>, </em><em>'irsd_score'</em><em>,</em><em>'ieo_score'</em><em>,</em><em>'irsad_score'</em><em>,</em><em>'rirsa_score'</em><em>, </em><em>‘uirsa_score'</em><em>]</em>) – the name of the seifa_score variable, options are include <cite>irsd_score</cite> for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, <cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, <cite>rirsa_score</cite> for the rural index of relative socio economic advantage.</p></li>
-<li><p><strong>fill_value</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>np.array</em><em>, </em><em>tuple</em><em>]</em><em>, </em><em>optional</em>) – Specifies the values returned outside the range of the ABS census datasets. It can be “null” and return np.nan values,  “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to ‘null’.</p></li>
-<li><p><strong>simplify</strong> (<em>float</em><em>, </em><em>optional</em>) – map value to simplify polygons too according to gpd.GeoSeries.simplify method. if 0, does not simplify Defaults to 0.001.</p></li>
-<li><p><strong>min_x</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – minimum x coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>min_y</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – maximum x coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>max_x</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – minimum y coordinate boundary of intersecting polygons to plot Defaults to None.</p></li>
-<li><p><strong>max_y</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – maximum y coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>clip_mask</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><em>gpd.GeoDataFrame</em><em>, </em><em>gpd.GeoSeries</em><em>]</em><em>, </em><em>optional</em>) – mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.</p></li>
-<li><p><strong>kwargs</strong> (<em>dict</em><em>, </em><em>option</em>) – optional additional parameters to feed into plotly.express.choropleth function.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>choropleth map of victorian suburbs with seifa_scores for each suburb</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.SeifaVic.get_seifa_interpolation">
-<span class="sig-name descname"><span class="pre">get_seifa_interpolation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suburb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lga</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">tuple</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'null'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_convert_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guess_misspelt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.SeifaVic.get_seifa_interpolation" title="Permalink to this definition"></a></dt>
-<dd><p>method to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>year_values</strong> (<em>Union</em><em>[</em><em>int</em><em>,</em><em>float</em><em>,</em><em>np.array</em><em>, </em><em>list</em><em>]</em>) – The year or array of year values you want interpolated.</p></li>
-<li><p><strong>suburb</strong> (<em>str</em>) – The name of the suburb that you want the data interpolated for (capitalisation doesn’t matter).</p></li>
-<li><p><strong>metric</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><em>Metric</em></a><em>, </em><em>str</em><em>]</em>) – the name of the seifa_score variable, options are include <cite>irsd_score</cite> for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, <cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, <cite>rirsa_score</cite> for the rural index of relative socio economic advantage.</p></li>
-<li><p><strong>fill_value</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>np.array</em><em>, </em><em>tuple</em><em>]</em><em>, </em><em>optional</em>) – Specifies the values returned outside the range of the ABS census datasets. It can be “null” and return np.nan values,  “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to ‘null’.</p></li>
-<li><p><strong>_convert_data</strong> (<em>bool</em>) – if true, will convert datetime values to decimal years, only false when batching</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict-like</em>) – additional keyword arguments for scipy.interpolate.interp1D object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The interpolated value (s) of that seifa variable at that year(s). np.array if year_value contains multiple years.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Union[float, np.array]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.SeifaVic.get_suburb_data">
-<span class="sig-name descname"><span class="pre">get_suburb_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">suburb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.SeifaVic.get_suburb_data" title="Permalink to this definition"></a></dt>
-<dd><p>returns the dataset (self.df) filtered to a suburb</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>suburb</strong> (<em>str</em>) – suburb that dataset will be filtered too(must be all caps)</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>filtered dataframe with only the data from that suburb</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>pd.DataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.create_timeseries_chart">
-<span class="sig-prename descclassname"><span class="pre">ausdex.seifa_vic.seifa_vic.</span></span><span class="sig-name descname"><span class="pre">create_timeseries_chart</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">suburbs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.create_timeseries_chart" title="Permalink to this definition"></a></dt>
-<dd><p>Creates a time series of seifa metrics for a given suburb or set of suburbs as a plotly line graph</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>suburbs</strong> (<em>Union</em><em>[</em><em>list</em><em>, </em><em>np.array</em><em>, </em><em>pd.Series</em><em>, </em><em>str</em><em>]</em>) – list of suburbs to include in the time series</p></li>
-<li><p><strong>metric</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><em>Metric</em></a><em>, </em><em>str</em><em>]</em>) – metric to plot along the time series</p></li>
-<li><p><strong>kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – optional arguments to pass into plotly.express.lineplot</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>plotly line plot of metric time series for a give set of suburbs</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.get_repeated_names">
-<span class="sig-prename descclassname"><span class="pre">ausdex.seifa_vic.seifa_vic.</span></span><span class="sig-name descname"><span class="pre">get_repeated_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.get_repeated_names" title="Permalink to this definition"></a></dt>
-<dd><p>returns the list of suburbs repeated names with their proper LGA attached</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>list of repeated names, in the format of <a href="#id1"><span class="problematic" id="id2">`</span></a>f’{suburb} - {lga}</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.get_seifa_gis">
-<span class="sig-prename descclassname"><span class="pre">ausdex.seifa_vic.seifa_vic.</span></span><span class="sig-name descname"><span class="pre">get_seifa_gis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'null'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">geopandas.geodataframe.GeoDataFrame</span></span></span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.get_seifa_gis" title="Permalink to this definition"></a></dt>
-<dd><p>This function interpolates the metric specified to the date specified for all years, and returns a geopandas vector dataset with the metric values as a field</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>str</em>) – datetime that can be a year, or any datettime parseable string to interpolate map data.</p></li>
-<li><p><strong>metric</strong> (<a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><em>Metric</em></a><em>, or </em><em>List</em><em>[</em><em>'ier_score'</em><em>, </em><em>'irsd_score'</em><em>,</em><em>'ieo_score'</em><em>,</em><em>'irsad_score'</em><em>,</em><em>'rirsa_score'</em><em>, </em><em>‘uirsa_score'</em><em>]</em>) – the name of the seifa_score variable, options are include <cite>irsd_score</cite> for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, <cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, <cite>rirsa_score</cite> for the rural index of relative socio economic advantage.</p></li>
-<li><p><strong>fill_value</strong> (<em>str</em><em>, </em><em>optional</em>) – (Union[str, np.array, tuple], optional): Specifies the values returned outside the range of the ABS census datasets. It can be “null” and return np.nan values,  “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to ‘null’.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>geodataframe of victorian suburbs with seifa score values for “metric” applied to each suburb as a column with the same name of the metric.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>gpd.GeoDataFrame</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.get_seifa_map">
-<span class="sig-prename descclassname"><span class="pre">ausdex.seifa_vic.seifa_vic.</span></span><span class="sig-name descname"><span class="pre">get_seifa_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'null'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">geopandas.geodataframe.GeoDataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">geopandas.geoseries.GeoSeries</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.get_seifa_map" title="Permalink to this definition"></a></dt>
-<dd><p>This function creates an interactive plotly choropleth map for each suburb for a give seifa score and date.</p>
-<p>The dataset can be simplified using the simplify command in map units, and clipped using min_x, min_y, max_x, and max_y bounds
-as well as a clipping polygons in clip mask</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>str</em>) – datetime that can be a year, or any datettime parseable string to interpolate map data.</p></li>
-<li><p><strong>metric</strong> (<a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><em>Metric</em></a><em>, or </em><em>List</em><em>[</em><em>'ier_score'</em><em>, </em><em>'irsd_score'</em><em>,</em><em>'ieo_score'</em><em>,</em><em>'irsad_score'</em><em>,</em><em>'rirsa_score'</em><em>, </em><em>‘uirsa_score'</em><em>]</em>) – the name of the seifa_score variable, options are include <cite>irsd_score</cite> for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, <cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, <cite>rirsa_score</cite> for the rural index of relative socio economic advantage.</p></li>
-<li><p><strong>fill_value</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>np.array</em><em>, </em><em>tuple</em><em>]</em><em>, </em><em>optional</em>) – Specifies the values returned outside the range of the ABS census datasets. It can be “null” and return np.nan values,  “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to ‘null’.</p></li>
-<li><p><strong>simplify</strong> (<em>float</em><em>, </em><em>optional</em>) – map value to simplify polygons too according to gpd.GeoSeries.simplify method. if 0, does not simplify Defaults to 0.001.</p></li>
-<li><p><strong>min_x</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – minimum x coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>min_y</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – maximum x coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>max_x</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – minimum y coordinate boundary of intersecting polygons to plot Defaults to None.</p></li>
-<li><p><strong>max_y</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – maximum y coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>clip_mask</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><em>gpd.GeoDataFrame</em><em>, </em><em>gpd.GeoSeries</em><em>]</em><em>, </em><em>optional</em>) – mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.</p></li>
-<li><p><strong>kwargs</strong> (<em>dict</em><em>, </em><em>optional</em>) – optional additional parameters to feed into plotly.express.choropleth function.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>choropleth map of victorian suburbs with seifa_scores for each suburb</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.interpolate_vic_suburb_seifa">
-<span class="sig-prename descclassname"><span class="pre">ausdex.seifa_vic.seifa_vic.</span></span><span class="sig-name descname"><span class="pre">interpolate_vic_suburb_seifa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.datetime64</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">modin.pandas.series.Series</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suburb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">modin.pandas.series.Series</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lga</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.array</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pandas.core.series.Series</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">modin.pandas.series.Series</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'null'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guess_misspelt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">numpy.array</span></span></span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.interpolate_vic_suburb_seifa" title="Permalink to this definition"></a></dt>
-<dd><p>function to get an interpolated estimate of a SEIFA score for each victorian suburb from Australian Bureau of statistics data</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>year_values</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>str</em><em>, </em><em>datetime.datetime</em><em>, </em><em>np.datetime64</em><em>, </em><em>np.array-like</em>) – The year or array of year values you want interpolated.</p></li>
-<li><p><strong>suburb</strong> (<em>str</em>) – The name of the suburb that you want the data interpolated for (capitalisation doesn’t matter).</p></li>
-<li><p><strong>metric</strong> (<em>List</em><em>[</em><em>'ier_score'</em><em>, </em><em>'irsd_score'</em><em>,</em><em>'ieo_score'</em><em>,</em><em>'irsad_score'</em><em>,</em><em>'rirsa_score'</em><em>, </em><em>‘uirsa_score'</em><em>]</em>) – the name of the seifa_score variable, options are include <cite>irsd_score</cite> for index of relative socio economic disadvantage,`ieo_score` for the index of education and opportunity, <cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio economic advantage and disadvantage,`uirsa_score` for the urban index of relative socio economic advantage, <cite>rirsa_score</cite> for the rural index of relative socio economic advantage.</p></li>
-<li><p><strong>fill_value</strong> (<em>str</em><em>, </em><em>np.array</em><em> or </em><em>tuple</em>) – Specifies the values returned outside the range of the ABS census datasets. It can be “null” and return np.nan values, “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or an excepted response for scipy.interpolate.interp1D fill_value keyword argument. Defaults to ‘null’.</p></li>
-<li><p><strong>guess_misspelt</strong> (<em>bool</em>) – Tries to guess the suburb if the particular spelling is not found in the dataset. Otherwise it returns a NaN.</p></li>
-<li><p><strong>**kwargs</strong> (<em>dict-like</em>) – additional keyword arguments for scipy.interpolate.interp1D object.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The interpolated value (s) of that seifa variable at that year(s). np.array if year_value contains multiple years.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>Union[float, np.array]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ausdex.seifa_vic.seifa_vic.make_suburb_map">
-<span class="sig-prename descclassname"><span class="pre">ausdex.seifa_vic.seifa_vic.</span></span><span class="sig-name descname"><span class="pre">make_suburb_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gdf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">geopandas.geodataframe.GeoDataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_mask</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">None</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">geopandas.geodataframe.GeoDataFrame</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">geopandas.geoseries.GeoSeries</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.seifa_vic.seifa_vic.make_suburb_map" title="Permalink to this definition"></a></dt>
-<dd><p>This function will take in a gdf and create a plotly choropleth map with the column defined by the metric argument.</p>
-<p>The dataset can be simplified using the simplify command in map units, and clipped using min_x, min_y, max_x, and max_y bounds
-as well as a clipping polygons in clip mask</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>gdf</strong> (<em>gpd.GeoDataFrame</em>) – suburbs geodataframe with attached seifa scores</p></li>
-<li><p><strong>metric</strong> (<a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><em>Metric</em></a><em>, </em><em>List</em><em>[</em><em>'ier_score'</em><em>, </em><em>'irsd_score'</em><em>,</em><em>'ieo_score'</em><em>,</em><em>'irsad_score'</em><em>,</em><em>'rirsa_score'</em><em>, </em><em>‘uirsa_score'</em><em>]</em>) – the seifa score metric used as the color scale in the choropleth map. However it could be any column in gdf.</p></li>
-<li><p><strong>date</strong> (<em>str</em><em>, </em><em>optional</em>) – Date the scores were interpolated too, optional as only appears in the title if not “”. Defaults to ‘’.</p></li>
-<li><p><strong>simplify</strong> (<em>float</em><em>, </em><em>optional</em>) – map scale value to simplify polygons too according to gpd.GeoSeries.simplify method. if 0, does not simplify Defaults to 0.</p></li>
-<li><p><strong>min_x</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – minimum x coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>min_y</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – maximum x coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>max_x</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – minimum y coordinate boundary of intersecting polygons to plot Defaults to None.</p></li>
-<li><p><strong>max_y</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – maximum y coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>clip_mask</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><em>gpd.GeoDataFrame</em><em>, </em><em>gpd.GeoSeries</em><em>]</em><em>, </em><em>optional</em>) – mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.</p></li>
-<li><p><strong>kwargs</strong> (<em>dict</em><em>, </em><em>option</em>) – optional additional parameters to feed into plotly.express.choropleth function.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>choropleth map of victorian suburbs with seifa_scores for each suburb</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
 <section id="module-ausdex.inflation">
-<span id="inflation"></span><h2>Inflation<a class="headerlink" href="#module-ausdex.inflation" title="Permalink to this headline"></a></h2>
+<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-ausdex.inflation" title="Permalink to this headline"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="ausdex.inflation.CPI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ausdex.inflation.</span></span><span class="sig-name descname"><span class="pre">CPI</span></span><a class="headerlink" href="#ausdex.inflation.CPI" title="Permalink to this definition"></a></dt>
@@ -644,7 +347,6 @@ If <cite>date</cite> is before the earliest reference date (i.e. 1948-09-01) the
 </dl>
 </dd></dl>
 
-</section>
 <section id="module-ausdex.main">
 <span id="main"></span><h2>Main<a class="headerlink" href="#module-ausdex.main" title="Permalink to this headline"></a></h2>
 <dl class="py function">
@@ -677,7 +379,7 @@ If <cite>date</cite> is before the earliest reference date (i.e. 1948-09-01) the
 <dl class="py function">
 <dt class="sig sig-object py" id="ausdex.main.main">
 <span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version:</span> <span class="pre">Optional[bool]</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.main" title="Permalink to this definition"></a></dt>
-<dd><p>Adjusts Australian dollars for inflation or returns interpolated socio-economic indexes for Victorian suburbs.</p>
+<dd><p>Adjusts Australian dollars for inflation.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -720,117 +422,6 @@ If <cite>date</cite> is before the earliest reference date (i.e. 1948-09-01) the
 <dd><p>Opens the repository in a web browser.</p>
 </dd></dl>
 
-<dl class="py function">
-<dt class="sig sig-object py" id="ausdex.main.seifa_vic">
-<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">seifa_vic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">year_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suburb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">lga</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'null'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">guess_misspelt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.seifa_vic" title="Permalink to this definition"></a></dt>
-<dd><p>Interpolates suburb aggregated socio-economic indexes for a given year for a given suburb.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>year_value</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>str</em>) – Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function</p></li>
-<li><p><strong>suburb</strong> (<em>str</em>) – <p>The name of the suburb that you want the data interpolated for</p>
-<p>metric (str): the name of the seifa_score variable, options are include</p>
-<p><cite>irsd_score</cite> for index of relative socio-economic disadvantage,</p>
-<p><cite>ieo_score</cite> for the index of education and opportunity,</p>
-<p><cite>ier_score</cite> for an index of economic resources, <cite>irsad_score</cite> for index of socio-economic advantage and disadvantage,</p>
-<p><cite>uirsa_score</cite> for the urban index of relative socio-economic advantage,</p>
-<p><cite>rirsa_score</cite> for the rural index of relative socio-economic advantage</p>
-</p></li>
-<li><p><strong>lga</strong> (<em>str None</em>) – local government area. Only necessary for suburb names that are repeated in the state</p></li>
-<li><p><strong>fill_value</strong> (<em>str</em>) – <p>can be “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or</p>
-<p>or an excepted response for scipy.interpolate.interp1D fill_value keyword argument</p>
-</p></li>
-<li><p><strong>guess_misspelt</strong> (<em>bool</em>) – If true, then if it cannot find a match for the name of the suburb then it finds the closest name to it.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>interpolated score (float)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ausdex.main.seifa_vic_assemble">
-<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">seifa_vic_assemble</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.seifa_vic_assemble" title="Permalink to this definition"></a></dt>
-<dd><p>This function re-assembles the victorian dataset from Aurin and Seifa data</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ausdex.main.seifa_vic_gis">
-<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">seifa_vic_gis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'null'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.seifa_vic_gis" title="Permalink to this definition"></a></dt>
-<dd><p>Interpolates aggregated socio-economic indexes for a given date for all suburbs and saves them to a GIS file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>str</em>) – Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function</p></li>
-<li><p><strong>metric</strong> (<em>str</em>) – <p>the name of the seifa_score variable, options are include</p>
-<p><cite>irsd_score</cite> for index of relative socio-economic disadvantage,</p>
-<p><cite>ieo_score</cite> for the index of education and opportunity,</p>
-<p><cite>ier_score</cite> for an index of economic resources,</p>
-<p><cite>irsad_score</cite> for index of socio-economic advantage and disadvantage,</p>
-<p><cite>uirsa_score</cite> for the urban index of relative socio-economic advantage,</p>
-<p><cite>rirsa_score</cite> for the rural index of relative socio-economic advantage</p>
-</p></li>
-<li><p><strong>out</strong> (<em>Path</em>) – Path to save html graph to.</p></li>
-<li><p><strong>fill_value</strong> (<em>str</em>) – <p>can be “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or</p>
-<p>or an excepted response for scipy.interpolate.interp1D fill_value keyword argument</p>
-</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>interpolated score (float)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ausdex.main.seifa_vic_map">
-<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">seifa_vic_map</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">date:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric:</span> <span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out:</span> <span class="pre">pathlib.Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_value:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'null'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_x:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_y:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_x:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_y:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_mask:</span> <span class="pre">pathlib.Path</span> <span class="pre">=</span> <span class="pre">&lt;typer.models.OptionInfo</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.seifa_vic_map" title="Permalink to this definition"></a></dt>
-<dd><p>Interpolates aggregated socio-economic indexes for a given date for all suburbs and saves them to a a plotly map html file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>date</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>str</em>) – Year values in decimal years or in a string datetime format convertable by pandas.to_datetime function</p></li>
-<li><p><strong>metric</strong> (<em>str</em>) – <p>the name of the seifa_score variable, options are include</p>
-<p><cite>irsd_score</cite> for index of relative socio-economic disadvantage,</p>
-<p><cite>ieo_score</cite> for the index of education and opportunity,</p>
-<p><cite>ier_score</cite> for an index of economic resources,</p>
-<p><cite>irsad_score</cite> for index of socio-economic advantage and disadvantage,</p>
-<p><cite>uirsa_score</cite> for the urban index of relative socio-economic advantage,</p>
-<p><cite>rirsa_score</cite> for the rural index of relative socio-economic advantage</p>
-</p></li>
-<li><p><strong>out</strong> (<em>Path</em>) – Path to save html graph to.</p></li>
-<li><p><strong>fill_value</strong> (<em>str</em>) – <p>can be “extrapolate” to extrapolate past the extent of the dataset or “boundary_value” to use the closest datapoint, or</p>
-<p>or an excepted response for scipy.interpolate.interp1D fill_value keyword argument</p>
-</p></li>
-<li><p><strong>min_x</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – minimum x coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>min_y</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – maximum x coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>max_x</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – minimum y coordinate boundary of intersecting polygons to plot Defaults to None.</p></li>
-<li><p><strong>max_y</strong> (<em>Union</em><em>[</em><em>None</em><em>,</em><em>float</em><em>]</em><em>, </em><em>optional</em>) – maximum y coordinate boundary of intersecting polygons to plot. Defaults to None.</p></li>
-<li><p><strong>clip_mask</strong> (<em>Path</em><em>, </em><em>optional</em>) – path to mask polygon data to clip the dataset to, overrides min_x, max_x, min_y, max_y. Defaults to None.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ausdex.main.seifa_vic_plot">
-<span class="sig-prename descclassname"><span class="pre">ausdex.main.</span></span><span class="sig-name descname"><span class="pre">seifa_vic_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><span class="pre">ausdex.seifa_vic.seifa_vic.Metric</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pathlib.Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suburbs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.main.seifa_vic_plot" title="Permalink to this definition"></a></dt>
-<dd><p>Creates a time series of seifa metrics for a given suburb or set of suburbs as a plotly line graph and saves the html file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>metric</strong> (<em>Union</em><em>[</em><a class="reference internal" href="#ausdex.seifa_vic.seifa_vic.Metric" title="ausdex.seifa_vic.seifa_vic.Metric"><em>Metric</em></a><em>, </em><em>str</em><em>]</em>) – metric to plot along the time series.</p></li>
-<li><p><strong>out</strong> (<em>Path</em>) – Path to html file where plot will be saved</p></li>
-<li><p><strong>suburbs</strong> (<em>Union</em><em>[</em><em>list</em><em>, </em><em>np.array</em><em>, </em><em>pd.Series</em><em>, </em><em>str</em><em>]</em>) – list of suburbs to include in the time series</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 </section>
 
@@ -838,7 +429,7 @@ If <cite>date</cite> is before the earliest reference date (i.e. 1948-09-01) the
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="data_viz.html" class="btn btn-neutral float-left" title="Data visualisations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="inflation.html" class="btn btn-neutral float-left" title="Inflation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="citation.html" class="btn btn-neutral float-right" title="Citation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
