@@ -228,40 +228,42 @@ end_date (str, optional): Date to set the end of the time series graph too. If e
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-ausdex-plot-cpi-arg-OUTPUT">
 <span class="sig-name descname"><span class="pre">OUTPUT</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ausdex-plot-cpi-arg-OUTPUT" title="Permalink to this definition"></a></dt>
-<dd><p><strong>Required argument</strong> The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension. &lt;click.types.Path object at 0x7f2fd6d1cc40&gt;</p>
+<dd><p><strong>Required argument</strong> The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension. &lt;click.types.Path object at 0x7fe703055ca0&gt;</p>
 </dd></dl>
 
 </section>
 <section id="ausdex-plot-inflation">
 <h3>plot-inflation<a class="headerlink" href="#ausdex-plot-inflation" title="Permalink to this headline"></a></h3>
-<p>function to plot a time series of dollar values attached to a particular date’s dollar value.</p>
-<p>saves output to html file</p>
+<p>Plots a time series of dollar values attached to a particular date’s dollar value.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>compare_date (str): Date to set relative value of the dollars too.
-out (Path): Path to html file where plot will be saved.
-start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
-end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
-value (Union[float, int], optional): Value you in <cite>compare_date</cite> dollars to plot on the time series. Defaults to 1.</p>
+out (Path): The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension.
+start_date (str, optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+end_date (str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
+value (float, optional): Value you in <cite>compare_date</cite> dollars to plot on the time series. Defaults to 1.</p>
 </dd>
 </dl>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex plot-inflation <span class="o">[</span>OPTIONS<span class="o">]</span> COMPARE_DATE OUT
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex plot-inflation <span class="o">[</span>OPTIONS<span class="o">]</span> COMPARE_DATE OUTPUT
 </pre></div>
 </div>
 <p class="rubric">Options</p>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-ausdex-plot-inflation-start-date">
 <span class="sig-name descname"><span class="pre">--start-date</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;start_date&gt;</span></span><a class="headerlink" href="#cmdoption-ausdex-plot-inflation-start-date" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.</p>
+</dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-ausdex-plot-inflation-end-date">
 <span class="sig-name descname"><span class="pre">--end-date</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;end_date&gt;</span></span><a class="headerlink" href="#cmdoption-ausdex-plot-inflation-end-date" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Date to set the end of the time series graph too. If empty, then the end date to the most recent quarter.</p>
+</dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-ausdex-plot-inflation-value">
 <span class="sig-name descname"><span class="pre">--value</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;value&gt;</span></span><a class="headerlink" href="#cmdoption-ausdex-plot-inflation-value" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Value you in <cite>compare_date</cite> dollars to plot on the time series. Defaults to 1.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Default</dt>
 <dd class="field-odd"><p>1.0</p>
 </dd>
@@ -276,9 +278,9 @@ value (Union[float, int], optional): Value you in <cite>compare_date</cite> doll
 </dd></dl>
 
 <dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-ausdex-plot-inflation-arg-OUT">
-<span class="sig-name descname"><span class="pre">OUT</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ausdex-plot-inflation-arg-OUT" title="Permalink to this definition"></a></dt>
-<dd><p><strong>Required argument</strong>  &lt;click.types.Path object at 0x7f2fd6d1cb80&gt;</p>
+<dt class="sig sig-object std" id="cmdoption-ausdex-plot-inflation-arg-OUTPUT">
+<span class="sig-name descname"><span class="pre">OUTPUT</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ausdex-plot-inflation-arg-OUTPUT" title="Permalink to this definition"></a></dt>
+<dd><p><strong>Required argument</strong> The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension. &lt;click.types.Path object at 0x7fe703055a60&gt;</p>
 </dd></dl>
 
 </section>
