@@ -20,8 +20,7 @@ available in a convenient Python package with a simple programatic and command l
    :maxdepth: 2
    :caption: Contents:
 
-   installation
-   inflation
+   quickstart
    reference
    citation
    contributing

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Inflation &mdash; ausdex 0.1.4 documentation</title>
+  <title>Quickstart &mdash; ausdex 0.1.4 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/copybutton.css" type="text/css" />
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="API Reference" href="reference.html" />
-    <link rel="prev" title="Installation" href="installation.html" /> 
+    <link rel="prev" title="ausdex" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,8 +43,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Inflation</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#command-line-usage">Command Line Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-usage">Module Usage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dataset-and-validation">Dataset and Validation</a></li>
@@ -69,9 +69,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Inflation</li>
+      <li>Quickstart</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/inflation.md.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/quickstart.md.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -103,9 +103,16 @@
     text-align: unset;
 }
 </style>
-<section class="tex2jax_ignore mathjax_ignore" id="inflation">
-<h1>Inflation<a class="headerlink" href="#inflation" title="Permalink to this headline"></a></h1>
-<p>Adjusts Australian dollars for inflation.</p>
+<section class="tex2jax_ignore mathjax_ignore" id="quickstart">
+<h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline"></a></h1>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h2>
+<p>You can install <code class="docutils literal notranslate"><span class="pre">ausdex</span></code> from the Python Package Index (PyPI):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">ausdex</span>
+</pre></div>
+</div>
+<p>To install ausdex for development, see the documentation for <a class="reference internal" href="contributing.html"><span class="doc std std-doc">contributing</span></a>.</p>
+</section>
 <section id="command-line-usage">
 <h2>Command Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline"></a></h2>
 <p>Adjust single values using the command line interface:</p>
@@ -129,7 +136,7 @@ $ 30.27
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ausdex</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">ausdex</span><span class="o">.</span><span class="n">inflation</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">)</span>
 <span class="go">52.35254237288135</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ausdex</span><span class="o">.</span><span class="n">inflation</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">,</span><span class="n">evaluation_date</span><span class="o">=</span><span class="s2">&quot;Sep 1999&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ausdex</span><span class="o">.</span><span class="n">inflation</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">,</span> <span class="n">evaluation_date</span><span class="o">=</span><span class="s2">&quot;Sep 1999&quot;</span><span class="p">)</span>
 <span class="go">30.27457627118644</span>
 </pre></div>
 </div>
@@ -155,7 +162,7 @@ $ 30.27
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="ausdex" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="reference.html" class="btn btn-neutral float-right" title="API Reference" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

@@ -1,7 +1,14 @@
-# Inflation
+# Quickstart
 
-Adjusts Australian dollars for inflation.
+## Installation
 
+You can install `ausdex` from the Python Package Index (PyPI):
+
+```
+pip install ausdex
+```
+
+To install ausdex for development, see the documentation for [contributing](./contributing.md).
 
 ## Command Line Usage
 
@@ -29,7 +36,7 @@ $ 30.27
 >>> import ausdex
 >>> ausdex.inflation(26, "July 21 1991")
 52.35254237288135
->>> ausdex.inflation(26, "July 21 1991",evaluation_date="Sep 1999")
+>>> ausdex.inflation(26, "July 21 1991", evaluation_date="Sep 1999")
 30.27457627118644
 ```
 The dates can be as strings or Python datetime objects.
