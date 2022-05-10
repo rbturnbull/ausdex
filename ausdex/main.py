@@ -75,28 +75,36 @@ def inflation(
 @app.command()
 def plot_inflation(
     compare_date: str,
-    out: Path,
-    start_date: str = typer.Option(None),
-    end_date: str = typer.Option(None),
-    value: float = typer.Option(1.0),
+    output: Path = typer.Argument(
+        ...,
+        help="The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension.",
+    ),
+    start_date: str = typer.Option(
+        None, help="Date to set the beginning of the time series graph. Defaults to None, which starts in 1948."
+    ),
+    end_date: str = typer.Option(
+        None,
+        help="Date to set the end of the time series graph too. If empty, then the end date to the most recent quarter.",
+    ),
+    value: float = typer.Option(
+        1.0, help="Value you in `compare_date` dollars to plot on the time series. Defaults to 1."
+    ),
 ):
-    """function to plot a time series of dollar values attached to a particular date's dollar value.
-
-    saves output to html file
+    """
+    Plots a time series of dollar values attached to a particular date's dollar value.
 
     Args:
         compare_date (str): Date to set relative value of the dollars too.
-        out (Path): Path to html file where plot will be saved.
-        start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
-        end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
-        value (Union[float, int], optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
-
-
+        out (Path): The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension.
+        start_date (str, optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+        end_date (str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
+        value (float, optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
     """
     from ausdex.inflation import plot_inflation_timeseries
 
     fig = plot_inflation_timeseries(compare_date=compare_date, start_date=start_date, end_date=end_date, value=value)
-    fig.write_html(out)
+    viz.format_fig(fig)
+    viz.write_fig(fig, output)
 
 
 @app.command()

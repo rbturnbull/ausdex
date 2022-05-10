@@ -187,9 +187,9 @@ class TestInflationPlot(unittest.TestCase):
             main.app,
             [
                 "plot-cpi",
-                str(self.tmp / "test_cpi_plot.html"),
+                str(self.tmp / "test_cpi_plot.png"),
                 "--start-date",
                 "06-06-1949",
             ],
         )
-        assert (self.tmp / "test_cpi_plot.html").exists()
+        assert (self.tmp / "test_cpi_plot.png").exists()
