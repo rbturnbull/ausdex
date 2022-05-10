@@ -34,7 +34,10 @@ available in a convenient Python package with a simple programatic and command-l
 
 # Inflation
 
-The Consumer Price Index (CPI) is a weighted average price of a basket of goods and services for urban consumers [@ABS_CPI_Methods]. The ABS issues the Australian CPI [each quarter](https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). The data are available from September 1948 onwards. The CPI values before decimalization of the Australian currency on February 14, 1966 are in understood according to the conversion rates specified in the 1965 Year Book of Australia such that £1 is equivalent to $2 [@yearbook1965, p. 810].
+![Figure 1](docs/images/cpi-time.pdf)
+<p align = "center"> Figure 1: The CPI in Australia since 1948.</p>
+
+The Consumer Price Index (CPI) is a weighted average price of a basket of goods and services for urban consumers [@ABS_CPI_Methods]. The ABS issues the Australian CPI [each quarter](https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). The data are available from September 1948 onwards (see fig. 1). The CPI values before decimalization of the Australian currency on February 14, 1966 are in understood according to the conversion rates specified in the 1965 Year Book of Australia such that £1 is equivalent to $2 [@yearbook1965, p. 810].
 
 To adjust prices for inflation, we assume that the ratio of prices for two dates is equal to ratio of the CPIs for those dates [@parkin_macroeconomics_2019, p. 811]. This gives the formula:
 

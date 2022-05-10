@@ -8,6 +8,7 @@ from typing import Optional
 import subprocess
 
 from ausdex import calc_inflation
+from . import viz
 
 app = typer.Typer()
 
@@ -100,24 +101,31 @@ def plot_inflation(
 
 @app.command()
 def plot_cpi(
-    out: Path,
-    start_date: str = typer.Option(None),
-    end_date: str = typer.Option(None),
+    output: Path = typer.Argument(
+        ...,
+        help="The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension.",
+    ),
+    start_date: str = typer.Option(
+        None, help="Date to set the beginning of the time series graph. Defaults to None, which starts in 1948."
+    ),
+    end_date: str = typer.Option(
+        None,
+        help="Date to set the end of the time series graph too. If empty, then the end date to the most recent quarter.",
+    ),
 ):
-    """function to plot the Australian CPI vs time
-
-    Saves plot as html in out
+    """
+    Plot the Australian CPI over time.
 
     Args:
-        out (Path): Path to html file where plot will be saved.
-        start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
-        end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
-
+        output (Path): The path to where the figure will be saved. Output can be PDF, SVG, JPG, PNG or HTML based on the extension.
+        start_date (str, optional): Date to set the beginning of the time series graph. If empty, it defaults to 1948.
+        end_date (str, optional): Date to set the end of the time series graph too. If empty, then the end date to the most recent quarter.
     """
     from ausdex.inflation import plot_cpi_timeseries
 
     fig = plot_cpi_timeseries(start_date=start_date, end_date=end_date)
-    fig.write_html(out)
+    viz.format_fig(fig)
+    viz.write_fig(fig, output)
 
 
 @app.callback()
