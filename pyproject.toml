@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ausdex"
-version = "0.2.2"
-description = "An interface for several Australian socio-economic indexes."
+version = "1.0.0"
+description = "An interface for Australian inflation indexes."
 authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>", "Jonathan Garber <jonathan.garber@unimelb.edu.au>"]
 license = "Apache-2.0"
 readme = "README.md"
@@ -18,13 +18,8 @@ cached-property = "^1.5.2"
 python-dateutil = "^2.8.2"
 typer = "^0.3.2"
 modin = "^0.10.2"
-geopandas = "^0.10.0"
-scipy = "^1.7.1"
-OWSLib = "^0.25.0"
-pygeos = "^0.10.2"
 importlib-metadata = "<4.3"
 plotly = "^5.4.0"
-matplotlib = "^3.5.1"
 
 [tool.poetry.dev-dependencies]
 ipykernel = "^6.2.0"

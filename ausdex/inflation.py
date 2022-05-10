@@ -9,12 +9,12 @@ from dateutil import parser
 import numpy as np
 import numbers
 import plotly
+import plotly.express as px
 
 from cached_property import cached_property
 
 from .files import cached_download, get_cached_path
 from .dates import convert_date
-from .data_viz import create_line_plot
 
 
 class CPI:
@@ -116,9 +116,7 @@ class CPI:
         df = self.latest_cpi_df
         return df["Index Numbers ;  All groups CPI ;  Australia ;"]
 
-    def cpi_australia_at(
-        self, date: Union[datetime, str, pd.Series, np.ndarray]
-    ) -> Union[float, np.ndarray]:
+    def cpi_australia_at(self, date: Union[datetime, str, pd.Series, np.ndarray]) -> Union[float, np.ndarray]:
         """Returns the CPI (Consumer Price Index) for a date (or a number of dates).
 
         If `date` is a string then it is converted to a datetime using dateutil.parser.
@@ -135,9 +133,7 @@ class CPI:
 
         min_date = self.cpi_australia_series.index.min()
         cpis = np.array(
-            self.cpi_australia_series[
-                np.searchsorted(self.cpi_australia_series.index, date, side="right") - 1
-            ],
+            self.cpi_australia_series[np.searchsorted(self.cpi_australia_series.index, date, side="right") - 1],
             dtype=float,
         )
         cpis[date < min_date] = np.nan
@@ -209,21 +205,15 @@ class CPI:
             plotly.graph_objects.Figure: line graph of inflated dollar values vs time
         """
 
-        inflation = self.calc_inflation_timeseries(
-            compare_date, start_date, end_date, value=value
-        ).reset_index()
+        inflation = self.calc_inflation_timeseries(compare_date, start_date, end_date, value=value).reset_index()
         new_col_name = f"price of $ {value} in {str(compare_date)} dollars"
         if "title" not in kwargs:
-            kwargs[
-                "title"
-            ] = f"Inflation time series for ${value} at evaluated in {str(compare_date)} dollars"
+            kwargs["title"] = f"Inflation time series for ${value} at evaluated in {str(compare_date)} dollars"
         inflation.rename(
             columns={"Index Numbers ;  All groups CPI ;  Australia ;": new_col_name},
             inplace=True,
         )
-        fig = create_line_plot(
-            inflation, x_col="Date", y_col=new_col_name, color_col=None, **kwargs
-        )
+        fig = px.line(inflation, x="Date", y=new_col_name, **kwargs)
         return fig
 
     def plot_cpi_timeseries(
@@ -249,20 +239,14 @@ class CPI:
         cpi_ts = self.cpi_australia_series[start_date:end_date].copy()
         cpi_ts = cpi_ts.reset_index()
         cpi_ts.rename(
-            columns={
-                "Index Numbers ;  All groups CPI ;  Australia ;": "Australian Consumer Price Index"
-            },
+            columns={"Index Numbers ;  All groups CPI ;  Australia ;": "Australian Consumer Price Index"},
             inplace=True,
         )
         if "title" not in kwargs:
             kwargs["title"] = f"Australian Consumer Price Index time series"
-        fig = create_line_plot(
-            cpi_ts,
-            x_col="Date",
-            y_col="Australian Consumer Price Index",
-            color_col=None,
-            **kwargs,
-        )
+
+        fig = px.line(cpi_ts, x="Date", y="Australian Consumer Price Index", **kwargs)
+
         return fig
 
 
@@ -310,9 +294,7 @@ def plot_inflation_timeseries(
     Returns:
         plotly.graph_objects.Figure: line graph of inflated dollar values vs time
     """
-    return _cpi.plot_inflation_timeseries(
-        compare_date, start_date=start_date, end_date=end_date, value=value, **kwargs
-    )
+    return _cpi.plot_inflation_timeseries(compare_date, start_date=start_date, end_date=end_date, value=value, **kwargs)
 
 
 def plot_cpi_timeseries(

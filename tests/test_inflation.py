@@ -27,15 +27,11 @@ class TestInflation(unittest.TestCase):
         self.assertAlmostEqual(value, 21.14, delta=0.01)
 
     def test_scalar_datetime(self):
-        value = inflation.calc_inflation(
-            1432, datetime(1990, 9, 1), evaluation_date=datetime(2003, 12, 1)
-        )
+        value = inflation.calc_inflation(1432, datetime(1990, 9, 1), evaluation_date=datetime(2003, 12, 1))
         self.assertAlmostEqual(value, 1_979.90, delta=0.01)
 
     def test_scalar_negative(self):
-        value = inflation.calc_inflation(
-            -1432, datetime(1990, 9, 1), evaluation_date=datetime(2003, 12, 1)
-        )
+        value = inflation.calc_inflation(-1432, datetime(1990, 9, 1), evaluation_date=datetime(2003, 12, 1))
         self.assertAlmostEqual(value, -1_979.90, delta=0.01)
 
     def test_scalar_early(self):
@@ -44,21 +40,15 @@ class TestInflation(unittest.TestCase):
 
     def test_no_evaluation_date(self):
         value = inflation.calc_inflation(42, "Sep 1990")
-        self.assertGreaterEqual(
-            value, 80
-        )  # This will fail if there is significant deflation after 2021
+        self.assertGreaterEqual(value, 80)  # This will fail if there is significant deflation after 2021
 
     def test_numpy(self):
         array = np.array([30, 52.35, -63])
         value = inflation.calc_inflation(array, "June 1981", evaluation_date="Feb 2011")
-        np.testing.assert_allclose(
-            value, np.array([102.36, 178.62, -214.95]), atol=1e-02
-        )
+        np.testing.assert_allclose(value, np.array([102.36, 178.62, -214.95]), atol=1e-02)
 
     def test_cpi_australia_at_pandas(self):
-        dates = pd.to_datetime(
-            pd.Series(["June 1 2019", "February 3 1944", "Feb 3 1997"])
-        )
+        dates = pd.to_datetime(pd.Series(["June 1 2019", "February 3 1944", "Feb 3 1997"]))
         cpi = inflation.CPI()
         results = cpi.cpi_australia_at(dates)
         np.testing.assert_allclose(results, np.array([114.8, np.nan, 67]), atol=1e-02)
@@ -75,14 +65,10 @@ class TestInflation(unittest.TestCase):
             ],
             columns=["date", "value"],
         )
-        results = inflation.calc_inflation(
-            df.value, df.date, evaluation_date="5 April 2005"
-        )
+        results = inflation.calc_inflation(df.value, df.date, evaluation_date="5 April 2005")
         self.assertEqual(results.size, len(df))
 
-        np.testing.assert_allclose(
-            results, np.array([290.99, 273.67, -240.29]), atol=1e-02
-        )
+        np.testing.assert_allclose(results, np.array([290.99, 273.67, -240.29]), atol=1e-02)
         return results
 
     def test_pandas_evaluation_dates(self, pandas_module=None):
@@ -97,9 +83,7 @@ class TestInflation(unittest.TestCase):
             ],
             columns=["date", "evaluation", "value", "gold"],
         )
-        results = inflation.calc_inflation(
-            df.value, df.date, evaluation_date=df.evaluation
-        )
+        results = inflation.calc_inflation(df.value, df.date, evaluation_date=df.evaluation)
         self.assertEqual(results.size, len(df))
 
         np.testing.assert_allclose(results, df.gold, atol=1e-02)
@@ -120,9 +104,7 @@ class TestInflation(unittest.TestCase):
 
     def test_get_abs_by_date_future(self):
         cpi = inflation.CPI()
-        future = datetime.now() + timedelta(
-            days=100
-        )  # The next quarter is sure to not yet be released
+        future = datetime.now() + timedelta(days=100)  # The next quarter is sure to not yet be released
 
         with patch("sys.stderr", new=StringIO()) as fake_out:
             cpi.get_abs_by_date("640101", future)
@@ -150,31 +132,27 @@ class TestInflationPlot(unittest.TestCase):
         return super().tearDown()
 
     def test_inflation_graph(self):
-        fig = inflation.plot_inflation_timeseries(
-            "01-01-2019", start_date="06-06-1949", end_date=2020
-        )
-        # fig.write_json("tests/testdata/ausdex/mock_gis/test_inflation_fig.json")
+        fig = inflation.plot_inflation_timeseries("01-01-2019", start_date="06-06-1949", end_date=2020)
         fig.write_json(self.tmp / "test_inflation_fig.json")
 
         import filecmp
 
         self.assertTrue(
             filecmp.cmp(
-                "tests/testdata/ausdex/mock_gis/test_inflation_fig.json",
+                "tests/testdata/ausdex/test_inflation_fig.json",
                 self.tmp / "test_inflation_fig.json",
             )
         )
 
     def test_cpi_graph(self):
         fig = inflation.plot_cpi_timeseries(start_date="06-06-1949", end_date=2020)
-        # fig.write_json("tests/testdata/ausdex/mock_gis/test_cpi_fig.json")
         fig.write_json(self.tmp / "test_cpi_fig.json")
 
         import filecmp
 
         self.assertTrue(
             filecmp.cmp(
-                "tests/testdata/ausdex/mock_gis/test_cpi_fig.json",
+                "tests/testdata/ausdex/test_cpi_fig.json",
                 self.tmp / "test_cpi_fig.json",
             )
         )

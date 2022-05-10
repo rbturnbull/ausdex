@@ -42,14 +42,6 @@ $ ausdex inflation 26 "July 21 1991"  --evaluation-date "Sep 1999"
 $ 30.27
 ```
 
-### seifa_vic command line usage
-youc an use the seifa-vic command to interpolate an ABS census derived Socio economic score for a given year, suburb, and SEIFA metric
-```
-$ ausdex seifa-vic 2020 footscray ier_score
-$ 861.68
-
-```
-
 ## Module Usage
 
 ```
@@ -70,33 +62,12 @@ The values, the dates and the evaluation dates can be vectors by using NumPy arr
 0     26  July 21 1991  52.352542
 1     25      Oct 1989  54.797048
 ```
-### seifa_vic submodule
-
-```python
->>> from ausdex.seifa_vic import interpolate_vic_suburb_seifa
->>> interpolate_vic_suburb_seifa(2007, 'FOOTSCRAY', 'ier_score')
-874.1489807920245
->>> interpolate_vic_suburb_seifa([2007, 2020], 'FOOTSCRAY', 'ier_score', fill_value='extrapolate')
-array([874.14898079, 861.68112674])
-```
 
 ## Dataset and Validation
 
-### Inflation datasets
 The Consumer Price Index dataset is taken from the [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). It uses the nation-wide CPI value. The validation examples in the tests are taken from the [Australian Reserve Bank's inflation calculator](https://www.rba.gov.au/calculator/). This will automatically update each quarter as the new datasets are released.
 
 The CPI data goes back to 1948. Using dates before this will result in a NaN.
-
-### seifa_vic datasets
-Data for the socio economic scores by suburbs comes from a variety of sources, and goes between 1986 to 2016 for the index of economic resources, and the index of education and opportunity, other indexes are only available for a subset of census years
-
-When this module is first used, data will be downloaded and preprocessed from several locations. Access to the AURIN API is necessary via this [form](https://aurin.org.au/resources/aurin-apis/sign-up/). You will be prompted to enter the username and password when you first run the submodule. This will be saved in the app user directory for future use. You can also create a config.ini file in the repository folder with the following:
-
-```toml
-[aurin]
-username = {aurin_api_username}
-password = {aurin_api_password}
-```
 
 ## Contributing
 
