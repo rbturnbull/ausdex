@@ -15,7 +15,7 @@ def convert_date(date: Union[datetime, str, pd.Series, np.ndarray]) -> np.ndarra
         date (Union[datetime, str, pd.Series, np.ndarray]): The date to be converted
 
     Returns:
-        np.ndarray: A numerical form of the date.
+        np.ndarray: A NumPy array with datatype datetime64[D].
     """
     if isinstance(date, int):
         date = pd.to_datetime(str(date))
@@ -35,8 +35,8 @@ def convert_date(date: Union[datetime, str, pd.Series, np.ndarray]) -> np.ndarra
     return np.array(date, dtype="datetime64[D]")
 
 
-def _dt_to_dyr(x):
-    return x.year + x.month / 12
+def timestamp_to_decimal_year(date):
+    return np.array(date.year + (date.dayofyear - 1) / (365.0 + date.is_leap_year * 1.0))
 
 
 def date_time_to_decimal_year(
@@ -53,19 +53,29 @@ def date_time_to_decimal_year(
         np.ndarray,
     ]
 ) -> np.ndarray:
+    """
+    Converts a date from a variety of formats to be a decimal year.
+
+    Args:
+        date (Union[ datetime, pd.Timestamp, list, tuple, np.datetime64, int, float, str, pd.Series, np.ndarray, ]):
+            The date to be converted.
+
+    Returns:
+        np.ndarray: The date as a NumPy array of the same shape as the input.
+    """
+    # If the date is a list or a tuple, then convert to a numpy array before doing anything else
     if isinstance(date, (list, tuple)):
         date = np.array(date)
+
     if isinstance(date, (float, int)):
+        # if a scalar numerical value, then assume that this is already as a numerical date
         return np.array([date])
     elif isinstance(date, (datetime, pd.Timestamp, np.datetime64)):
-        return _dt_to_dyr(pd.to_datetime(date))
-
-    elif isinstance(date, (pd.Series, mpd.Series, np.ndarray, list, tuple)):
+        # if a scalar date value, then convert to pandas to be converted to decimal year
+        return timestamp_to_decimal_year(pd.to_datetime(date))
+    elif isinstance(date, (pd.Series, mpd.Series, np.ndarray)):
         if date.dtype in [float, int]:
+            # if it is already an array of numerical values, then just return it
             return date
-        else:
-            return np.array(_dt_to_dyr(pd.to_datetime(convert_date(date))))
 
-    if type(date) != pd.Timestamp:
-        date = pd.Timestamp(date)
-    return _dt_to_dyr(date)
+    return timestamp_to_decimal_year(pd.to_datetime(convert_date(date)))
