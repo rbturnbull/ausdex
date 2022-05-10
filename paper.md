@@ -43,8 +43,7 @@ $$ \textrm{Price at time B} = \textrm{Price at time A} \times \frac{\textrm{CPI 
 The `ausdex` package automates the process for downloading the latest version of the Australian CPI data from the ABS. The user enters a price, the original date ($A$) and the evaluation date ($B$) and it returns the adjusted price. The inputs can be scalar values or vectors as a `NumPy` array [@harris2020array], a `pandas` series [@mckinney-proc-scipy-2010] or a `Modin pandas` series [@Petersohn2020]. The size of the returned vector of prices is the same as the vector of original prices. If the original date or the evaluation dates are vectors instead of scalar values then these must be the same size as the vector of prices. Several scenarios for validation are in the automated tests and these have been compared with the Reserve Bank of Australia's [inflation calculator](https://www.rba.gov.au/calculator/).
 
 # Module Features
-The components of the module work both from a simple command-line interface and through the API. The code style adheres to PEP 8 [@pep8] through the use of the [Black](https://black.readthedocs.io/en/stable/) Python code formatter. Automated tests run as part of the CI/CD pipeline and testing coverage is above 96%. The package is thoroughly documented at [https://rbturnbull.github.io/ausdex/](https://rbturnbull.github.io/ausdex/).
-
+The components of the module work both from a simple command-line interface and through the API. The code style adheres to PEP 8 [@pep8] through the use of the [Black](https://black.readthedocs.io/en/stable/) Python code formatter. Automated tests run as part of the CI/CD pipeline and testing coverage is 100%. The package is thoroughly documented at [https://rbturnbull.github.io/ausdex/](https://rbturnbull.github.io/ausdex/).
 
 # Acknowledgements
 

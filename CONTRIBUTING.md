@@ -22,7 +22,7 @@ The tests can be run using `pytest`.
 
 * Use clear and explicit variable names. The variable names are typically more verbose than those in fastai.
 * Python code should be formatted using black with the settings in pyproject.toml. The maximum line length is 120 characters.
-* Add emojis at the start of git commit messages according to the `git3moji specification <https://robinpokorny.github.io/git3moji/>`_.
+* Add emojis at the start of git commit messages according to the [git3moji specification](https://robinpokorny.github.io/git3moji/).
 * Contributions should be commited to a new branch and will be merged with main only after tests and documentation are complete.
 * All tests must be passing before merging with the ``main`` branch.
 * Tests are automatically included in the CI/CD pipeline using Github actions.
