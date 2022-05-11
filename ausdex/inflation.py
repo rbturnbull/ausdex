@@ -129,6 +129,9 @@ class CPI:
 
         return df
 
+    def column_name(self, location: Union[Location, str] = Location.AUSTRALIA):
+        return f"Index Numbers ;  All groups CPI ;  {str(location).title()} ;"
+
     def cpi_series(self, location: Union[Location, str] = Location.AUSTRALIA) -> pd.Series:
         """
         Returns a Pandas Series with the Australian CPI (Consumer Price Index) per quarter.
@@ -146,7 +149,7 @@ class CPI:
         """
         df = self.latest_cpi_df
 
-        return df[f"Index Numbers ;  All groups CPI ;  {location} ;"]
+        return df[self.column_name(location)]
 
     def cpi_at(
         self, date: Union[datetime, str, pd.Series, np.ndarray], location: Union[Location, str] = Location.AUSTRALIA
@@ -265,7 +268,7 @@ class CPI:
         if "title" not in kwargs:
             kwargs["title"] = f"The equivalent of ${value:.2f} from {str(compare_date)}"
         inflation.rename(
-            columns={f"Index Numbers ;  All groups CPI ;  {location} ;": new_col_name},
+            columns={self.column_name(location): new_col_name},
             inplace=True,
         )
         fig = px.line(inflation, x="Date", y=new_col_name, **kwargs)
@@ -302,7 +305,7 @@ class CPI:
             end_date = convert_date(end_date).item()
 
         df = self.latest_cpi_df
-        column_map = {f"Index Numbers ;  All groups CPI ;  {location} ;": str(location) for location in locations}
+        column_map = {self.column_name(location): str(location) for location in locations}
         df = df.rename(columns=column_map)
         df = df[column_map.values()]
         df = df[start_date:end_date].copy()
