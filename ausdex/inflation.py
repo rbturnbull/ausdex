@@ -1,11 +1,11 @@
 import sys
+from enum import Enum
 from pathlib import Path
 from datetime import datetime, timedelta
 from typing import Union
 import pandas as pd
 from pandas._config import config
 import modin.pandas as mpd
-from dateutil import parser
 import numpy as np
 import numbers
 import plotly
@@ -15,6 +15,22 @@ from cached_property import cached_property
 
 from .files import cached_download, get_cached_path, DownloadError
 from .dates import convert_date
+from .viz import format_fig
+
+
+class Location(str, Enum):
+    AUSTRALIA = "Australia"
+    SYDNEY = "Sydney"
+    MELBOURNE = "Melbourne"
+    BRISBANE = "Brisbane"
+    ADELAIDE = "Adelaide"
+    PERTH = "Perth"
+    HOBART = "Hobart"
+    DARWIN = "Darwin"
+    CANBERRA = "Canberra"
+
+    def __str__(self):
+        return self.value
 
 
 class CPI:
@@ -40,14 +56,16 @@ class CPI:
         if quarter not in self.ACCEPTED_QUARTERS:
             raise ValueError(f"Cannot understand quarter {quarter}.")
 
+        def cached_download_abs(quarter, year, id, extension):
+            url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{quarter}-{year}/{id}.{extension}"
+            local_path = get_cached_path(f"{id}-{quarter}-{year}.{extension}")
+            cached_download(url, local_path)
+            return local_path
+
         try:
-            url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{quarter}-{year}/{id}.xlsx"
-            local_path = get_cached_path(f"{id}-{quarter}-{year}.xlsx")
-            cached_download(url, local_path)
+            local_path = cached_download_abs(quarter=quarter, year=year, id=id, extension="xlsx")
         except (DownloadError, IOError):
-            url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{quarter}-{year}/{id}.xls"
-            local_path = get_cached_path(f"{id}-{quarter}-{year}.xls")
-            cached_download(url, local_path)
+            local_path = cached_download_abs(quarter=quarter, year=year, id=id, extension="xls")
 
         return local_path
 
@@ -111,20 +129,28 @@ class CPI:
 
         return df
 
-    @cached_property
-    def cpi_australia_series(self) -> pd.Series:
+    def cpi_series(self, location: Union[Location, str] = Location.AUSTRALIA) -> pd.Series:
         """
         Returns a Pandas Series with the Australian CPI (Consumer Price Index) per quarter.
 
-        This is taken from the latest spreadsheet from the Australian Bureau of Statistics (file id '640101'). The index of the series is the relevant date.
+        This is taken from the latest spreadsheet from the Australian Bureau of Statistics (file id '640101').
+        The index of the series is the relevant date.
+
+        Args:
+            location (Union[Location, str], optional): The location for calculating the CPI.
+                Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
+                Default is 'Australia'.
 
         Returns:
             pd.Series: The CPIs per quarter.
         """
         df = self.latest_cpi_df
-        return df["Index Numbers ;  All groups CPI ;  Australia ;"]
 
-    def cpi_australia_at(self, date: Union[datetime, str, pd.Series, np.ndarray]) -> Union[float, np.ndarray]:
+        return df[f"Index Numbers ;  All groups CPI ;  {location} ;"]
+
+    def cpi_at(
+        self, date: Union[datetime, str, pd.Series, np.ndarray], location: Union[Location, str] = Location.AUSTRALIA
+    ) -> Union[float, np.ndarray]:
         """
         Returns the CPI (Consumer Price Index) for a date (or a number of dates).
 
@@ -134,18 +160,25 @@ class CPI:
 
         Args:
             date (Union[datetime, str, pd.Series, np.ndarray]): The date(s) to get the CPI(s) for.
+            location (Union[Location, str], optional): The location for calculating the CPI.
+                Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
+                Default is 'Australia'.
 
         Returns:
             Union[float, np.ndarray]: The CPI value(s).
         """
         date = convert_date(date)
 
-        min_date = self.cpi_australia_series.index.min()
+        cpi_series = self.cpi_series(location=location)
+
+        min_date = cpi_series.index.min()
         cpis = np.array(
-            self.cpi_australia_series[np.searchsorted(self.cpi_australia_series.index, date, side="right") - 1],
+            cpi_series[np.searchsorted(cpi_series.index, date, side="right") - 1],
             dtype=float,
         )
         cpis[date < min_date] = np.nan
+
+        # TODO check if the date difference is greater than 3 months
 
         if cpis.size == 1:
             return cpis.item()
@@ -157,6 +190,7 @@ class CPI:
         value: Union[numbers.Number, np.ndarray, pd.Series],
         original_date: Union[datetime, str],
         evaluation_date: Union[datetime, str] = None,
+        location: Union[Location, str] = Location.AUSTRALIA,
     ):
         """
         Adjusts a value (or list of values) for inflation.
@@ -165,6 +199,9 @@ class CPI:
             value (Union[numbers.Number, np.ndarray, pd.Series]): The value to be converted.
             original_date (Union[datetime, str]): The date that the value is in relation to.
             evaluation_date (Union[datetime, str], optional): The date to adjust the value to. Defaults to the current date.
+            location (Union[Location, str], optional): The location for calculating the CPI.
+                Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
+                Default is 'Australia'.
 
         Returns:
             Union[float, np.ndarray]: The adjusted value.
@@ -172,8 +209,8 @@ class CPI:
         if evaluation_date is None:
             evaluation_date = datetime.now()
 
-        original_cpi = self.cpi_australia_at(original_date)
-        evaluation_cpi = self.cpi_australia_at(evaluation_date)
+        original_cpi = self.cpi_at(original_date, location=location)
+        evaluation_cpi = self.cpi_at(evaluation_date, location=location)
         return value * evaluation_cpi / original_cpi
 
     def calc_inflation_timeseries(
@@ -182,6 +219,7 @@ class CPI:
         start_date: Union[datetime, str, None] = None,
         end_date: Union[datetime, str, None] = None,
         value=1,
+        location: Union[Location, str] = Location.AUSTRALIA,
     ) -> pd.Series:
         compare_date = convert_date(compare_date)
         if start_date != None:
@@ -189,8 +227,8 @@ class CPI:
         if end_date != None:
             end_date = convert_date(end_date).item()
 
-        cpi_ts = self.cpi_australia_series[start_date:end_date].copy()
-        evaluation_cpi = self.cpi_australia_at(compare_date)
+        cpi_ts = self.cpi_series(location=location)[start_date:end_date].copy()
+        evaluation_cpi = self.cpi_at(compare_date, location=location)
         inflation = value * (evaluation_cpi / cpi_ts)
         return inflation
 
@@ -200,6 +238,7 @@ class CPI:
         start_date: Union[datetime, str, None] = None,
         end_date: Union[datetime, str, None] = None,
         value: Union[float, int] = 1,
+        location: Union[Location, str] = Location.AUSTRALIA,
         **kwargs,
     ) -> plotly.graph_objects.Figure:
         """
@@ -210,6 +249,9 @@ class CPI:
             start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
             end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
             value (Union[float, int], optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
+            location (Union[Location, str], optional): The location for calculating the CPI.
+                Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
+                Default is 'Australia'.
             kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
 
         Returns:
@@ -225,21 +267,26 @@ class CPI:
             inplace=True,
         )
         fig = px.line(inflation, x="Date", y=new_col_name, **kwargs)
+        format_fig(fig)
         return fig
 
     def plot_cpi_timeseries(
         self,
         start_date: Union[datetime, str, None] = None,
         end_date: Union[datetime, str, None] = None,
+        location: Union[Location, str] = Location.AUSTRALIA,
         **kwargs,
     ) -> plotly.graph_objects.Figure:
         """
-        Plot the Australian CPI vs time
+        Plots CPI vs time.
 
         Args:
             start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
             end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
             kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
+            location (Union[Location, str], optional): The location for calculating the CPI.
+                Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
+                Default is 'Australia'.
 
         Returns:
             plotly.graph_objects.Figure: plot of cpi vs time
@@ -248,17 +295,17 @@ class CPI:
             start_date = convert_date(start_date).item()
         if end_date != None:
             end_date = convert_date(end_date).item()
-        cpi_ts = self.cpi_australia_series[start_date:end_date].copy()
+        cpi_ts = self.cpi_series(location=location)[start_date:end_date].copy()
         cpi_ts = cpi_ts.reset_index()
         cpi_ts.rename(
-            columns={"Index Numbers ;  All groups CPI ;  Australia ;": "Australian Consumer Price Index"},
+            columns={f"Index Numbers ;  All groups CPI ;  {location} ;": "Consumer Price Index"},
             inplace=True,
         )
         if "title" not in kwargs:
-            kwargs["title"] = f"Australian Consumer Price Index time series"
+            kwargs["title"] = f"Consumer Price Index in {location} over time"
 
-        fig = px.line(cpi_ts, x="Date", y="Australian Consumer Price Index", **kwargs)
-
+        fig = px.line(cpi_ts, x="Date", y="Consumer Price Index", **kwargs)
+        format_fig(fig)
         return fig
 
 
@@ -269,13 +316,18 @@ def calc_inflation(
     value: Union[numbers.Number, np.ndarray, pd.Series],
     original_date: Union[datetime, str],
     evaluation_date: Union[datetime, str] = None,
+    location: Union[Location, str] = Location.AUSTRALIA,
 ) -> Union[float, np.ndarray]:
-    """Adjusts a value (or list of values) for inflation.
+    """
+    Adjusts a value (or list of values) for inflation.
 
     Args:
         value (Union[numbers.Number, np.ndarray, pd.Series]): The value to be converted.
         original_date (Union[datetime, str]): The date that the value is in relation to.
         evaluation_date (Union[datetime, str], optional): The date to adjust the value to. Defaults to the current date.
+        location (Union[Location, str], optional): The location for calculating the CPI.
+            Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
+            Default is 'Australia'.
 
     Returns:
         Union[float, np.ndarray]: The adjusted value.
@@ -284,6 +336,7 @@ def calc_inflation(
         value,
         original_date=original_date,
         evaluation_date=evaluation_date,
+        location=location,
     )
 
 

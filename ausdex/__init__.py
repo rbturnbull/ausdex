@@ -1,1 +1,1 @@
-from .inflation import calc_inflation
+from .inflation import calc_inflation, Location

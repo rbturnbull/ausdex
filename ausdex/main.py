@@ -7,7 +7,8 @@ import importlib_metadata as lib_metadata
 from typing import Optional
 import subprocess
 
-from ausdex import calc_inflation
+from ausdex import Location, calc_inflation
+
 from . import viz
 
 app = typer.Typer()
@@ -54,11 +55,15 @@ def docs(live: bool = True):
 
 @app.command()
 def inflation(
-    value: float,
-    original_date: str,
-    evaluation_date: str = None,
+    value: float = typer.Argument(..., help="The dollar value to be converted."),
+    original_date: str = typer.Argument(..., help="The date that the value is in relation to."),
+    evaluation_date: str = typer.Option(None, help="The date to adjust the value to. Defaults to the current date."),
+    location: Location = typer.Option(
+        Location.AUSTRALIA, case_sensitive=False, help="The location for calculating the CPI."
+    ),
 ):
-    """Adjusts Australian dollars for inflation.
+    """
+    Adjusts Australian dollars for inflation.
 
     Prints output to stdout.
 
@@ -66,9 +71,14 @@ def inflation(
         value (float): The dollar value to be converted.
         original_date (str): The date that the value is in relation to.
         evaluation_date (str, optional): The date to adjust the value to. Defaults to the current date.
+        location (Location, optional): The location for calculating the CPI.
+            Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
+            Default is 'Australia'.
     """
 
-    result = calc_inflation(value=value, original_date=original_date, evaluation_date=evaluation_date)
+    result = calc_inflation(
+        value=value, original_date=original_date, evaluation_date=evaluation_date, location=location
+    )
     typer.echo(f"{result:.2f}")
 
 
@@ -103,7 +113,6 @@ def plot_inflation(
     from ausdex.inflation import plot_inflation_timeseries
 
     fig = plot_inflation_timeseries(compare_date=compare_date, start_date=start_date, end_date=end_date, value=value)
-    viz.format_fig(fig)
     viz.write_fig(fig, output)
 
 
@@ -132,7 +141,6 @@ def plot_cpi(
     from ausdex.inflation import plot_cpi_timeseries
 
     fig = plot_cpi_timeseries(start_date=start_date, end_date=end_date)
-    viz.format_fig(fig)
     viz.write_fig(fig, output)
 
 

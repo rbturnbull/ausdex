@@ -51,10 +51,10 @@ class TestInflation(unittest.TestCase):
         value = inflation.calc_inflation(array, "June 1981", evaluation_date="Feb 2011")
         np.testing.assert_allclose(value, np.array([102.36, 178.62, -214.95]), atol=1e-02)
 
-    def test_cpi_australia_at_pandas(self):
+    def test_cpi_at_pandas(self):
         dates = pd.to_datetime(pd.Series(["June 1 2019", "February 3 1944", "Feb 3 1997"]))
         cpi = inflation.CPI()
-        results = cpi.cpi_australia_at(dates)
+        results = cpi.cpi_at(dates)
         np.testing.assert_allclose(results, np.array([114.8, np.nan, 67]), atol=1e-02)
 
     def test_pandas(self, pandas_module=None):
@@ -132,7 +132,7 @@ class TestInflationPlot(unittest.TestCase):
     def tearDown(self) -> None:
         import shutil
 
-        shutil.rmtree(self.tmp)
+        # shutil.rmtree(self.tmp)
         return super().tearDown()
 
     def test_inflation_graph(self):
