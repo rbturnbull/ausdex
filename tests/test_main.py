@@ -21,9 +21,7 @@ class TestMain(unittest.TestCase):
         result = self.runner.invoke(main.app, ["repo"])
         assert result.exit_code == 0
         mock_launch.assert_called_once()
-        self.assertIn(
-            "https://github.com/rbturnbull/ausdex", str(mock_launch.call_args)
-        )
+        self.assertIn("https://github.com/rbturnbull/ausdex", str(mock_launch.call_args))
 
     @patch("subprocess.run")
     def test_docs_live(self, mock_subprocess):
@@ -48,3 +46,19 @@ class TestMain(unittest.TestCase):
         )
         assert result.exit_code == 0
         assert "21.14" in result.stdout
+
+    def test_inflation_melbourne(self):
+        result = self.runner.invoke(
+            main.app,
+            ["inflation", "13", "March 1991", "--evaluation-date", "May 2022", "--location", "melbourne"],
+        )
+        assert result.exit_code == 0
+        assert "26.95" in result.stdout
+
+    def test_inflation_perth(self):
+        result = self.runner.invoke(
+            main.app,
+            ["inflation", "1", "March 1979", "--location", "Perth", "--evaluation-date", "May 2022"],
+        )
+        assert result.exit_code == 0
+        assert "5.29" in result.stdout
