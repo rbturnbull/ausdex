@@ -19,12 +19,16 @@ class TestInflation(unittest.TestCase):
     """
     Tests the inflation adjustment functionality.
 
-    Gold values taken from https://www.rba.gov.au/calculator/quarterDecimal.html
+    Expected values taken from https://www.rba.gov.au/calculator/quarterDecimal.html
     """
 
     def test_scalar(self):
         value = inflation.calc_inflation(13, "March 1991", evaluation_date="June 2010")
         self.assertAlmostEqual(value, 21.14, delta=0.01)
+
+    def test_scalar_2022(self):
+        value = inflation.calc_inflation(13, "March 1991", evaluation_date="May 2022")
+        self.assertAlmostEqual(value, 27.35, delta=0.01)
 
     def test_scalar_datetime(self):
         value = inflation.calc_inflation(1432, datetime(1990, 9, 1), evaluation_date=datetime(2003, 12, 1))
