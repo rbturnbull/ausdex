@@ -132,14 +132,22 @@ $ 52.35
 $ 30.27
 </pre></div>
 </div>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">ausdex</span></code> uses the CPI for Australia in general but you can calculate the inflation for specific capital cities with the <code class="docutils literal notranslate"><span class="pre">--location</span></code> argument:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ausdex inflation 26 &quot;July 21 1991&quot;  --evaluation-date &quot;Sep 1999&quot; --location sydney
+$ 30.59
+</pre></div>
+</div>
+<p>Location options are: ‘Australia’, ‘Sydney’, ‘Melbourne’, ‘Brisbane’, ‘Adelaide’, ‘Perth’, ‘Hobart’, ‘Darwin’, and ‘Canberra’.</p>
 </section>
 <section id="module-usage">
 <h2>Module Usage<a class="headerlink" href="#module-usage" title="Permalink to this headline"></a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ausdex</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ausdex</span><span class="o">.</span><span class="n">inflation</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">)</span>
-<span class="go">52.35254237288135</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ausdex</span><span class="o">.</span><span class="n">inflation</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">,</span> <span class="n">evaluation_date</span><span class="o">=</span><span class="s2">&quot;Sep 1999&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ausdex</span><span class="o">.</span><span class="n">calc_inflation</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">)</span>
+<span class="go">54.6</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ausdex</span><span class="o">.</span><span class="n">calc_inflation</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">,</span> <span class="n">evaluation_date</span><span class="o">=</span><span class="s2">&quot;Sep 1999&quot;</span><span class="p">)</span>
 <span class="go">30.27457627118644</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ausdex</span><span class="o">.</span><span class="n">calc_inflation</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="s2">&quot;July 21 1991&quot;</span><span class="p">,</span> <span class="n">evaluation_date</span><span class="o">=</span><span class="s2">&quot;Sep 1999&quot;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="s2">&quot;sydney&quot;</span><span class="p">)</span>
+<span class="go">30.59083191850594</span>
 </pre></div>
 </div>
 <p>The dates can be as strings or Python datetime objects.</p>
