@@ -55,3 +55,10 @@ The values, the dates and the evaluation dates can be vectors by using NumPy arr
 The Consumer Price Index dataset is taken from the [Australian Bureau of Statistics](https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia). It uses the nation-wide CPI value. The validation examples in the tests are taken from the [Australian Reserve Bank's inflation calculator](https://www.rba.gov.au/calculator/). This will automatically update each quarter as the new datasets are released.
 
 The CPI data goes back to 1948. Using dates before this will result in a NaN.
+
+## License and Disclaimer
+
+`ausdex` is released under the Apache 2.0 license.
+
+While every effort has been made by the authors of this package to ensure that the data and calculations used to produce the results are accurate, as is stated in the license, we accept no liability or responsibility for the accuracy or completeness of the calculations. 
+We recommend that users exercise their own care and judgment with respect to the use of this package.
