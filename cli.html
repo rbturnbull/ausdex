@@ -228,10 +228,26 @@ start_date (str, optional): Date to set the beginning of the time series graph. 
 end_date (str, optional): Date to set the end of the time series graph too. If empty, then the end date to the most recent quarter.</p>
 </dd>
 </dl>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex plot-cpi <span class="o">[</span>OPTIONS<span class="o">]</span> OUTPUT
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex plot-cpi <span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 <p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ausdex-plot-cpi-show">
+<span class="sig-name descname"><span class="pre">--show</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--no-show</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ausdex-plot-cpi-show" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Default</dt>
+<dd class="field-odd"><p>True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ausdex-plot-cpi-output">
+<span class="sig-name descname"><span class="pre">--output</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output&gt;</span></span><a class="headerlink" href="#cmdoption-ausdex-plot-cpi-output" title="Permalink to this definition"></a></dt>
+<dd><p>The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension.</p>
+</dd></dl>
+
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-ausdex-plot-cpi-start-date">
 <span class="sig-name descname"><span class="pre">--start-date</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;start_date&gt;</span></span><a class="headerlink" href="#cmdoption-ausdex-plot-cpi-start-date" title="Permalink to this definition"></a></dt>
@@ -244,11 +260,15 @@ end_date (str, optional): Date to set the end of the time series graph too. If e
 <dd><p>Date to set the end of the time series graph too. If empty, then the end date to the most recent quarter.</p>
 </dd></dl>
 
-<p class="rubric">Arguments</p>
 <dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-ausdex-plot-cpi-arg-OUTPUT">
-<span class="sig-name descname"><span class="pre">OUTPUT</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ausdex-plot-cpi-arg-OUTPUT" title="Permalink to this definition"></a></dt>
-<dd><p><strong>Required argument</strong> The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension. &lt;click.types.Path object at 0x7fd6647e8e80&gt;</p>
+<dt class="sig sig-object std" id="cmdoption-ausdex-plot-cpi-location">
+<span class="sig-name descname"><span class="pre">--location</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;location&gt;</span></span><a class="headerlink" href="#cmdoption-ausdex-plot-cpi-location" title="Permalink to this definition"></a></dt>
+<dd><p>The location for calculating the CPI.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Options</dt>
+<dd class="field-odd"><p>Australia | Sydney | Melbourne | Brisbane | Adelaide | Perth | Hobart | Darwin | Canberra</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -300,7 +320,7 @@ value (float, optional): Value you in <cite>compare_date</cite> dollars to plot 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-ausdex-plot-inflation-arg-OUTPUT">
 <span class="sig-name descname"><span class="pre">OUTPUT</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ausdex-plot-inflation-arg-OUTPUT" title="Permalink to this definition"></a></dt>
-<dd><p><strong>Required argument</strong> The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension. &lt;click.types.Path object at 0x7fd6647e8e50&gt;</p>
+<dd><p><strong>Required argument</strong> The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension. &lt;click.types.Path object at 0x7f189c540370&gt;</p>
 </dd></dl>
 
 </section>
