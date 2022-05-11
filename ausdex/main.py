@@ -84,9 +84,10 @@ def inflation(
 
 @app.command()
 def plot_inflation(
-    compare_date: str,
-    output: Path = typer.Argument(
-        ...,
+    compare_date: str = typer.Argument(..., help="Date to set relative value of the dollars too."),
+    show: bool = typer.Option(True, help="Whether or not to show the figure in a browser."),
+    output: Path = typer.Option(
+        None,
         help="The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension.",
     ),
     start_date: str = typer.Option(
@@ -98,6 +99,11 @@ def plot_inflation(
     ),
     value: float = typer.Option(
         1.0, help="Value you in `compare_date` dollars to plot on the time series. Defaults to 1."
+    ),
+    location: Location = typer.Option(
+        Location.AUSTRALIA,
+        help="The location for calculating the CPI.",
+        case_sensitive=False,
     ),
 ):
     """
@@ -112,13 +118,19 @@ def plot_inflation(
     """
     from ausdex.inflation import plot_inflation_timeseries
 
-    fig = plot_inflation_timeseries(compare_date=compare_date, start_date=start_date, end_date=end_date, value=value)
-    viz.write_fig(fig, output)
+    fig = plot_inflation_timeseries(
+        compare_date=compare_date, start_date=start_date, end_date=end_date, value=value, location=location
+    )
+    if output:
+        print(f"Writing figure to '{output}'.")
+        viz.write_fig(fig, output)
+    if show:
+        fig.show()
 
 
 @app.command()
 def plot_cpi(
-    show: bool = True,
+    show: bool = typer.Option(True, help="Whether or not to show the figure in a browser."),
     output: Path = typer.Option(
         None,
         help="The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension.",

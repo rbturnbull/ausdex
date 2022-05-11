@@ -258,12 +258,14 @@ class CPI:
             plotly.graph_objects.Figure: line graph of inflated dollar values vs time
         """
 
-        inflation = self.calc_inflation_timeseries(compare_date, start_date, end_date, value=value).reset_index()
-        new_col_name = f"price of $ {value} in {str(compare_date)} dollars"
+        inflation = self.calc_inflation_timeseries(
+            compare_date, start_date, end_date, value=value, location=location
+        ).reset_index()
+        new_col_name = f"Equivalent Dollar Value"
         if "title" not in kwargs:
-            kwargs["title"] = f"Inflation time series for ${value} at evaluated in {str(compare_date)} dollars"
+            kwargs["title"] = f"The equivalent of ${value:.2f} from {str(compare_date)}"
         inflation.rename(
-            columns={"Index Numbers ;  All groups CPI ;  Australia ;": new_col_name},
+            columns={f"Index Numbers ;  All groups CPI ;  {location} ;": new_col_name},
             inplace=True,
         )
         fig = px.line(inflation, x="Date", y=new_col_name, **kwargs)
@@ -360,6 +362,7 @@ def plot_inflation_timeseries(
     start_date: Union[datetime, str, None] = None,
     end_date: Union[datetime, str, None] = None,
     value: Union[float, int] = 1,
+    location: Union[Location, str] = Location.AUSTRALIA,
     **kwargs,
 ) -> plotly.graph_objects.Figure:
     """
@@ -375,7 +378,9 @@ def plot_inflation_timeseries(
     Returns:
         plotly.graph_objects.Figure: line graph of inflated dollar values vs time
     """
-    return _cpi.plot_inflation_timeseries(compare_date, start_date=start_date, end_date=end_date, value=value, **kwargs)
+    return _cpi.plot_inflation_timeseries(
+        compare_date, start_date=start_date, end_date=end_date, value=value, location=location, **kwargs
+    )
 
 
 def plot_cpi_timeseries(

@@ -84,3 +84,23 @@ class TestMain(unittest.TestCase):
         assert result.exit_code == 0
         mock_show.assert_called_once()
         mock_write_image.assert_called_once()
+
+    @patch.object(Figure, "show")
+    def test_plot_inflation(self, mock_show):
+        result = self.runner.invoke(
+            main.app,
+            ["plot-inflation", "2022"],
+        )
+        assert result.exit_code == 0
+        mock_show.assert_called_once()
+
+    @patch.object(Figure, "show")
+    @patch.object(Figure, "write_html")
+    def test_plot_inflation_output(self, mock_show, mock_write_html):
+        result = self.runner.invoke(
+            main.app,
+            ["plot-inflation", "2022", "--output", "tmp.html", "--location", "Melbourne"],
+        )
+        assert result.exit_code == 0
+        mock_show.assert_called_once()
+        mock_write_html.assert_called_once()
