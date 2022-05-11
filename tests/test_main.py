@@ -1,7 +1,6 @@
 import unittest
 import re
 from unittest.mock import patch
-from matplotlib.figure import Figure
 
 from typer.testing import CliRunner
 from plotly.graph_objects import Figure
