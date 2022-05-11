@@ -42,14 +42,25 @@ $ ausdex inflation 26 "July 21 1991"  --evaluation-date "Sep 1999"
 $ 30.27
 ```
 
+By default, `ausdex` uses the CPI for Australia in general but you can calculate the inflation for specific capital cities with the `--location` argument:
+```
+$ ausdex inflation 26 "July 21 1991"  --evaluation-date "Sep 1999" --location sydney
+$ 30.59
+```
+
+Location options are: 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
+
+
 ## Module Usage
 
 ```
 >>> import ausdex
 >>> ausdex.calc_inflation(26, "July 21 1991")
 52.35254237288135
->>> ausdex.calc_inflation(26, "July 21 1991",evaluation_date="Sep 1999")
+>>> ausdex.calc_inflation(26, "July 21 1991", evaluation_date="Sep 1999")
 30.27457627118644
+>>> ausdex.calc_inflation(26, "July 21 1991", evaluation_date="Sep 1999", location="sydney")
+30.59083191850594
 ```
 The dates can be as strings or Python datetime objects.
 
