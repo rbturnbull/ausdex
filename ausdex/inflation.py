@@ -280,6 +280,7 @@ class CPI:
         start_date: Union[datetime, str, None] = None,
         end_date: Union[datetime, str, None] = None,
         locations: List[Location] = None,
+        title: str = None,
         **kwargs,
     ) -> plotly.graph_objects.Figure:
         """
@@ -320,9 +321,14 @@ class CPI:
             legend_title="Location",
         )
 
+        if title is None:
+            location_name = locations[0] if len(locations) == 1 else "Australia"
+            title = f"Consumer Price Index in {location_name} over time"
+
+        fig.update_layout(title=title)
+
         if len(locations) == 1:
             fig.update_layout(
-                title=f"Consumer Price Index in {locations[0]} over time",
                 showlegend=False,
             )
         format_fig(fig)
