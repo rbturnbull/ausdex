@@ -2,7 +2,7 @@ import sys
 from enum import Enum
 from pathlib import Path
 from datetime import datetime, timedelta
-from typing import Union
+from typing import Union, List
 import pandas as pd
 from pandas._config import config
 import modin.pandas as mpd
@@ -274,7 +274,7 @@ class CPI:
         self,
         start_date: Union[datetime, str, None] = None,
         end_date: Union[datetime, str, None] = None,
-        location: Union[Location, str] = Location.AUSTRALIA,
+        locations: List[Location] = None,
         **kwargs,
     ) -> plotly.graph_objects.Figure:
         """
@@ -284,27 +284,42 @@ class CPI:
             start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
             end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
             kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
-            location (Union[Location, str], optional): The location for calculating the CPI.
+            locations (List[Location], optional): The location(s) for calculating the CPI.
                 Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
                 Default is 'Australia'.
 
         Returns:
             plotly.graph_objects.Figure: plot of cpi vs time
         """
-        if start_date != None:
-            start_date = convert_date(start_date).item()
-        if end_date != None:
-            end_date = convert_date(end_date).item()
-        cpi_ts = self.cpi_series(location=location)[start_date:end_date].copy()
-        cpi_ts = cpi_ts.reset_index()
-        cpi_ts.rename(
-            columns={f"Index Numbers ;  All groups CPI ;  {location} ;": "Consumer Price Index"},
-            inplace=True,
-        )
-        if "title" not in kwargs:
-            kwargs["title"] = f"Consumer Price Index in {location} over time"
+        if not locations:
+            locations = list(Location)
 
-        fig = px.line(cpi_ts, x="Date", y="Consumer Price Index", **kwargs)
+        if start_date is not None:
+            start_date = convert_date(start_date).item()
+        if end_date is not None:
+            end_date = convert_date(end_date).item()
+
+        df = self.latest_cpi_df
+        column_map = {f"Index Numbers ;  All groups CPI ;  {location} ;": str(location) for location in locations}
+        df = df.rename(columns=column_map)
+        df = df[column_map.values()]
+        df = df[start_date:end_date].copy()
+        df = df.reset_index()
+
+        if "title" not in kwargs:
+            kwargs["title"] = f"Consumer Price Index in Australia over time"
+
+        fig = px.line(df, x="Date", y=list(column_map.values()), **kwargs)
+        fig.update_layout(
+            yaxis_title="CPI",
+            legend_title="Location",
+        )
+
+        if len(locations) == 1:
+            fig.update_layout(
+                title=f"Consumer Price Index in {locations[0]} over time",
+                showlegend=False,
+            )
         format_fig(fig)
         return fig
 

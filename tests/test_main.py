@@ -1,8 +1,10 @@
 import unittest
 import re
 from unittest.mock import patch
+from matplotlib.figure import Figure
 
 from typer.testing import CliRunner
+from plotly.graph_objects import Figure
 
 from ausdex import main
 
@@ -62,3 +64,23 @@ class TestMain(unittest.TestCase):
         )
         assert result.exit_code == 0
         assert "5.29" in result.stdout
+
+    @patch.object(Figure, "show")
+    def test_plot_cpi(self, mock_show):
+        result = self.runner.invoke(
+            main.app,
+            ["plot-cpi"],
+        )
+        assert result.exit_code == 0
+        mock_show.assert_called_once()
+
+    @patch.object(Figure, "show")
+    @patch.object(Figure, "write_image")
+    def test_plot_cpi_output(self, mock_show, mock_write_image):
+        result = self.runner.invoke(
+            main.app,
+            ["plot-cpi", "--output", "tmp.jpg", "--location", "Melbourne"],
+        )
+        assert result.exit_code == 0
+        mock_show.assert_called_once()
+        mock_write_image.assert_called_once()

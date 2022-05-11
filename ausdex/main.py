@@ -118,8 +118,9 @@ def plot_inflation(
 
 @app.command()
 def plot_cpi(
-    output: Path = typer.Argument(
-        ...,
+    show: bool = True,
+    output: Path = typer.Option(
+        None,
         help="The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension.",
     ),
     start_date: str = typer.Option(
@@ -128,6 +129,11 @@ def plot_cpi(
     end_date: str = typer.Option(
         None,
         help="Date to set the end of the time series graph too. If empty, then the end date to the most recent quarter.",
+    ),
+    location: List[Location] = typer.Option(
+        None,
+        help="The location for calculating the CPI.",
+        case_sensitive=False,
     ),
 ):
     """
@@ -140,8 +146,12 @@ def plot_cpi(
     """
     from ausdex.inflation import plot_cpi_timeseries
 
-    fig = plot_cpi_timeseries(start_date=start_date, end_date=end_date)
-    viz.write_fig(fig, output)
+    fig = plot_cpi_timeseries(start_date=start_date, end_date=end_date, locations=location)
+    if output:
+        print(f"Writing figure to '{output}'.")
+        viz.write_fig(fig, output)
+    if show:
+        fig.show()
 
 
 @app.callback()
