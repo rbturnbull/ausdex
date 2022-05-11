@@ -1,10 +1,11 @@
+from pathlib import Path
 import unittest
 import re
 from unittest.mock import patch
 
 from typer.testing import CliRunner
 from plotly.graph_objects import Figure
-
+from tempfile import NamedTemporaryFile
 from ausdex import main
 
 
@@ -103,3 +104,36 @@ class TestMain(unittest.TestCase):
         assert result.exit_code == 0
         mock_show.assert_called_once()
         mock_write_html.assert_called_once()
+
+    def test_plot_inflation_output_exists(self):
+        with NamedTemporaryFile(suffix=".html") as tmp:
+            result = self.runner.invoke(
+                main.app,
+                [
+                    "plot-inflation",
+                    "01-01-2019",
+                    "--no-show",
+                    "--output",
+                    tmp.name,
+                    "--start-date",
+                    "06-06-1949",
+                ],
+            )
+            assert result.exit_code == 0
+            assert Path(tmp.name).exists()
+
+    def test_plot_cpi_output_exists(self):
+        with NamedTemporaryFile(suffix=".png") as tmp:
+            result = self.runner.invoke(
+                main.app,
+                [
+                    "plot-cpi",
+                    "--no-show",
+                    "--output",
+                    tmp.name,
+                    "--start-date",
+                    "06-06-1949",
+                ],
+            )
+            assert result.exit_code == 0
+            assert Path(tmp.name).exists()
