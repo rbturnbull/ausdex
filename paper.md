@@ -28,7 +28,11 @@ in a convenient Python package with simple programatic and command-line interfac
 
 # Statement of need
 
+Understanding price inflation is both critical to any economic analysis, and is one of the key economic concerns in a post-pandemic global economy [@hung2021output]. Therefore it is important to be able to quickly incorporate measures of inflation, and correct historic prices to current values in order to reflect the real change in purchasing power, and the value of goods. To that end we have built a package to automate the collection and calculation of inflation data for Australia, as well as for specific regions of Australia, using data supplied by the ABS.
+
 The ABS data is generally housed in Microsoft Excel spreadsheets linked from the data catalogue. Working with these spreadsheets directly is cumbersome. This package provides an Application Programming Interface (API) for Australian CPI data that seemlessly interoperates with `NumPy` [@harris2020array] and `pandas` [@mckinney-proc-scipy-2010]. It makes working with Australian dollars in Python convenient in a similar manner to the [cpi](https://github.com/palewire/cpi) Python package which adjusts US dollars for inflation.
+
+One example of an application of this package is during an analysis of a time series of building permits in Victoria Australia. corrections to inflation were needed in order to compare the costs of renovations and new builds along a multidecadal dataset. The results of these studies are being presented at the world building conference [cite the world building conference?], and will be included in forthcoming publications [make cite a future vidal and robert paper in prep?]
 
 # Calculating Inflation
 
