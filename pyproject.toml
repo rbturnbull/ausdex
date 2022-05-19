@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "ausdex"
-version = "1.0.0"
-description = "An interface for Australian inflation indexes."
+version = "1.0.1"
+description = "A Python package for adjusting Australian dollars for inflation"
 authors = ["Robert Turnbull <robert.turnbull@unimelb.edu.au>", "Jonathan Garber <jonathan.garber@unimelb.edu.au>"]
 license = "Apache-2.0"
 readme = "README.md"
