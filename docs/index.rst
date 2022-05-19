@@ -23,6 +23,7 @@ available in a convenient Python package with a simple programatic and command l
    quickstart
    reference
    cli
+   data_viz   
    citation
    contributing
    
