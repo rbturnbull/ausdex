@@ -2,7 +2,7 @@
 
 ![pipline](https://github.com/rbturnbull/ausdex/actions/workflows/pipeline.yml/badge.svg)
 [<img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rbturnbull/49262550cc8b0fb671d46df58de213d4/raw/coverage-badge.json">](<https://rbturnbull.github.io/ausdex/coverage/>)
-[<img src="https://img.shields.io/badge/docs-html-dodgerblue.svg">](<https://rbturnbull.github.io/ausdex/>)
+[<img src="https://github.com/rbturnbull/ausdex/actions/workflows/docs.yml/badge.svg">](<https://rbturnbull.github.io/ausdex/>)
 [<img src="https://img.shields.io/badge/code%20style-black-000000.svg">](<https://github.com/psf/black>)
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](code_of_conduct.md)
 [![status](https://joss.theoj.org/papers/817baa72d2b17b535af8f421a43404b0/status.svg)](https://joss.theoj.org/papers/817baa72d2b17b535af8f421a43404b0)
