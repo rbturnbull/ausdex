@@ -31,19 +31,19 @@ class TestFiles(unittest.TestCase):
         with self.assertRaises(files.DownloadError) as context:
             files.cached_download("http://www.example.com", data_dir() / "empty.html")
 
-    def test_get_abs_by_date(self):
-        file = files.get_abs_by_date("640101", datetime(2021, 8, 26))
+    def test_cached_download_abs_excel_by_date(self):
+        file = files.cached_download_abs_excel_by_date("640101", datetime(2021, 8, 26))
         self.assertIn("640101-jun-2021.xls", str(file))
-        file = files.get_abs_by_date("640101", datetime(2020, 1, 12))
+        file = files.cached_download_abs_excel_by_date("640101", datetime(2020, 1, 12))
         self.assertIn("640101-dec-2019.xls", str(file))
 
-    def test_get_abs_bad_quarter(self):
+    def test_cached_download_abs_excel_bad_quarter(self):
         with self.assertRaises(ValueError) as _:
             files.cached_download_abs_excel("640101", quarter="feb", year=2006)
 
-    def test_get_abs_by_date_future(self):
+    def test_cached_download_abs_excel_by_date_future(self):
         future = datetime.now() + timedelta(days=100)  # The next quarter is sure to not yet be released
 
         with patch("sys.stderr", new=StringIO()) as fake_out:
-            files.get_abs_by_date("640101", future)
+            files.cached_download_abs_excel_by_date("640101", future)
             self.assertIn(f"CPI data for {future} not available.", fake_out.getvalue())

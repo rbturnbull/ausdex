@@ -124,7 +124,9 @@ def cached_download_abs_excel(
     return local_path
 
 
-def get_abs_by_date(id: str, date: datetime, local_path: Union[Path, str, None] = None, force: bool = False) -> Path:
+def cached_download_abs_excel_by_date(
+    id: str, date: datetime, local_path: Union[Path, str, None] = None, force: bool = False
+) -> Path:
     """
     Gets a datafile from the Australian Burau of Statistics before a specific date.
 
@@ -158,7 +160,7 @@ def get_abs_by_date(id: str, date: datetime, local_path: Union[Path, str, None] 
     return file
 
 
-def latest_cpi_datafile(local_path: Union[Path, str, None] = None, force: bool = False) -> Path:
+def cached_download_latest_cpi(local_path: Union[Path, str, None] = None, force: bool = False) -> Path:
     """
     Returns the path to the latest cached file with the Australian Consumer Price Index (CPI) data.
 
@@ -174,4 +176,4 @@ def latest_cpi_datafile(local_path: Union[Path, str, None] = None, force: bool =
         Path: The path to the cached datafile.
     """
     CPI_FILE_ID = "640101"
-    return get_abs_by_date(id=CPI_FILE_ID, date=datetime.now(), local_path=local_path, force=force)
+    return cached_download_abs_excel_by_date(id=CPI_FILE_ID, date=datetime.now(), local_path=local_path, force=force)
