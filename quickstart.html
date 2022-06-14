@@ -123,13 +123,13 @@
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ausdex</span> <span class="n">inflation</span> <span class="n">VALUE</span> <span class="n">ORIGINAL_DATE</span>
 </pre></div>
 </div>
-<p>This adjust the value from the original date to the equivalent in today’s dollars.</p>
-<p>For example, to adjust $26 from July 21, 1991 to today run:</p>
+<p>This adjust the value from the original date to the equivalent for the most recent quarter.</p>
+<p>For example, to adjust $26 from July 21, 1991 to the latest quarter run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ausdex inflation 26 &quot;July 21 1991&quot; 
 $ 52.35
 </pre></div>
 </div>
-<p>To choose a different date for evaluation use the <code class="docutils literal notranslate"><span class="pre">--evaluation-date</span></code> option. e.g.</p>
+<p>To choose a different date for evaluation use the <code class="docutils literal notranslate"><span class="pre">--evaluation-date</span></code> option. This adjusts the value to dollars in the quarter corresponding to that date. For example, this command adjusts $26 from July 1991 to dollars in September 1999:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ ausdex inflation 26 &quot;July 21 1991&quot;  --evaluation-date &quot;Sep 1999&quot;
 $ 30.27
 </pre></div>

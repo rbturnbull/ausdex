@@ -18,19 +18,20 @@ Adjust single values using the command line interface:
 ```
 ausdex inflation VALUE ORIGINAL_DATE
 ```
-This adjust the value from the original date to the equivalent in today's dollars.
+This adjust the value from the original date to the equivalent for the most recent quarter.
 
-For example, to adjust $26 from July 21, 1991 to today run:
+For example, to adjust $26 from July 21, 1991 to the latest quarter run:
 ```
 $ ausdex inflation 26 "July 21 1991" 
 $ 52.35
 ```
 
-To choose a different date for evaluation use the `--evaluation-date` option. e.g.
+To choose a different date for evaluation use the `--evaluation-date` option. This adjusts the value to dollars in the quarter corresponding to that date. For example, this command adjusts $26 from July 1991 to dollars in September 1999:
 ```
 $ ausdex inflation 26 "July 21 1991"  --evaluation-date "Sep 1999"
 $ 30.27
 ```
+
 
 By default, `ausdex` uses the CPI for Australia in general but you can calculate the inflation for specific capital cities with the `--location` argument:
 ```
