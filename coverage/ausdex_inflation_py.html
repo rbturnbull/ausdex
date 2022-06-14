@@ -22,8 +22,8 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            106 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">106 run</button>
+            108 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">108 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
@@ -387,12 +387,25 @@
     <p id="t333" class="pln"><span class="n"><a href="#t333">333</a></span><span class="t"><span class="str">        plotly.graph_objects.Figure: plot of cpi vs time</span>&nbsp;</span><span class="r"></span></p>
     <p id="t334" class="pln"><span class="n"><a href="#t334">334</a></span><span class="t"><span class="str">    """</span>&nbsp;</span><span class="r"></span></p>
     <p id="t335" class="run"><span class="n"><a href="#t335">335</a></span><span class="t">    <span class="key">return</span> <span class="nam">_cpi</span><span class="op">.</span><span class="nam">plot_cpi_timeseries</span><span class="op">(</span><span class="nam">start_date</span><span class="op">=</span><span class="nam">start_date</span><span class="op">,</span> <span class="nam">end_date</span><span class="op">=</span><span class="nam">end_date</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t336" class="pln"><span class="n"><a href="#t336">336</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t337" class="pln"><span class="n"><a href="#t337">337</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t338" class="run"><span class="n"><a href="#t338">338</a></span><span class="t"><span class="key">def</span> <span class="nam">latest_cpi_df</span><span class="op">(</span><span class="op">)</span> <span class="op">-></span> <span class="nam">pd</span><span class="op">.</span><span class="nam">DataFrame</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t339" class="pln"><span class="n"><a href="#t339">339</a></span><span class="t">    <span class="str">"""</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t340" class="pln"><span class="n"><a href="#t340">340</a></span><span class="t"><span class="str">    Returns a pandas DataFrame with the latest CPI data from the Australian Bureau of Statistics.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t341" class="pln"><span class="n"><a href="#t341">341</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t342" class="pln"><span class="n"><a href="#t342">342</a></span><span class="t"><span class="str">    This will contain the data for each quarter going back to 1948.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t343" class="pln"><span class="n"><a href="#t343">343</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t344" class="pln"><span class="n"><a href="#t344">344</a></span><span class="t"><span class="str">    Returns:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t345" class="pln"><span class="n"><a href="#t345">345</a></span><span class="t"><span class="str">        pandas.DataFrame: The latest dataframe with the CPI data.</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t346" class="pln"><span class="n"><a href="#t346">346</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t347" class="pln"><span class="n"><a href="#t347">347</a></span><span class="t"><span class="str">    """</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t348" class="run"><span class="n"><a href="#t348">348</a></span><span class="t">    <span class="key">return</span> <span class="nam">_cpi</span><span class="op">.</span><span class="nam">latest_cpi_df</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2022-06-14 02:13 +0000
+            created at 2022-06-14 02:34 +0000
         </p>
     </div>
 </div>

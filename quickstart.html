@@ -167,6 +167,16 @@ $ 30.59
 <h2>Dataset and Validation<a class="headerlink" href="#dataset-and-validation" title="Permalink to this headline"></a></h2>
 <p>The Consumer Price Index dataset is taken from the <a class="reference external" href="https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia">Australian Bureau of Statistics</a>. It uses the nation-wide CPI value. The validation examples in the tests are taken from the <a class="reference external" href="https://www.rba.gov.au/calculator/">Australian Reserve Bank’s inflation calculator</a>. This will automatically update each quarter as the new datasets are released.</p>
 <p>The CPI data goes back to 1948. Using dates before this will result in a NaN.</p>
+<p>To access the raw CPI data as a pandas DataFrame, use this function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">ausdex</span><span class="o">.</span><span class="n">latest_cpi_df</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The Excel spreadsheet for this is stored in the user’s cache directory.
+If you wish to download this Excel file to a specific location, use this function:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ausdex</span><span class="o">.</span><span class="n">files</span><span class="o">.</span><span class="n">cached_download_cpi</span><span class="p">(</span><span class="n">local_path</span><span class="o">=</span><span class="s2">&quot;cpi-data.xlsx&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For more infomation about the methods to download data from the ABS, see the <a class="reference external" href="https://rbturnbull.github.io/ausdex/reference.html">API specification</a>.</p>
 </section>
 <section id="license-and-disclaimer">
 <h2>License and Disclaimer<a class="headerlink" href="#license-and-disclaimer" title="Permalink to this headline"></a></h2>
