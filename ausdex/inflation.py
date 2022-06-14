@@ -12,7 +12,7 @@ import plotly.express as px
 
 from cached_property import cached_property
 
-from .files import cached_download_latest_cpi
+from .files import cached_download_cpi
 from .dates import convert_date
 from .viz import format_fig
 
@@ -43,7 +43,7 @@ class CPI:
         Returns:
             pd.DataFrame: The latest Australian Consumer Price Index (CPI) data. The index of the series is the relevant date for each row.
         """
-        local_path = cached_download_latest_cpi()
+        local_path = cached_download_cpi()
         excel_file = pd.ExcelFile(local_path)
         df = excel_file.parse("Data1")
 

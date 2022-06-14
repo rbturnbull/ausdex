@@ -117,22 +117,27 @@ def cached_download_abs_excel(
         Path: The path to the cached ABS datafile
     """
     try:
-        local_path = cached_download_abs(quarter=quarter, year=year, id=id, extension="xlsx")
+        local_path = cached_download_abs(
+            quarter=quarter, year=year, id=id, extension="xlsx", local_path=local_path, force=force
+        )
     except (DownloadError, IOError):
-        local_path = cached_download_abs(quarter=quarter, year=year, id=id, extension="xls")
+        local_path = cached_download_abs(
+            quarter=quarter, year=year, id=id, extension="xls", local_path=local_path, force=force
+        )
 
     return local_path
 
 
 def cached_download_abs_excel_by_date(
-    id: str, date: datetime, local_path: Union[Path, str, None] = None, force: bool = False
+    id: str, date: Union[datetime, None] = None, local_path: Union[Path, str, None] = None, force: bool = False
 ) -> Path:
     """
     Gets a datafile from the Australian Burau of Statistics before a specific date.
 
     Args:
         id (str): The ABS id for the datafile. For Australian Consumer Price Index (CPI) the ID is 640101.
-        date (datetime): The date before which the CPI data should be valid.
+        date (datetime, optional): The date before which the CPI data should be valid.
+            If not provided, then it uses today's date download get the latest file.
         local_path (Path, str, optional): The path to where the file should be downloaded.
             If None, then it is downloaded in the user's cache directory.
         force (bool): Whether or not the file should be forced to download again even if present in the local path.
@@ -141,6 +146,7 @@ def cached_download_abs_excel_by_date(
     Returns:
         Path: The path to the cached ABS datafile.
     """
+    date = date or datetime.now()
     file = None
     while file is None and date > datetime(1948, 1, 1):
         try:
@@ -160,13 +166,17 @@ def cached_download_abs_excel_by_date(
     return file
 
 
-def cached_download_latest_cpi(local_path: Union[Path, str, None] = None, force: bool = False) -> Path:
+def cached_download_cpi(
+    *, date: Union[datetime, None] = None, local_path: Union[Path, str, None] = None, force: bool = False
+) -> Path:
     """
     Returns the path to the latest cached file with the Australian Consumer Price Index (CPI) data.
 
-    The ABS id of this file is "640101".
+    It downloads the file if it does not exist already. The ABS id of this file is "640101".
 
     Args:
+        date (datetime, optional): The date before which the CPI data should be valid.
+            If not provided, then it uses today's date download get the latest file.
         local_path (Path, str, optional): The path to where the file should be downloaded.
             If None, then it is downloaded in the user's cache directory.
         force (bool): Whether or not the file should be forced to download again even if present in the local path.
@@ -176,4 +186,4 @@ def cached_download_latest_cpi(local_path: Union[Path, str, None] = None, force:
         Path: The path to the cached datafile.
     """
     CPI_FILE_ID = "640101"
-    return cached_download_abs_excel_by_date(id=CPI_FILE_ID, date=datetime.now(), local_path=local_path, force=force)
+    return cached_download_abs_excel_by_date(id=CPI_FILE_ID, date=date, local_path=local_path, force=force)
