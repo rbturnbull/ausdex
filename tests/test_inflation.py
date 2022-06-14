@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from io import StringIO
 import unittest
 import numpy as np
 import pandas as pd
@@ -92,27 +91,6 @@ class TestInflation(unittest.TestCase):
 
         np.testing.assert_allclose(results, df.gold, atol=1e-02)
         return results
-
-    def test_get_abs_by_date(self):
-        cpi = inflation.CPI()
-        file = cpi.get_abs_by_date("640101", datetime(2021, 8, 26))
-        self.assertIn("640101-jun-2021.xls", str(file))
-        file = cpi.get_abs_by_date("640101", datetime(2020, 1, 12))
-        self.assertIn("640101-dec-2019.xls", str(file))
-
-    def test_get_abs_bad_quarter(self):
-        cpi = inflation.CPI()
-
-        with self.assertRaises(ValueError) as _:
-            cpi.get_abs("640101", quarter="feb", year=2006)
-
-    def test_get_abs_by_date_future(self):
-        cpi = inflation.CPI()
-        future = datetime.now() + timedelta(days=100)  # The next quarter is sure to not yet be released
-
-        with patch("sys.stderr", new=StringIO()) as fake_out:
-            cpi.get_abs_by_date("640101", future)
-            self.assertIn(f"CPI data for {future} not available.", fake_out.getvalue())
 
     def test_pandas_modin(self):
         results = self.test_pandas(pandas_module=mpd)

@@ -2,9 +2,8 @@ import sys
 from enum import Enum
 from pathlib import Path
 from datetime import datetime, timedelta
-from typing import Union, List
+from typing import Union, List, Optional
 import pandas as pd
-from pandas._config import config
 import modin.pandas as mpd
 import numpy as np
 import numbers
@@ -13,7 +12,7 @@ import plotly.express as px
 
 from cached_property import cached_property
 
-from .files import cached_download, get_cached_path, DownloadError
+from .files import latest_cpi_datafile
 from .dates import convert_date
 from .viz import format_fig
 
@@ -36,79 +35,6 @@ class Location(str, Enum):
 class CPI:
     """A class to manage the Australian Consumer Index (CPI) data."""
 
-    ACCEPTED_QUARTERS = ["mar", "jun", "sep", "dec"]
-
-    def get_abs(self, id: str, quarter: str, year: Union[str, int]) -> Path:
-        """Gets a datafile from the Australian Burau of Statistics.
-
-        Args:
-            id (str): The ABS id for the datafile. For Australian Consumer Price Index the ID is 640101.
-            quarter (str): One of "mar", "jun", "sep", or "dec".
-            year (Union[str,int]): [description]
-
-        Raises:
-            ValueError: Raises this error if the quarter cannot be understood.
-
-        Returns:
-            Path: The path to the cached ABS datafile
-        """
-        quarter = quarter.lower()[:3]
-        if quarter not in self.ACCEPTED_QUARTERS:
-            raise ValueError(f"Cannot understand quarter {quarter}.")
-
-        def cached_download_abs(quarter, year, id, extension):
-            url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{quarter}-{year}/{id}.{extension}"
-            local_path = get_cached_path(f"{id}-{quarter}-{year}.{extension}")
-            cached_download(url, local_path)
-            return local_path
-
-        try:
-            local_path = cached_download_abs(quarter=quarter, year=year, id=id, extension="xlsx")
-        except (DownloadError, IOError):
-            local_path = cached_download_abs(quarter=quarter, year=year, id=id, extension="xls")
-
-        return local_path
-
-    def get_abs_by_date(self, id: str, date: datetime) -> Path:
-        """
-        Gets a datafile from the Australian Burau of Statistics before a specific date.
-
-        Args:
-            id (str): The ABS id for the datafile. For Australian Consumer Price Index (CPI) the ID is 640101.
-            date (datetime): The date before which the CPI data should be valid.
-
-        Returns:
-            Path: The path to the cached ABS datafile.
-        """
-        file = None
-        while file is None and date > datetime(1948, 1, 1):
-            try:
-                year = date.year
-                quarter_index = (date.month - 3) // 3
-                if quarter_index == -1:
-                    quarter_index = 3
-                    year -= 1
-                quarter = self.ACCEPTED_QUARTERS[quarter_index]
-
-                file = self.get_abs(id, quarter, year)
-            except:
-                print(f"CPI data for {date} not available.", file=sys.stderr)
-
-            date -= timedelta(days=89)  # go back approximately a quarter
-
-        return file
-
-    def latest_cpi_datafile(self) -> Path:
-        """
-        Returns the path to the latest cached file with the Australian Consumer Price Index (CPI) data.
-
-        The ABS id of this file is "640101".
-
-        Returns:
-            Path: The path to the cached datafile.
-        """
-        return self.get_abs_by_date("640101", datetime.now())
-
     @cached_property
     def latest_cpi_df(self) -> pd.DataFrame:
         """
@@ -117,7 +43,7 @@ class CPI:
         Returns:
             pd.DataFrame: The latest Australian Consumer Price Index (CPI) data. The index of the series is the relevant date for each row.
         """
-        local_path = self.latest_cpi_datafile()
+        local_path = latest_cpi_datafile()
         excel_file = pd.ExcelFile(local_path)
         df = excel_file.parse("Data1")
 
@@ -192,7 +118,7 @@ class CPI:
         self,
         value: Union[numbers.Number, np.ndarray, pd.Series],
         original_date: Union[datetime, str],
-        evaluation_date: Union[datetime, str] = None,
+        evaluation_date: Union[datetime, str, None] = None,
         location: Union[Location, str] = Location.AUSTRALIA,
     ):
         """
@@ -248,11 +174,11 @@ class CPI:
         Plots a time series of dollar values attached to a particular date's dollar value
 
         Args:
-            compare_date (Union[datetime, str]): Date to set relative value of the dollars too.
-            start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
-            end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
-            value (Union[float, int], optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
-            location (Union[Location, str], optional): The location for calculating the CPI.
+            compare_date (datetime, str): Date to set relative value of the dollars too.
+            start_date (datetime, str, optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+            end_date (datetime, str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
+            value (float, int, optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
+            location (Location, str, optional): The location for calculating the CPI.
                 Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
                 Default is 'Australia'.
             kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
@@ -287,12 +213,13 @@ class CPI:
         Plots CPI vs time.
 
         Args:
-            start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
-            end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
-            kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
+            start_date (datetime, str, optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+            end_date (datetime, str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
             locations (List[Location], optional): The location(s) for calculating the CPI.
                 Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
                 Default is 'Australia'.
+            title: (str, optional): The title of the figure.
+            kwargs:: additional parameters to feed into plotly.express.line function.
 
         Returns:
             plotly.graph_objects.Figure: plot of cpi vs time
@@ -311,9 +238,6 @@ class CPI:
         df = df[column_map.values()]
         df = df[start_date:end_date].copy()
         df = df.reset_index()
-
-        if "title" not in kwargs:
-            kwargs["title"] = f"Consumer Price Index in Australia over time"
 
         fig = px.line(df, x="Date", y=list(column_map.values()), **kwargs)
         fig.update_layout(
@@ -348,10 +272,10 @@ def calc_inflation(
     Adjusts a value (or list of values) for inflation.
 
     Args:
-        value (Union[numbers.Number, np.ndarray, pd.Series]): The value to be converted.
-        original_date (Union[datetime, str]): The date that the value is in relation to.
-        evaluation_date (Union[datetime, str], optional): The date to adjust the value to. Defaults to the current date.
-        location (Union[Location, str], optional): The location for calculating the CPI.
+        value (numbers.Number, np.ndarray, pd.Series): The value to be converted.
+        original_date (datetime, str): The date that the value is in relation to.
+        evaluation_date (datetime, str, optional): The date to adjust the value to. Defaults to the current date.
+        location (Location, str, optional): The location for calculating the CPI.
             Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
             Default is 'Australia'.
 
@@ -378,11 +302,11 @@ def plot_inflation_timeseries(
     Plots a time series of dollar values attached to a particular date's dollar value.
 
     Args:
-        compare_date (Union[datetime, str]): Date to set relative value of the dollars too.
-        start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
-        end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
-        value (Union[float, int], optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
-        kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
+        compare_date (datetime, str): Date to set relative value of the dollars too.
+        start_date (datetime, str, optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+        end_date (datetime, str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
+        value (float, int, optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
+        kwargs: additional parameters to feed into plotly.express.line function
 
     Returns:
         plotly.graph_objects.Figure: line graph of inflated dollar values vs time
@@ -401,9 +325,9 @@ def plot_cpi_timeseries(
     Plots the Australian CPI vs time
 
     Args:
-        start_date (Union[datetime, str, None], optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
-        end_date (Union[datetime, str, None], optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
-        kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
+        start_date (datetime, str, optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+        end_date (datetime, str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
+        kwargs: additional parameters to feed into plotly.express.line function.
 
     Returns:
         plotly.graph_objects.Figure: plot of cpi vs time
