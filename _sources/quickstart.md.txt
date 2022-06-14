@@ -8,7 +8,9 @@ You can install `ausdex` from the Python Package Index (PyPI):
 pip install ausdex
 ```
 
-To install ausdex for development, see the documentation for [contributing](./contributing.md).
+`ausdex` requires Python 3.8 or higher.
+
+To install `ausdex` for development, see the documentation for [contributing](./contributing.md).
 
 ## Command Line Usage
 
