@@ -333,3 +333,16 @@ def plot_cpi_timeseries(
         plotly.graph_objects.Figure: plot of cpi vs time
     """
     return _cpi.plot_cpi_timeseries(start_date=start_date, end_date=end_date, **kwargs)
+
+
+def latest_cpi_df() -> pd.DataFrame:
+    """
+    Returns a pandas DataFrame with the latest CPI data from the Australian Bureau of Statistics.
+
+    This will contain the data for each quarter going back to 1948.
+
+    Returns:
+        pandas.DataFrame: The latest dataframe with the CPI data.
+
+    """
+    return _cpi.latest_cpi_df

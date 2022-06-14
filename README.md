@@ -87,6 +87,19 @@ The Consumer Price Index dataset is taken from the [Australian Bureau of Statist
 
 The CPI data goes back to 1948. Using dates before this will result in a NaN.
 
+To access the raw CPI data as a pandas DataFrame, use this function:
+```
+df = ausdex.latest_cpi_df()
+```
+
+The Excel spreadsheet for this is stored in the user's cache directory. 
+If you wish to download this Excel file to a specific location, use this function:
+```
+ausdex.files.cached_download_cpi(local_path="cpi-data.xlsx")
+```
+
+For more infomation about the methods to download data from the ABS, see the [API specification](https://rbturnbull.github.io/ausdex/reference.html).
+
 ## Contributing
 
 See the guidelines for contributing and our code of conduct in the [documentation](https://rbturnbull.github.io/ausdex/contributing.html).

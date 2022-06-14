@@ -138,3 +138,9 @@ class TestInflationPlot(unittest.TestCase):
                 self.tmp / "test_cpi_fig.json",
             )
         )
+
+    def test_latest_cpi_df(self):
+        df = inflation.latest_cpi_df()
+        assert isinstance(df, pd.DataFrame)
+        assert len(df) > 290
+        assert "Index Numbers ;  All groups CPI ;  Australia ;" in df.columns
