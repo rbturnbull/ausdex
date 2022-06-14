@@ -45,6 +45,8 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-ausdex.inflation">Inflation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ausdex.files">Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ausdex.main">Main</a></li>
 </ul>
 </li>
@@ -102,8 +104,10 @@
     text-align: unset;
 }
 </style>
+<section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline"></a></h1>
 <section id="module-ausdex.inflation">
-<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-ausdex.inflation" title="Permalink to this headline"></a></h1>
+<span id="inflation"></span><h2>Inflation<a class="headerlink" href="#module-ausdex.inflation" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="ausdex.inflation.CPI">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ausdex.inflation.</span></span><span class="sig-name descname"><span class="pre">CPI</span></span><a class="headerlink" href="#ausdex.inflation.CPI" title="Permalink to this definition"></a></dt>
@@ -319,6 +323,156 @@ Default is ‘Australia’.</p></li>
 </dl>
 </dd></dl>
 
+</section>
+<section id="module-ausdex.files">
+<span id="files"></span><h2>Files<a class="headerlink" href="#module-ausdex.files" title="Permalink to this headline"></a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="ausdex.files.DownloadError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ausdex.files.</span></span><span class="sig-name descname"><span class="pre">DownloadError</span></span><a class="headerlink" href="#ausdex.files.DownloadError" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.files.cached_download">
+<span class="sig-prename descclassname"><span class="pre">ausdex.files.</span></span><span class="sig-name descname"><span class="pre">cached_download</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#ausdex.files.cached_download" title="Permalink to this definition"></a></dt>
+<dd><p>Downloads a file if a local file does not already exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>url</strong> (<em>str</em>) – The url of the file to download.</p></li>
+<li><p><strong>local_path</strong> (<em>str</em><em>, </em><em>Path</em>) – The local path of where the file should be.
+If this file isn’t there or the file size is zero then this function downloads it to this location.</p></li>
+<li><p><strong>force</strong> (<em>bool</em>) – Whether or not the file should be forced to download again even if present in the local path.
+Default False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#ausdex.files.DownloadError" title="ausdex.files.DownloadError"><strong>DownloadError</strong></a> – Raises an exception if it cannot download the file.</p></li>
+<li><p><strong>IOError</strong> – Raises an exception if the file does not exist or is empty after downloading.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.files.cached_download_abs">
+<span class="sig-prename descclassname"><span class="pre">ausdex.files.</span></span><span class="sig-name descname"><span class="pre">cached_download_abs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quarter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extension</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="headerlink" href="#ausdex.files.cached_download_abs" title="Permalink to this definition"></a></dt>
+<dd><p>Downloads a file from the ABS if a local file does not already exist.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The ABS id for the datafile. For Australian Consumer Price Index the ID is 640101.</p></li>
+<li><p><strong>quarter</strong> (<em>str</em>) – The quarter of the file in question. One of “mar”, “jun”, “sep”, or “dec”.</p></li>
+<li><p><strong>year</strong> (<em>str</em><em>, </em><em>int</em>) – The year for the file in question.</p></li>
+<li><p><strong>extension</strong> (<em>str</em>) – The extension of the file in question.</p></li>
+<li><p><strong>local_path</strong> (<em>str</em><em>, </em><em>Path</em>) – The path to where the file should be downloaded.
+If None, then it is downloaded in the user’s cache directory.</p></li>
+<li><p><strong>force</strong> (<em>bool</em>) – Whether or not the file should be forced to download again even if present in the local path.</p></li>
+<li><p><strong>local_path</strong> – The local path of where the file should be.
+If this file isn’t there or the file size is zero then this function downloads it to this location.</p></li>
+<li><p><strong>force</strong> – Whether or not the file should be forced to download again even if present in the local path.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the value for <cite>quarter</cite> cannot be understood.</p></li>
+<li><p><a class="reference internal" href="#ausdex.files.DownloadError" title="ausdex.files.DownloadError"><strong>DownloadError</strong></a> – Raises an exception if it cannot download the file.</p></li>
+<li><p><strong>IOError</strong> – Raises an exception if the file does not exist or is empty after downloading.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The path to the downloaded ABS datafile.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.files.cached_download_abs_excel">
+<span class="sig-prename descclassname"><span class="pre">ausdex.files.</span></span><span class="sig-name descname"><span class="pre">cached_download_abs_excel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quarter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="headerlink" href="#ausdex.files.cached_download_abs_excel" title="Permalink to this definition"></a></dt>
+<dd><p>Gets am Excel file from the Australian Burau of Statistics.</p>
+<p>First it tries the extension <cite>xlsx</cite> and then falls back to <cite>xls</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The ABS id for the datafile. For Australian Consumer Price Index the ID is 640101.</p></li>
+<li><p><strong>quarter</strong> (<em>str</em>) – The quarter of the file in question. One of “mar”, “jun”, “sep”, or “dec”.</p></li>
+<li><p><strong>year</strong> (<em>str</em><em>, </em><em>int</em>) – The year for the file in question.</p></li>
+<li><p><strong>local_path</strong> (<em>Path</em><em>, </em><em>str</em><em>, </em><em>optional</em>) – The path to where the file should be downloaded.
+If None, then it is downloaded in the user’s cache directory.</p></li>
+<li><p><strong>force</strong> (<em>bool</em>) – Whether or not the file should be forced to download again even if present in the local path.
+Default False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Raises this error if the quarter cannot be understood.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The path to the cached ABS datafile</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.files.cached_download_abs_excel_by_date">
+<span class="sig-prename descclassname"><span class="pre">ausdex.files.</span></span><span class="sig-name descname"><span class="pre">cached_download_abs_excel_by_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime.datetime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="headerlink" href="#ausdex.files.cached_download_abs_excel_by_date" title="Permalink to this definition"></a></dt>
+<dd><p>Gets a datafile from the Australian Burau of Statistics before a specific date.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> (<em>str</em>) – The ABS id for the datafile. For Australian Consumer Price Index (CPI) the ID is 640101.</p></li>
+<li><p><strong>date</strong> (<em>datetime</em>) – The date before which the CPI data should be valid.</p></li>
+<li><p><strong>local_path</strong> (<em>Path</em><em>, </em><em>str</em><em>, </em><em>optional</em>) – The path to where the file should be downloaded.
+If None, then it is downloaded in the user’s cache directory.</p></li>
+<li><p><strong>force</strong> (<em>bool</em>) – Whether or not the file should be forced to download again even if present in the local path.
+Default False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The path to the cached ABS datafile.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.files.cached_download_latest_cpi">
+<span class="sig-prename descclassname"><span class="pre">ausdex.files.</span></span><span class="sig-name descname"><span class="pre">cached_download_latest_cpi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">local_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="headerlink" href="#ausdex.files.cached_download_latest_cpi" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the path to the latest cached file with the Australian Consumer Price Index (CPI) data.</p>
+<p>The ABS id of this file is “640101”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>local_path</strong> (<em>Path</em><em>, </em><em>str</em><em>, </em><em>optional</em>) – The path to where the file should be downloaded.
+If None, then it is downloaded in the user’s cache directory.</p></li>
+<li><p><strong>force</strong> (<em>bool</em>) – Whether or not the file should be forced to download again even if present in the local path.
+Default False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The path to the cached datafile.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.files.get_cached_path">
+<span class="sig-prename descclassname"><span class="pre">ausdex.files.</span></span><span class="sig-name descname"><span class="pre">get_cached_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pathlib.Path</span></span></span><a class="headerlink" href="#ausdex.files.get_cached_path" title="Permalink to this definition"></a></dt>
+<dd><p>Returns a path in the ausdex directory in the user’s cache.</p>
+<p>File may or may not exist.</p>
+</dd></dl>
+
+</section>
 <section id="module-ausdex.main">
 <span id="main"></span><h2>Main<a class="headerlink" href="#module-ausdex.main" title="Permalink to this headline"></a></h2>
 <dl class="py function">
