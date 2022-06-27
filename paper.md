@@ -32,7 +32,7 @@ Understanding price inflation is critical to any economic analysis and is one of
 
 ABS datasets are generally housed in Microsoft Excel spreadsheets linked from the data catalogue. Working with these spreadsheets directly is cumbersome. The `ausdex` package provides an Application Programming Interface (API) for Australian CPI data that seemlessly interoperates with `NumPy` [@harris2020array] and `pandas` [@mckinney-proc-scipy-2010]. It makes working with Australian dollars in Python convenient in a similar manner to the [cpi](https://github.com/palewire/cpi) Python package which adjusts US dollars for inflation.
 
-This software project was developed for the purpose of performing an analysis of a time series of building permits in Victoria, Australia. Corrections to inflation were needed in order to compare the costs of renovations and new building project along a multi-decadal timespan. The results of these studies are being presented at the 2022 CIB World Building Conference [@crawford_trends_2022; @paton-cole_trends_2022]. This software would be of use for any analysis of Australian prices over a period of time where inflationary effects need to be accounted for.
+This software project was developed for the purpose of performing an analysis of a time series of building permits in Victoria, Australia. Corrections to inflation were needed in order to compare the costs of renovations and new building project along a multi-decadal timespan. The results of these studies were presented at the 2022 CIB World Building Conference [@crawford_trends_2022; @paton-cole_trends_2022]. This software would be of use for any analysis of Australian prices over a period of time where inflationary effects need to be accounted for.
 
 # Calculating Inflation
 
