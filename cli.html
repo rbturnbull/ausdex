@@ -50,6 +50,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#ausdex-docs">docs</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ausdex-inflation">inflation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ausdex-plot-cpi">plot-cpi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ausdex-plot-cpi-change">plot-cpi-change</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ausdex-plot-inflation">plot-inflation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#ausdex-repo">repo</a></li>
 </ul>
@@ -224,7 +225,8 @@ Default is ‘Australia’.</p>
 <h3>plot-cpi<a class="headerlink" href="#ausdex-plot-cpi" title="Permalink to this headline"></a></h3>
 <p>Plot the Australian CPI over time.</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>output (Path): The path to where the figure will be saved. Output can be PDF, SVG, JPG, PNG or HTML based on the extension.
+<dt>Args:</dt><dd><p>show (bool): Whether or not to show the figure in a browser. Default True.
+output (Path): The path to where the figure will be saved. Output can be PDF, SVG, JPG, PNG or HTML based on the extension.
 start_date (str, optional): Date to set the beginning of the time series graph. If empty, it defaults to 1948.
 end_date (str, optional): Date to set the end of the time series graph too. If empty, then the end date to the most recent quarter.
 location (List[location]): The location for calculating the CPI.
@@ -279,6 +281,36 @@ title (str, optional): A custom title of the plot.</p>
 <dt class="sig sig-object std" id="cmdoption-ausdex-plot-cpi-title">
 <span class="sig-name descname"><span class="pre">--title</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;title&gt;</span></span><a class="headerlink" href="#cmdoption-ausdex-plot-cpi-title" title="Permalink to this definition"></a></dt>
 <dd><p>A custom title of the plot.</p>
+</dd></dl>
+
+</section>
+<section id="ausdex-plot-cpi-change">
+<h3>plot-cpi-change<a class="headerlink" href="#ausdex-plot-cpi-change" title="Permalink to this headline"></a></h3>
+<p>Produces a plot of the percentage change from corresponding quarter of previous year.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>show (bool): Whether or not to show the figure in a browser. Default True.
+output (Path): The path to where the figure will be saved. Output can be PDF, SVG, JPG, PNG or HTML based on the extension.</p>
+</dd>
+</dl>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex plot-cpi-change <span class="o">[</span>OPTIONS<span class="o">]</span>
+</pre></div>
+</div>
+<p class="rubric">Options</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ausdex-plot-cpi-change-show">
+<span class="sig-name descname"><span class="pre">--show</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--no-show</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-ausdex-plot-cpi-change-show" title="Permalink to this definition"></a></dt>
+<dd><p>Whether or not to show the figure in a browser.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Default</dt>
+<dd class="field-odd"><p>True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-ausdex-plot-cpi-change-output">
+<span class="sig-name descname"><span class="pre">--output</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output&gt;</span></span><a class="headerlink" href="#cmdoption-ausdex-plot-cpi-change-output" title="Permalink to this definition"></a></dt>
+<dd><p>The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension.</p>
 </dd></dl>
 
 </section>
