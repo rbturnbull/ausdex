@@ -46,6 +46,7 @@
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#module-ausdex.inflation">Inflation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ausdex.viz">Visualization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ausdex.files">Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-ausdex.main">Main</a></li>
 </ul>
@@ -233,6 +234,99 @@ Default is ‘Australia’.</p></li>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>pandas.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-ausdex.viz">
+<span id="visualization"></span><h2>Visualization<a class="headerlink" href="#module-ausdex.viz" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.viz.format_fig">
+<span class="sig-prename descclassname"><span class="pre">ausdex.viz.</span></span><span class="sig-name descname"><span class="pre">format_fig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.viz.format_fig" title="Permalink to this definition"></a></dt>
+<dd><p>Formats a plotly figure in a nicer way.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.viz.plot_cpi_change">
+<span class="sig-prename descclassname"><span class="pre">ausdex.viz.</span></span><span class="sig-name descname"><span class="pre">plot_cpi_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rba_target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.viz.plot_cpi_change" title="Permalink to this definition"></a></dt>
+<dd><p>Produces a plot of the percentage change from corresponding quarter of previous year.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output</strong> (<em>Path</em><em>, </em><em>str</em><em>, </em><em>None</em>) – If given, then the plot is written to this path.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The resulting plotly figure.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>go.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.viz.plot_cpi_timeseries">
+<span class="sig-prename descclassname"><span class="pre">ausdex.viz.</span></span><span class="sig-name descname"><span class="pre">plot_cpi_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">locations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ausdex.location.Location</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.viz.plot_cpi_timeseries" title="Permalink to this definition"></a></dt>
+<dd><p>Plots CPI vs time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_date</strong> (<em>datetime</em><em>, </em><em>str</em><em>, </em><em>optional</em>) – Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.</p></li>
+<li><p><strong>end_date</strong> (<em>datetime</em><em>, </em><em>str</em><em>, </em><em>optional</em>) – Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.</p></li>
+<li><p><strong>locations</strong> (<em>List</em><em>[</em><em>Location</em><em>]</em><em>, </em><em>optional</em>) – The location(s) for calculating the CPI.
+Options are ‘Australia’, ‘Sydney’, ‘Melbourne’, ‘Brisbane’, ‘Adelaide’, ‘Perth’, ‘Hobart’, ‘Darwin’, and ‘Canberra’.
+Default is ‘Australia’.</p></li>
+<li><p><strong>title</strong> – (str, optional): The title of the figure.</p></li>
+<li><p><strong>kwargs:</strong> – additional parameters to feed into plotly.express.line function.:</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>plot of cpi vs time</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.viz.plot_inflation_timeseries">
+<span class="sig-prename descclassname"><span class="pre">ausdex.viz.</span></span><span class="sig-name descname"><span class="pre">plot_inflation_timeseries</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compare_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">datetime.datetime</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">ausdex.location.Location</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Location.AUSTRALIA</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">plotly.graph_objs._figure.Figure</span></span></span><a class="headerlink" href="#ausdex.viz.plot_inflation_timeseries" title="Permalink to this definition"></a></dt>
+<dd><p>Plots a time series of dollar values attached to a particular date’s dollar value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>compare_date</strong> (<em>datetime</em><em>, </em><em>str</em>) – Date to set relative value of the dollars too.</p></li>
+<li><p><strong>start_date</strong> (<em>datetime</em><em>, </em><em>str</em><em>, </em><em>optional</em>) – Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.</p></li>
+<li><p><strong>end_date</strong> (<em>datetime</em><em>, </em><em>str</em><em>, </em><em>optional</em>) – Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.</p></li>
+<li><p><strong>value</strong> (<em>float</em><em>, </em><em>int</em><em>, </em><em>optional</em>) – Value you in <cite>compare_date</cite> dollars to plot on the time series. Defaults to 1.</p></li>
+<li><p><strong>location</strong> (<em>Location</em><em>, </em><em>str</em><em>, </em><em>optional</em>) – The location for calculating the CPI.
+Options are ‘Australia’, ‘Sydney’, ‘Melbourne’, ‘Brisbane’, ‘Adelaide’, ‘Perth’, ‘Hobart’, ‘Darwin’, and ‘Canberra’.
+Default is ‘Australia’.</p></li>
+<li><p><strong>kwargs</strong> – (Optional(dict)): additional parameters to feed into plotly.express.line function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>line graph of inflated dollar values vs time</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>plotly.graph_objects.Figure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ausdex.viz.write_fig">
+<span class="sig-prename descclassname"><span class="pre">ausdex.viz.</span></span><span class="sig-name descname"><span class="pre">write_fig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">pathlib.Path</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ausdex.viz.write_fig" title="Permalink to this definition"></a></dt>
+<dd><p>Writes a plotly figure to file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig</strong> (<em>plotly figure</em>) – The figure to be written</p></li>
+<li><p><strong>output</strong> (<em>Path</em>) – The path to the output file.
+If the directory does not exist, then it is created.
+Output can be PDF, SVG, JPG, PNG or HTML based on the extension.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>

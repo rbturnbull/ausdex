@@ -8,6 +8,12 @@ Inflation
 .. automodule:: ausdex.inflation
    :members:   
 
+Visualization 
+======================
+
+.. automodule:: ausdex.viz
+   :members:   
+
 Files 
 ======================
 
