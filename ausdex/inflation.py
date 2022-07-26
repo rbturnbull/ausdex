@@ -1,35 +1,15 @@
-import sys
-from enum import Enum
-from pathlib import Path
-from datetime import datetime, timedelta
-from typing import Union, List, Optional
+from datetime import datetime
+from typing import Union
 import pandas as pd
 import modin.pandas as mpd
 import numpy as np
 import numbers
-import plotly
-import plotly.express as px
 
 from cached_property import cached_property
 
+from .location import Location
 from .files import cached_download_cpi
 from .dates import convert_date
-from .viz import format_fig
-
-
-class Location(str, Enum):
-    AUSTRALIA = "Australia"
-    SYDNEY = "Sydney"
-    MELBOURNE = "Melbourne"
-    BRISBANE = "Brisbane"
-    ADELAIDE = "Adelaide"
-    PERTH = "Perth"
-    HOBART = "Hobart"
-    DARWIN = "Darwin"
-    CANBERRA = "Canberra"
-
-    def __str__(self):
-        return self.value
 
 
 class CPI:
@@ -161,103 +141,6 @@ class CPI:
         inflation = value * (evaluation_cpi / cpi_ts)
         return inflation
 
-    def plot_inflation_timeseries(
-        self,
-        compare_date: Union[datetime, str],
-        start_date: Union[datetime, str, None] = None,
-        end_date: Union[datetime, str, None] = None,
-        value: Union[float, int] = 1,
-        location: Union[Location, str] = Location.AUSTRALIA,
-        **kwargs,
-    ) -> plotly.graph_objects.Figure:
-        """
-        Plots a time series of dollar values attached to a particular date's dollar value
-
-        Args:
-            compare_date (datetime, str): Date to set relative value of the dollars too.
-            start_date (datetime, str, optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
-            end_date (datetime, str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
-            value (float, int, optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
-            location (Location, str, optional): The location for calculating the CPI.
-                Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
-                Default is 'Australia'.
-            kwargs: (Optional(dict)): additional parameters to feed into plotly.express.line function
-
-        Returns:
-            plotly.graph_objects.Figure: line graph of inflated dollar values vs time
-        """
-
-        inflation = self.calc_inflation_timeseries(
-            compare_date, start_date, end_date, value=value, location=location
-        ).reset_index()
-        new_col_name = f"Equivalent Dollar Value"
-        if "title" not in kwargs:
-            kwargs["title"] = f"The equivalent of ${value:.2f} from {str(compare_date)}"
-        inflation.rename(
-            columns={self.column_name(location): new_col_name},
-            inplace=True,
-        )
-        fig = px.line(inflation, x="Date", y=new_col_name, **kwargs)
-        format_fig(fig)
-        return fig
-
-    def plot_cpi_timeseries(
-        self,
-        start_date: Union[datetime, str, None] = None,
-        end_date: Union[datetime, str, None] = None,
-        locations: List[Location] = None,
-        title: str = None,
-        **kwargs,
-    ) -> plotly.graph_objects.Figure:
-        """
-        Plots CPI vs time.
-
-        Args:
-            start_date (datetime, str, optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
-            end_date (datetime, str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
-            locations (List[Location], optional): The location(s) for calculating the CPI.
-                Options are 'Australia', 'Sydney', 'Melbourne', 'Brisbane', 'Adelaide', 'Perth', 'Hobart', 'Darwin', and 'Canberra'.
-                Default is 'Australia'.
-            title: (str, optional): The title of the figure.
-            kwargs:: additional parameters to feed into plotly.express.line function.
-
-        Returns:
-            plotly.graph_objects.Figure: plot of cpi vs time
-        """
-        if not locations:
-            locations = list(Location)
-
-        if start_date is not None:
-            start_date = convert_date(start_date).item()
-        if end_date is not None:
-            end_date = convert_date(end_date).item()
-
-        df = self.latest_cpi_df
-        column_map = {self.column_name(location): str(location) for location in locations}
-        df = df.rename(columns=column_map)
-        df = df[column_map.values()]
-        df = df[start_date:end_date].copy()
-        df = df.reset_index()
-
-        fig = px.line(df, x="Date", y=list(column_map.values()), **kwargs)
-        fig.update_layout(
-            yaxis_title="CPI",
-            legend_title="Location",
-        )
-
-        if title is None:
-            location_name = locations[0] if len(locations) == 1 else "Australia"
-            title = f"Consumer Price Index in {location_name} over time"
-
-        fig.update_layout(title=title)
-
-        if len(locations) == 1:
-            fig.update_layout(
-                showlegend=False,
-            )
-        format_fig(fig)
-        return fig
-
 
 _cpi = CPI()
 
@@ -288,51 +171,6 @@ def calc_inflation(
         evaluation_date=evaluation_date,
         location=location,
     )
-
-
-def plot_inflation_timeseries(
-    compare_date: Union[datetime, str],
-    start_date: Union[datetime, str, None] = None,
-    end_date: Union[datetime, str, None] = None,
-    value: Union[float, int] = 1,
-    location: Union[Location, str] = Location.AUSTRALIA,
-    **kwargs,
-) -> plotly.graph_objects.Figure:
-    """
-    Plots a time series of dollar values attached to a particular date's dollar value.
-
-    Args:
-        compare_date (datetime, str): Date to set relative value of the dollars too.
-        start_date (datetime, str, optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
-        end_date (datetime, str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
-        value (float, int, optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
-        kwargs: additional parameters to feed into plotly.express.line function
-
-    Returns:
-        plotly.graph_objects.Figure: line graph of inflated dollar values vs time
-    """
-    return _cpi.plot_inflation_timeseries(
-        compare_date, start_date=start_date, end_date=end_date, value=value, location=location, **kwargs
-    )
-
-
-def plot_cpi_timeseries(
-    start_date: Union[datetime, str, None] = None,
-    end_date: Union[datetime, str, None] = None,
-    **kwargs,
-) -> plotly.graph_objects.Figure:
-    """
-    Plots the Australian CPI vs time
-
-    Args:
-        start_date (datetime, str, optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
-        end_date (datetime, str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
-        kwargs: additional parameters to feed into plotly.express.line function.
-
-    Returns:
-        plotly.graph_objects.Figure: plot of cpi vs time
-    """
-    return _cpi.plot_cpi_timeseries(start_date=start_date, end_date=end_date, **kwargs)
 
 
 def latest_cpi_df() -> pd.DataFrame:

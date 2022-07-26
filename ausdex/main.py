@@ -7,8 +7,8 @@ import importlib_metadata as lib_metadata
 from typing import Optional
 import subprocess
 
-from ausdex import Location, calc_inflation
-
+from .inflation import calc_inflation
+from .location import Location
 from . import viz
 
 app = typer.Typer()
@@ -116,7 +116,7 @@ def plot_inflation(
         end_date (str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
         value (float, optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
     """
-    from ausdex.inflation import plot_inflation_timeseries
+    from ausdex.viz import plot_inflation_timeseries
 
     fig = plot_inflation_timeseries(
         compare_date=compare_date, start_date=start_date, end_date=end_date, value=value, location=location
@@ -153,18 +153,41 @@ def plot_cpi(
     Plot the Australian CPI over time.
 
     Args:
+        show (bool): Whether or not to show the figure in a browser. Default True.
         output (Path): The path to where the figure will be saved. Output can be PDF, SVG, JPG, PNG or HTML based on the extension.
         start_date (str, optional): Date to set the beginning of the time series graph. If empty, it defaults to 1948.
         end_date (str, optional): Date to set the end of the time series graph too. If empty, then the end date to the most recent quarter.
         location (List[location]): The location for calculating the CPI.
         title (str, optional): A custom title of the plot.
     """
-    from ausdex.inflation import plot_cpi_timeseries
+    from ausdex.viz import plot_cpi_timeseries
 
     fig = plot_cpi_timeseries(start_date=start_date, end_date=end_date, locations=location, title=title)
     if output:
         print(f"Writing figure to '{output}'.")
         viz.write_fig(fig, output)
+    if show:
+        fig.show()
+
+
+@app.command()
+def plot_cpi_change(
+    show: bool = typer.Option(True, help="Whether or not to show the figure in a browser."),
+    output: Path = typer.Option(
+        None,
+        help="The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension.",
+    ),
+):
+    """
+    Produces a plot of the percentage change from corresponding quarter of previous year.
+
+    Args:
+        show (bool): Whether or not to show the figure in a browser. Default True.
+        output (Path): The path to where the figure will be saved. Output can be PDF, SVG, JPG, PNG or HTML based on the extension.
+    """
+    from ausdex.viz import plot_cpi_change
+
+    fig = plot_cpi_change(output)
     if show:
         fig.show()
 

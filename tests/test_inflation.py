@@ -101,46 +101,8 @@ class TestInflation(unittest.TestCase):
         self.assertIsInstance(results, mpd.Series)
 
 
-class TestInflationPlot(unittest.TestCase):
-    def setUp(self) -> None:
-        self.tmp = Path("tmp")
-        self.tmp.mkdir(exist_ok=True, parents=True)
-        return super().setUp()
-
-    def tearDown(self) -> None:
-        import shutil
-
-        # shutil.rmtree(self.tmp)
-        return super().tearDown()
-
-    def test_inflation_graph(self):
-        fig = inflation.plot_inflation_timeseries("01-01-2019", start_date="06-06-1949", end_date=2020)
-        fig.write_json(self.tmp / "test_inflation_fig.json")
-
-        import filecmp
-
-        self.assertTrue(
-            filecmp.cmp(
-                "tests/testdata/ausdex/test_inflation_fig.json",
-                self.tmp / "test_inflation_fig.json",
-            )
-        )
-
-    def test_cpi_graph(self):
-        fig = inflation.plot_cpi_timeseries(start_date="06-06-1949", end_date=2020)
-        fig.write_json(self.tmp / "test_cpi_fig.json")
-
-        import filecmp
-
-        self.assertTrue(
-            filecmp.cmp(
-                "tests/testdata/ausdex/test_cpi_fig.json",
-                self.tmp / "test_cpi_fig.json",
-            )
-        )
-
-    def test_latest_cpi_df(self):
-        df = inflation.latest_cpi_df()
-        assert isinstance(df, pd.DataFrame)
-        assert len(df) > 290
-        assert "Index Numbers ;  All groups CPI ;  Australia ;" in df.columns
+def test_latest_cpi_df():
+    df = inflation.latest_cpi_df()
+    assert isinstance(df, pd.DataFrame)
+    assert len(df) > 290
+    assert "Index Numbers ;  All groups CPI ;  Australia ;" in df.columns

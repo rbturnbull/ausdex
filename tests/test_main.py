@@ -105,6 +105,17 @@ class TestMain(unittest.TestCase):
         mock_show.assert_called_once()
         mock_write_html.assert_called_once()
 
+    @patch.object(Figure, "show")
+    @patch.object(Figure, "write_html")
+    def test_plot_cpi_change_output(self, mock_show, mock_write_html):
+        result = self.runner.invoke(
+            main.app,
+            ["plot-cpi-change", "--output", "tmp.html"],
+        )
+        assert result.exit_code == 0
+        mock_show.assert_called_once()
+        mock_write_html.assert_called_once()
+
     def test_plot_inflation_output_exists(self):
         with NamedTemporaryFile(suffix=".html") as tmp:
             result = self.runner.invoke(
@@ -133,6 +144,36 @@ class TestMain(unittest.TestCase):
                     tmp.name,
                     "--start-date",
                     "06-06-1949",
+                ],
+            )
+            assert result.exit_code == 0
+            assert Path(tmp.name).exists()
+
+    def test_plot_cpi_output_exists(self):
+        with NamedTemporaryFile(suffix=".png") as tmp:
+            result = self.runner.invoke(
+                main.app,
+                [
+                    "plot-cpi",
+                    "--no-show",
+                    "--output",
+                    tmp.name,
+                    "--start-date",
+                    "06-06-1949",
+                ],
+            )
+            assert result.exit_code == 0
+            assert Path(tmp.name).exists()
+
+    def test_plot_cpi_change_output_exists(self):
+        with NamedTemporaryFile(suffix=".png") as tmp:
+            result = self.runner.invoke(
+                main.app,
+                [
+                    "plot-cpi-change",
+                    "--no-show",
+                    "--output",
+                    tmp.name,
                 ],
             )
             assert result.exit_code == 0
