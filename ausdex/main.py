@@ -173,10 +173,23 @@ def plot_cpi(
 @app.command()
 def plot_cpi_change(
     show: bool = typer.Option(True, help="Whether or not to show the figure in a browser."),
+    start_date: str = typer.Option(
+        None, help="Date to set the beginning of the time series graph. Defaults to None, which starts in 1948."
+    ),
+    end_date: str = typer.Option(
+        None,
+        help="Date to set the end of the time series graph too. If empty, then the end date to the most recent quarter.",
+    ),
     output: Path = typer.Option(
         None,
         help="The path to where the figure will be saved. Output can be PDF, JPG, PNG or HTML based on the extension.",
     ),
+    location: List[Location] = typer.Option(
+        None,
+        help="The location for calculating the CPI.",
+        case_sensitive=False,
+    ),
+    title: str = typer.Option(None, help="A custom title of the plot."),
 ):
     """
     Produces a plot of the percentage change from corresponding quarter of previous year.
@@ -184,10 +197,17 @@ def plot_cpi_change(
     Args:
         show (bool): Whether or not to show the figure in a browser. Default True.
         output (Path): The path to where the figure will be saved. Output can be PDF, SVG, JPG, PNG or HTML based on the extension.
+        location (List[location]): The location for calculating the CPI.
     """
     from ausdex.viz import plot_cpi_change
 
-    fig = plot_cpi_change(output)
+    fig = plot_cpi_change(
+        start_date=start_date,
+        end_date=end_date,
+        output=output,
+        locations=location,
+        title=title,
+    )
     if show:
         fig.show()
 

@@ -26,10 +26,11 @@ def test_cpi_graph():
 
 
 def test_plot_cpi_change():
-    fig = viz.plot_cpi_change()
+    fig = viz.plot_cpi_change(start_date="1990", end_date="2022")
     with tempfile.NamedTemporaryFile(suffix=".json") as tmp:
         fig.write_json(tmp.name)
         expected = "tests/testdata/ausdex/test_plot_cpi_change.json"
+        # shutil.copy(tmp.name, expected)
         assert filecmp.cmp(
             expected,
             tmp.name,

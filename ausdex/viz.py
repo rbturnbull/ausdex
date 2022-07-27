@@ -156,26 +156,44 @@ def plot_cpi_timeseries(
     return fig
 
 
-def plot_cpi_change(output: Union[Path, str, None] = None, rba_target: bool = True) -> go.Figure:
+def plot_cpi_change(
+    start_date: Union[datetime, str, None] = None,
+    end_date: Union[datetime, str, None] = None,
+    output: Union[Path, str, None] = None,
+    locations: List[Location] = None,
+    title: str = None,
+    rba_target: bool = True,
+) -> go.Figure:
     """
     Produces a plot of the percentage change from corresponding quarter of previous year.
 
     Args:
+        start_date (datetime, str, optional): Date to set the beginning of the time series graph. Defaults to None, which starts in 1948.
+        end_date (datetime, str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
         output (Path, str, None): If given, then the plot is written to this path.
 
     Returns:
         go.Figure: The resulting plotly figure.
     """
+    if not locations:
+        locations = list(Location)
+
     df = latest_cpi_df()
+    df = df[start_date:end_date].copy()
+
+    if start_date is not None:
+        start_date = convert_date(start_date).item()
+    if end_date is not None:
+        end_date = convert_date(end_date).item()
 
     fig = go.Figure()
-    for location in Location:
+    for location in locations:
         fig.add_trace(
             go.Scatter(
                 x=df.index,
                 y=df[f'Percentage Change from Corresponding Quarter of Previous Year ;  All groups CPI ;  {location} ;']
                 / 100,
-                name=str(location),
+                name=str(location) if len(locations) > 1 else "CPI Change",
                 line=dict(width=4.0 if location == Location.AUSTRALIA else 1.5),
                 visible=1 if location == Location.AUSTRALIA else "legendonly",
             )
@@ -194,9 +212,14 @@ def plot_cpi_change(output: Union[Path, str, None] = None, rba_target: bool = Tr
             )
         )
 
+    if title is None:
+        location_name = locations[0] if len(locations) == 1 else "Australia"
+        title = f"Percentage change from corresponding quarter of previous year in {location_name}"
+
     fig.update_layout(
+        title=title,
         xaxis_title="Date",
-        yaxis_title="Percentage Change from Previous Year",
+        yaxis_title="Percentage Change",
         yaxis_tickformat=',.0%',
         xaxis_range=(df.index.min(), df.index.max() + timedelta(days=200)),
     )
