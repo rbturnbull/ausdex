@@ -75,8 +75,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Command-line Interface Reference</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Command-line Interface Reference</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/cli.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -115,7 +115,7 @@
 <section id="ausdex">
 <h2>ausdex<a class="headerlink" href="#ausdex" title="Permalink to this headline"></a></h2>
 <p>Adjusts Australian dollars for inflation.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>COMMAND<span class="w"> </span><span class="o">[</span>ARGS<span class="o">]</span>...
 </pre></div>
 </div>
 <p class="rubric">Options</p>
@@ -153,7 +153,7 @@
 <dt>Args:</dt><dd><p>live (bool, optional): Whether or not to use sphinx-autobuild to automatically build the documentation as files are edited. Defaults to True.</p>
 </dd>
 </dl>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex docs <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex<span class="w"> </span>docs<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 <p class="rubric">Options</p>
@@ -183,7 +183,7 @@ Default is ‘Australia’.</p>
 </div></blockquote>
 </dd>
 </dl>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex inflation <span class="o">[</span>OPTIONS<span class="o">]</span> VALUE ORIGINAL_DATE
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex<span class="w"> </span>inflation<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>VALUE<span class="w"> </span>ORIGINAL_DATE
 </pre></div>
 </div>
 <p class="rubric">Options</p>
@@ -233,7 +233,7 @@ location (List[location]): The location for calculating the CPI.
 title (str, optional): A custom title of the plot.</p>
 </dd>
 </dl>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex plot-cpi <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex<span class="w"> </span>plot-cpi<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 <p class="rubric">Options</p>
@@ -293,7 +293,7 @@ output (Path): The path to where the figure will be saved. Output can be PDF, SV
 location (List[location]): The location for calculating the CPI.</p>
 </dd>
 </dl>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex plot-cpi-change <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex<span class="w"> </span>plot-cpi-change<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 <p class="rubric">Options</p>
@@ -355,7 +355,7 @@ end_date (str, optional): Date to set the end of the time series graph too. Defa
 value (float, optional): Value you in <cite>compare_date</cite> dollars to plot on the time series. Defaults to 1.</p>
 </dd>
 </dl>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex plot-inflation <span class="o">[</span>OPTIONS<span class="o">]</span> COMPARE_DATE
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex<span class="w"> </span>plot-inflation<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>COMPARE_DATE
 </pre></div>
 </div>
 <p class="rubric">Options</p>
@@ -424,7 +424,7 @@ value (float, optional): Value you in <cite>compare_date</cite> dollars to plot 
 <section id="ausdex-repo">
 <h3>repo<a class="headerlink" href="#ausdex-repo" title="Permalink to this headline"></a></h3>
 <p>Opens the repository in a web browser.</p>
-<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex repo <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>ausdex<span class="w"> </span>repo<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 </section>

@@ -71,8 +71,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>Visualization</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Visualization</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/visualization.ipynb.txt" rel="nofollow"> View page source</a>
       </li>
@@ -192,10 +192,11 @@ div.nboutput.container div.prompt > div {
     }
 }
 
-/* disable scrollbars on prompts */
+/* disable scrollbars and line breaks on prompts */
 div.nbinput.container div.prompt pre,
 div.nboutput.container div.prompt pre {
     overflow: hidden;
+    white-space: pre;
 }
 
 /* input/output area */
@@ -373,7 +374,7 @@ div.rendered_html tbody tr:hover {
 <span class="kn">import</span> <span class="nn">plotly.io</span> <span class="k">as</span> <span class="nn">pio</span>
 <span class="n">pio</span><span class="o">.</span><span class="n">renderers</span><span class="o">.</span><span class="n">default</span> <span class="o">=</span> <span class="s1">&#39;notebook&#39;</span>
 <span class="k">def</span> <span class="nf">show_fig_in_docs</span><span class="p">(</span><span class="n">fig</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Shows plotly figures in a wa display in the documentation. &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Shows plotly figures in a wa display in the documentation. &quot;&quot;&quot;</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">650</span><span class="p">,</span> <span class="n">paper_bgcolor</span><span class="o">=</span><span class="s1">&#39;rgba(0,0,0,0)&#39;</span><span class="p">,</span> <span class="n">plot_bgcolor</span><span class="o">=</span><span class="s1">&#39;rgba(0,0,0,0)&#39;</span><span class="p">)</span>
     <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -382,7 +383,7 @@ div.rendered_html tbody tr:hover {
 <section id="Change-in-Consumer-Price-Index-(CPI)">
 <h2>Change in Consumer Price Index (CPI)<a class="headerlink" href="#Change-in-Consumer-Price-Index-(CPI)" title="Permalink to this headline"></a></h2>
 <p>Produces a plot of the percentage change from corresponding quarter of previous year</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ausdex plot-cpi-change <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ausdex<span class="w"> </span>plot-cpi-change<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 <p>With the following options:</p>
@@ -526,7 +527,7 @@ if (outputEl) {{
 <section id="Consumer-Price-Index-(CPI)-over-time">
 <h2>Consumer Price Index (CPI) over time<a class="headerlink" href="#Consumer-Price-Index-(CPI)-over-time" title="Permalink to this headline"></a></h2>
 <p>A time series fo the CPI can be generated via the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ausdex plot-cpi <span class="o">[</span>OPTIONS<span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ausdex<span class="w"> </span>plot-cpi<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
 <p>With the following options:</p>
@@ -584,7 +585,7 @@ if (outputEl) {{
 <section id="Equivalent-dollar-value-over-time">
 <h2>Equivalent dollar value over time<a class="headerlink" href="#Equivalent-dollar-value-over-time" title="Permalink to this headline"></a></h2>
 <p>An inflation chart can be created via the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ausdex plot-inflation <span class="o">[</span>OPTIONS<span class="o">]</span> COMPARE_DATE
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ausdex<span class="w"> </span>plot-inflation<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>COMPARE_DATE
 </pre></div>
 </div>
 <p>With the following arguments and options:</p>
