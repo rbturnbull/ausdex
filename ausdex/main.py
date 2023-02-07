@@ -3,7 +3,7 @@ from typing import List, Union
 import webbrowser
 import typer
 
-import importlib_metadata as lib_metadata
+
 from typing import Optional
 import subprocess
 
@@ -16,6 +16,7 @@ app = typer.Typer()
 
 def version_callback(value: bool):
     if value:
+        import importlib_metadata as lib_metadata
         version = lib_metadata.version("ausdex")
         typer.echo(version)
         raise typer.Exit()
