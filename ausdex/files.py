@@ -45,7 +45,7 @@ def cached_download(url: str, local_path: Union[str, Path], force: bool = False,
             if verbose:
                 print(f"Downloading {url} to {local_path}")
             urllib.request.urlretrieve(url, local_path)
-        except:
+        except Exception:
             raise DownloadError(f"Error downloading {url}")
 
     if not local_path.exists() or local_path.stat().st_size == 0:
@@ -87,15 +87,22 @@ def cached_download_abs(
     if quarter not in ACCEPTED_QUARTERS:
         raise ValueError(f"Cannot understand quarter {quarter}.")
 
+    if (year == 2021 and quarter == 'dec') or year > 2021:
+        extension = "xlsx"
+    else:
+        extension = "xls"
+
+    if (year == 2022 and quarter in ['jun', 'dec']) or year > 2022:
+        online_dir = f"{quarter}-quarter-{year}"
+    else:
+        online_dir = f"{quarter}-{year}"
+    
+
     local_path = local_path or get_cached_path(f"{id}-{quarter}-{year}.{extension}")
     local_path = Path(local_path)
     
-    try:
-        url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{quarter}-quarter-{year}/{id}.{extension}"
-        cached_download(url, local_path, force=force)
-    except DownloadError:
-        url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{quarter}-{year}/{id}.{extension}"
-        cached_download(url, local_path, force=force)
+    url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{online_dir}/{id}.{extension}"
+    cached_download(url, local_path, force=force)
 
     return local_path
 
@@ -123,14 +130,9 @@ def cached_download_abs_excel(
     Returns:
         Path: The path to the cached ABS datafile
     """
-    try:
-        local_path = cached_download_abs(
-            quarter=quarter, year=year, id=id, extension="xlsx", local_path=local_path, force=force
-        )
-    except (DownloadError, IOError):
-        local_path = cached_download_abs(
-            quarter=quarter, year=year, id=id, extension="xls", local_path=local_path, force=force
-        )
+    local_path = cached_download_abs(
+        quarter=quarter, year=year, id=id, extension="xlsx", local_path=local_path, force=force
+    )
 
     return local_path
 
