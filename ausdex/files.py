@@ -42,8 +42,6 @@ def cached_download(url: str, local_path: Union[str, Path], force: bool = False,
     local_path = Path(local_path)
     if (not local_path.exists() or local_path.stat().st_size == 0) or force:
         try:
-            if verbose:
-                print(f"Downloading {url} to {local_path}")
             urllib.request.urlretrieve(url, local_path)
         except Exception:
             raise DownloadError(f"Error downloading {url}")
