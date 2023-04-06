@@ -24,7 +24,7 @@ def get_cached_path(filename: str) -> Path:
     return cache_dir / filename
 
 
-def cached_download(url: str, local_path: Union[str, Path], force: bool = False) -> None:
+def cached_download(url: str, local_path: Union[str, Path], force: bool = False, verbose:bool = False) -> None:
     """
     Downloads a file if a local file does not already exist.
 
@@ -42,7 +42,8 @@ def cached_download(url: str, local_path: Union[str, Path], force: bool = False)
     local_path = Path(local_path)
     if (not local_path.exists() or local_path.stat().st_size == 0) or force:
         try:
-            print(f"Downloading {url} to {local_path}")
+            if verbose:
+                print(f"Downloading {url} to {local_path}")
             urllib.request.urlretrieve(url, local_path)
         except:
             raise DownloadError(f"Error downloading {url}")
@@ -86,10 +87,16 @@ def cached_download_abs(
     if quarter not in ACCEPTED_QUARTERS:
         raise ValueError(f"Cannot understand quarter {quarter}.")
 
-    url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{quarter}-{year}/{id}.{extension}"
     local_path = local_path or get_cached_path(f"{id}-{quarter}-{year}.{extension}")
     local_path = Path(local_path)
-    cached_download(url, local_path, force=force)
+    
+    try:
+        url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{quarter}-quarter-{year}/{id}.{extension}"
+        cached_download(url, local_path, force=force)
+    except DownloadError:
+        url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{quarter}-{year}/{id}.{extension}"
+        cached_download(url, local_path, force=force)
+
     return local_path
 
 
@@ -149,17 +156,18 @@ def cached_download_abs_excel_by_date(
     date = date or datetime.now()
     file = None
     while file is None and date > datetime(1948, 1, 1):
-        try:
-            year = date.year
-            quarter_index = (date.month - 3) // 3
-            if quarter_index == -1:
-                quarter_index = 3
-                year -= 1
-            quarter = ACCEPTED_QUARTERS[quarter_index]
+        year = date.year
+        quarter_index = (date.month - 3) // 3
+        if quarter_index == -1:
+            quarter_index = 3
+            year -= 1
+        quarter = ACCEPTED_QUARTERS[quarter_index]
 
+        try:
             file = cached_download_abs_excel(id, quarter, year, local_path=local_path, force=force)
-        except:
-            print(f"CPI data for {date} not available.", file=sys.stderr)
+            break
+        except (DownloadError, IOError):
+            print(f"WARNING: CPI data for Quarter {quarter.title()} {year} not yet available.", file=sys.stderr)
 
         date -= timedelta(days=89)  # go back approximately a quarter
 

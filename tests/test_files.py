@@ -46,4 +46,4 @@ class TestFiles(unittest.TestCase):
 
         with patch("sys.stderr", new=StringIO()) as fake_out:
             files.cached_download_abs_excel_by_date("640101", future)
-            self.assertIn(f"CPI data for {future} not available.", fake_out.getvalue())
+            self.assertIn(f"WARNING: CPI data for Quarter", fake_out.getvalue())
