@@ -9,7 +9,7 @@ import subprocess
 
 from .inflation import calc_inflation
 from .location import Location
-from . import viz
+
 
 app = typer.Typer()
 
@@ -117,14 +117,14 @@ def plot_inflation(
         end_date (str, optional): Date to set the end of the time series graph too. Defaults to None, which will set the end date to the most recent quarter.
         value (float, optional): Value you in `compare_date` dollars to plot on the time series. Defaults to 1.
     """
-    from ausdex.viz import plot_inflation_timeseries
+    from ausdex.viz import plot_inflation_timeseries, write_fig
 
     fig = plot_inflation_timeseries(
         compare_date=compare_date, start_date=start_date, end_date=end_date, value=value, location=location
     )
     if output:
         print(f"Writing figure to '{output}'.")
-        viz.write_fig(fig, output)
+        write_fig(fig, output)
     if show:
         fig.show()
 
@@ -161,12 +161,12 @@ def plot_cpi(
         location (List[location]): The location for calculating the CPI.
         title (str, optional): A custom title of the plot.
     """
-    from ausdex.viz import plot_cpi_timeseries
+    from ausdex.viz import plot_cpi_timeseries, write_fig
 
     fig = plot_cpi_timeseries(start_date=start_date, end_date=end_date, locations=location, title=title)
     if output:
         print(f"Writing figure to '{output}'.")
-        viz.write_fig(fig, output)
+        write_fig(fig, output)
     if show:
         fig.show()
 

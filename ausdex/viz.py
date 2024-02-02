@@ -3,9 +3,12 @@ from datetime import datetime
 from datetime import timedelta
 from typing import Union, List
 
-import plotly.io as pio
-import plotly.graph_objects as go
-import plotly.express as px
+try:
+    import plotly.io as pio
+    import plotly.graph_objects as go
+    import plotly.express as px
+except:
+    raise ModuleNotFoundError("Plotly and/or Kaleido not installed. Install with plotting utilities using hte following line: `pip install ausdex[plotly]`")
 
 from .location import Location
 from .inflation import latest_cpi_df, CPI
