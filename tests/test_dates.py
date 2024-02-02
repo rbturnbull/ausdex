@@ -1,13 +1,13 @@
 import unittest
 from unittest.mock import patch
+
+import pytest
+
 from pathlib import Path
 from datetime import datetime
 import numpy as np
 import pandas as pd
-import modin.pandas as mpd
-import modin.config as cfg
 
-cfg.IsDebug.put(True)
 
 from ausdex.dates import convert_date, date_time_to_decimal_year
 
@@ -52,6 +52,9 @@ class TestDates(unittest.TestCase):
         )
 
     def test_modin_series(self):
+        mpd = pytest.importorskip("modin.pandas")
+        cfg = pytest.importorskip("modin.config")
+        cfg.IsDebug.put(True)
         dates = mpd.Series(["Jul 31, 2009", "2010-01-10", datetime(2006, 3, 1)])
         np.testing.assert_equal(
             convert_date(dates),
@@ -127,6 +130,9 @@ class TestDateToDecimalYear(unittest.TestCase):
         self.assertEqual(result[1], 1996.5)
 
     def test_datetime_mpdseries(self):
+        mpd = pytest.importorskip("modin.pandas")
+        cfg = pytest.importorskip("modin.config")
+        cfg.IsDebug.put(True)
         result = date_time_to_decimal_year(
             mpd.Series(np.array([np.datetime64("1995-01-01"), np.datetime64("1996-07-02")]))
         )
@@ -136,6 +142,9 @@ class TestDateToDecimalYear(unittest.TestCase):
         self.assertEqual(result[1], 1996.5)
 
     def test_str_mpdseries(self):
+        mpd = pytest.importorskip("modin.pandas")
+        cfg = pytest.importorskip("modin.config")
+        cfg.IsDebug.put(True)
         result = date_time_to_decimal_year(mpd.Series(np.array(["1995-01-01", "1996-07-02"])))
         self.assertIsInstance(result, np.ndarray)
         # trues = [x == y for x, y in zip(result, [1995.5, 1996.6])]

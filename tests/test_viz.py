@@ -1,11 +1,11 @@
 import filecmp
 import tempfile
-from ausdex import viz
 import shutil
+import pytest
 
 
-def test_inflation_graph():
-    fig = viz.plot_inflation_timeseries("01-01-2019", start_date="06-06-1949", end_date=2020)
+def test_inflation_graph(check_viz):
+    fig = check_viz.plot_inflation_timeseries("01-01-2019", start_date="06-06-1949", end_date=2020)
     with tempfile.NamedTemporaryFile(suffix=".json") as tmp:
         fig.write_json(tmp.name)
 
@@ -15,8 +15,8 @@ def test_inflation_graph():
         )
 
 
-def test_cpi_graph():
-    fig = viz.plot_cpi_timeseries(start_date="06-06-1949", end_date=2020)
+def test_cpi_graph(check_viz):
+    fig = check_viz.plot_cpi_timeseries(start_date="06-06-1949", end_date=2020)
     with tempfile.NamedTemporaryFile(suffix=".json") as tmp:
         fig.write_json(tmp.name)
         assert filecmp.cmp(
@@ -25,8 +25,8 @@ def test_cpi_graph():
         )
 
 
-def test_plot_cpi_change():
-    fig = viz.plot_cpi_change(start_date="1990", end_date="2022")
+def test_plot_cpi_change(check_viz):
+    fig = check_viz.plot_cpi_change(start_date="1990", end_date="2022")
     with tempfile.NamedTemporaryFile(suffix=".json") as tmp:
         fig.write_json(tmp.name)
         expected = "tests/testdata/ausdex/test_plot_cpi_change.json"
