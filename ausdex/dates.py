@@ -4,16 +4,17 @@ import pandas as pd
 from datetime import datetime, timedelta
 import calendar
 
-try: 
+try:
     import modin.pandas as mpd
+
     modin_series = mpd.Series
     modin_to_datetime = mpd.to_datetime
     series_types = (pd.Series, mpd.Series, np.ndarray)
 except ModuleNotFoundError as e:
     modin_series = pd.Series
     modin_to_datetime = pd.to_datetime
-    series_types = (pd.Series,  np.ndarray)
-    
+    series_types = (pd.Series, np.ndarray)
+
 
 def convert_date(date: Union[datetime, str, pd.Series, np.ndarray]) -> np.ndarray:
     """Receives `date` from a variety of datatypes and converts it into a numeric value in a numpy array.
@@ -36,10 +37,9 @@ def convert_date(date: Union[datetime, str, pd.Series, np.ndarray]) -> np.ndarra
         if np.issubdtype(date.dtype, np.integer):
             date = date.astype(str)
         date = pd.to_datetime(date, format="mixed")
-        
-   
+
     elif type(date) == modin_series:
-        date =modin_to_datetime(date, format="mixed")
+        date = modin_to_datetime(date, format="mixed")
     else:
         date = pd.to_datetime(date, format="mixed")
 

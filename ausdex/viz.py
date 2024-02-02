@@ -8,7 +8,9 @@ try:
     import plotly.graph_objects as go
     import plotly.express as px
 except:
-    raise ModuleNotFoundError("Plotly and/or Kaleido not installed. Install with plotting utilities using hte following line: `pip install ausdex[plotly]`")
+    raise ModuleNotFoundError(
+        "Plotly and/or Kaleido not installed. Install with plotting utilities using hte following line: `pip install ausdex[plotly]`"
+    )
 
 from .location import Location
 from .inflation import latest_cpi_df, CPI
