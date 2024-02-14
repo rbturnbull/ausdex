@@ -18,6 +18,8 @@ ABS datasets are generally housed in Microsoft Excel spreadsheets linked from th
 
 The package is documented here: https://rbturnbull.github.io/ausdex
 
+More information about `ausdex` can be found in the paper about the packge in the Journal of Open Source Software: [https://doi.org/10.21105/joss.04212](https://doi.org/10.21105/joss.04212).
+
 ## Installation
 
 You can install `ausdex` from the Python Package Index (PyPI):
@@ -26,7 +28,7 @@ You can install `ausdex` from the Python Package Index (PyPI):
 pip install ausdex
 ```
 
-`ausdex` requires Python 3.8 or higher.
+`ausdex` requires Python 3.9 or higher.
 
 To install ausdex for development, see the documentation for [contributing](https://rbturnbull.github.io/ausdex/contributing.html).
 
