@@ -1,17 +1,14 @@
 from datetime import datetime, timedelta
 import unittest
+
+import pytest
 import numpy as np
 import pandas as pd
-import modin.pandas as mpd
 from pathlib import Path
 
 from unittest.mock import patch
 
 from ausdex import inflation
-
-import modin.config as cfg
-
-cfg.IsDebug.put(True)
 
 
 class TestInflation(unittest.TestCase):
@@ -51,7 +48,7 @@ class TestInflation(unittest.TestCase):
         np.testing.assert_allclose(value, np.array([102.36, 178.62, -214.95]), atol=1e-02)
 
     def test_cpi_at_pandas(self):
-        dates = pd.to_datetime(pd.Series(["June 1 2019", "February 3 1944", "Feb 3 1997"]))
+        dates = pd.to_datetime(pd.Series(["June 1 2019", "February 3 1944", "Feb 3 1997"]), format="mixed")
         cpi = inflation.CPI()
         results = cpi.cpi_at(dates)
         np.testing.assert_allclose(results, np.array([114.8, np.nan, 67]), atol=1e-02)
@@ -93,10 +90,16 @@ class TestInflation(unittest.TestCase):
         return results
 
     def test_pandas_modin(self):
+        mpd = pytest.importorskip("modin.pandas")
+        cfg = pytest.importorskip("modin.config")
+        cfg.IsDebug.put(True)
         results = self.test_pandas(pandas_module=mpd)
         self.assertIsInstance(results, mpd.Series)
 
     def test_pandas_evaluation_dates_modin(self):
+        mpd = pytest.importorskip("modin.pandas")
+        cfg = pytest.importorskip("modin.config")
+        cfg.IsDebug.put(True)
         results = self.test_pandas_evaluation_dates(pandas_module=mpd)
         self.assertIsInstance(results, mpd.Series)
 

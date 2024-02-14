@@ -1,6 +1,7 @@
 # ausdex
 
-![pipline](https://github.com/rbturnbull/ausdex/actions/workflows/pipeline.yml/badge.svg)
+![testing](https://github.com/rbturnbull/ausdex/actions/workflows/testing.yml/badge.svg)
+![extras](https://github.com/rbturnbull/ausdex/actions/workflows/extras.yml/badge.svg)
 [<img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rbturnbull/49262550cc8b0fb671d46df58de213d4/raw/coverage-badge.json">](<https://rbturnbull.github.io/ausdex/coverage/>)
 [<img src="https://github.com/rbturnbull/ausdex/actions/workflows/docs.yml/badge.svg">](<https://rbturnbull.github.io/ausdex/>)
 [<img src="https://img.shields.io/badge/code%20style-black-000000.svg">](<https://github.com/psf/black>)
@@ -17,6 +18,8 @@ ABS datasets are generally housed in Microsoft Excel spreadsheets linked from th
 
 The package is documented here: https://rbturnbull.github.io/ausdex
 
+More information about `ausdex` can be found in the paper about the packge in the Journal of Open Source Software: [https://doi.org/10.21105/joss.04212](https://doi.org/10.21105/joss.04212).
+
 ## Installation
 
 You can install `ausdex` from the Python Package Index (PyPI):
@@ -25,7 +28,7 @@ You can install `ausdex` from the Python Package Index (PyPI):
 pip install ausdex
 ```
 
-`ausdex` requires Python 3.8 or higher.
+`ausdex` requires Python 3.9 or higher.
 
 To install ausdex for development, see the documentation for [contributing](https://rbturnbull.github.io/ausdex/contributing.html).
 
@@ -115,7 +118,23 @@ We recommend that users exercise their own care and judgment with respect to the
 
 `ausdex` was written by [Dr Robert Turnbull](https://findanexpert.unimelb.edu.au/profile/877006-robert-turnbull) and [Dr Jonathan Garber](https://findanexpert.unimelb.edu.au/profile/787135-jonathan-garber) from the [Melbourne Data Analytics Platform](https://mdap.unimelb.edu.au/).
 
-Please cite from the article when it is released. Details to come soon.
+If you use this software package, please cite the following article:
+    
+Robert Turnbull and Jonathan Garber, (2022). ausdex: A Python package for adjusting Australian dollars for inflation. *Journal of Open Source Software*, 7(75), 4212, [https://doi.org/10.21105/joss.04212](https://doi.org/10.21105/joss.04212).
+
+## BibTeX
+
+    @article{ausdex, 
+        author = {Robert Turnbull and Jonathan Garber}, 
+        title = {ausdex: A Python package for adjusting Australian dollars for inflation}, 
+        journal = {Journal of Open Source Software},
+        doi = {10.21105/joss.04212}, 
+        year = {2022}, 
+        volume = {7}, 
+        number = {75}, 
+        pages = {4212},
+        publisher = {The Open Journal} 
+    }
 
 ## Acknowledgements
 

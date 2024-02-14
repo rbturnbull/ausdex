@@ -1,9 +1,19 @@
 from typing import Union
 import numpy as np
 import pandas as pd
-import modin.pandas as mpd
 from datetime import datetime, timedelta
 import calendar
+
+try:
+    import modin.pandas as mpd
+
+    modin_series = mpd.Series
+    modin_to_datetime = mpd.to_datetime
+    series_types = (pd.Series, mpd.Series, np.ndarray)
+except ModuleNotFoundError as e:
+    modin_series = pd.Series
+    modin_to_datetime = pd.to_datetime
+    series_types = (pd.Series, np.ndarray)
 
 
 def convert_date(date: Union[datetime, str, pd.Series, np.ndarray]) -> np.ndarray:
@@ -26,11 +36,12 @@ def convert_date(date: Union[datetime, str, pd.Series, np.ndarray]) -> np.ndarra
     elif isinstance(date, np.ndarray):
         if np.issubdtype(date.dtype, np.integer):
             date = date.astype(str)
-        date = pd.to_datetime(date)
-    elif type(date) == mpd.Series:
-        date = mpd.to_datetime(date)
+        date = pd.to_datetime(date, format="mixed")
+
+    elif type(date) == modin_series:
+        date = modin_to_datetime(date, format="mixed")
     else:
-        date = pd.to_datetime(date)
+        date = pd.to_datetime(date, format="mixed")
 
     return np.array(date, dtype="datetime64[D]")
 
@@ -73,7 +84,7 @@ def date_time_to_decimal_year(
     elif isinstance(date, (datetime, pd.Timestamp, np.datetime64)):
         # if a scalar date value, then convert to pandas to be converted to decimal year
         return timestamp_to_decimal_year(pd.to_datetime(date))
-    elif isinstance(date, (pd.Series, mpd.Series, np.ndarray)):
+    elif isinstance(date, series_types):
         if date.dtype in [float, int]:
             # if it is already an array of numerical values, then just return it
             return date

@@ -3,8 +3,11 @@ import unittest
 import re
 from unittest.mock import patch
 
+import pytest
+from pytest_mock import MockerFixture
+
 from typer.testing import CliRunner
-from plotly.graph_objects import Figure
+
 from tempfile import NamedTemporaryFile
 from ausdex import main
 
@@ -65,116 +68,143 @@ class TestMain(unittest.TestCase):
         assert result.exit_code == 0
         assert "5.29" in result.stdout
 
-    @patch.object(Figure, "show")
-    def test_plot_cpi(self, mock_show):
-        result = self.runner.invoke(
+
+@pytest.fixture
+def runner():
+    return CliRunner()
+
+
+@pytest.fixture
+def mock_show(mocker: MockerFixture, check_viz):
+    from plotly.graph_objects import Figure
+
+    return mocker.patch.object(Figure, "show")
+
+
+@pytest.fixture
+def mock_write_image(mocker: MockerFixture, check_viz):
+    from plotly.graph_objects import Figure
+
+    return mocker.patch.object(Figure, "write_image")
+
+
+@pytest.fixture
+def mock_write_html(mocker: MockerFixture, check_viz):
+    from plotly.graph_objects import Figure
+
+    return mocker.patch.object(Figure, "write_html")
+
+
+def test_plot_cpi(check_viz, runner, mock_show):
+    result = runner.invoke(
+        main.app,
+        ["plot-cpi"],
+    )
+    assert result.exit_code == 0
+    mock_show.assert_called_once()
+
+
+def test_plot_cpi_output(check_viz, runner, mock_show, mock_write_image):
+    result = runner.invoke(
+        main.app,
+        ["plot-cpi", "--output", "tmp.jpg", "--location", "Melbourne"],
+    )
+    assert result.exit_code == 0
+    mock_show.assert_called_once()
+    mock_write_image.assert_called_once()
+
+
+def test_plot_inflation(check_viz, runner, mock_show):
+    result = runner.invoke(
+        main.app,
+        ["plot-inflation", "2022"],
+    )
+    assert result.exit_code == 0
+    mock_show.assert_called_once()
+
+
+def test_plot_inflation_output(check_viz, runner, mock_show, mock_write_html):
+    result = runner.invoke(
+        main.app,
+        ["plot-inflation", "2022", "--output", "tmp.html", "--location", "Melbourne"],
+    )
+    assert result.exit_code == 0
+    mock_show.assert_called_once()
+    mock_write_html.assert_called_once()
+
+
+def test_plot_cpi_change_output(check_viz, runner, mock_show, mock_write_html):
+    result = runner.invoke(
+        main.app,
+        ["plot-cpi-change", "--output", "tmp.html"],
+    )
+    assert result.exit_code == 0
+    mock_show.assert_called_once()
+    mock_write_html.assert_called_once()
+
+
+def test_plot_inflation_output_exists(check_viz, runner):
+    with NamedTemporaryFile(suffix=".html") as tmp:
+        result = runner.invoke(
             main.app,
-            ["plot-cpi"],
+            [
+                "plot-inflation",
+                "01-01-2019",
+                "--no-show",
+                "--output",
+                tmp.name,
+                "--start-date",
+                "06-06-1949",
+            ],
         )
         assert result.exit_code == 0
-        mock_show.assert_called_once()
+        assert Path(tmp.name).exists()
 
-    @patch.object(Figure, "show")
-    @patch.object(Figure, "write_image")
-    def test_plot_cpi_output(self, mock_show, mock_write_image):
-        result = self.runner.invoke(
+
+def test_plot_cpi_output_exists(check_viz, runner):
+    with NamedTemporaryFile(suffix=".png") as tmp:
+        result = runner.invoke(
             main.app,
-            ["plot-cpi", "--output", "tmp.jpg", "--location", "Melbourne"],
+            [
+                "plot-cpi",
+                "--no-show",
+                "--output",
+                tmp.name,
+                "--start-date",
+                "06-06-1949",
+            ],
         )
         assert result.exit_code == 0
-        mock_show.assert_called_once()
-        mock_write_image.assert_called_once()
+        assert Path(tmp.name).exists()
 
-    @patch.object(Figure, "show")
-    def test_plot_inflation(self, mock_show):
-        result = self.runner.invoke(
+
+def test_plot_cpi_output_exists(check_viz, runner):
+    with NamedTemporaryFile(suffix=".png") as tmp:
+        result = runner.invoke(
             main.app,
-            ["plot-inflation", "2022"],
+            [
+                "plot-cpi",
+                "--no-show",
+                "--output",
+                tmp.name,
+                "--start-date",
+                "06-06-1949",
+            ],
         )
         assert result.exit_code == 0
-        mock_show.assert_called_once()
+        assert Path(tmp.name).exists()
 
-    @patch.object(Figure, "show")
-    @patch.object(Figure, "write_html")
-    def test_plot_inflation_output(self, mock_show, mock_write_html):
-        result = self.runner.invoke(
+
+def test_plot_cpi_change_output_exists(check_viz, runner):
+    with NamedTemporaryFile(suffix=".png") as tmp:
+        result = runner.invoke(
             main.app,
-            ["plot-inflation", "2022", "--output", "tmp.html", "--location", "Melbourne"],
+            [
+                "plot-cpi-change",
+                "--no-show",
+                "--output",
+                tmp.name,
+            ],
         )
         assert result.exit_code == 0
-        mock_show.assert_called_once()
-        mock_write_html.assert_called_once()
-
-    @patch.object(Figure, "show")
-    @patch.object(Figure, "write_html")
-    def test_plot_cpi_change_output(self, mock_show, mock_write_html):
-        result = self.runner.invoke(
-            main.app,
-            ["plot-cpi-change", "--output", "tmp.html"],
-        )
-        assert result.exit_code == 0
-        mock_show.assert_called_once()
-        mock_write_html.assert_called_once()
-
-    def test_plot_inflation_output_exists(self):
-        with NamedTemporaryFile(suffix=".html") as tmp:
-            result = self.runner.invoke(
-                main.app,
-                [
-                    "plot-inflation",
-                    "01-01-2019",
-                    "--no-show",
-                    "--output",
-                    tmp.name,
-                    "--start-date",
-                    "06-06-1949",
-                ],
-            )
-            assert result.exit_code == 0
-            assert Path(tmp.name).exists()
-
-    def test_plot_cpi_output_exists(self):
-        with NamedTemporaryFile(suffix=".png") as tmp:
-            result = self.runner.invoke(
-                main.app,
-                [
-                    "plot-cpi",
-                    "--no-show",
-                    "--output",
-                    tmp.name,
-                    "--start-date",
-                    "06-06-1949",
-                ],
-            )
-            assert result.exit_code == 0
-            assert Path(tmp.name).exists()
-
-    def test_plot_cpi_output_exists(self):
-        with NamedTemporaryFile(suffix=".png") as tmp:
-            result = self.runner.invoke(
-                main.app,
-                [
-                    "plot-cpi",
-                    "--no-show",
-                    "--output",
-                    tmp.name,
-                    "--start-date",
-                    "06-06-1949",
-                ],
-            )
-            assert result.exit_code == 0
-            assert Path(tmp.name).exists()
-
-    def test_plot_cpi_change_output_exists(self):
-        with NamedTemporaryFile(suffix=".png") as tmp:
-            result = self.runner.invoke(
-                main.app,
-                [
-                    "plot-cpi-change",
-                    "--no-show",
-                    "--output",
-                    tmp.name,
-                ],
-            )
-            assert result.exit_code == 0
-            assert Path(tmp.name).exists()
+        assert Path(tmp.name).exists()

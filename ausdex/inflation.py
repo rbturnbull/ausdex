@@ -1,7 +1,12 @@
+import logging
 from datetime import datetime
 from typing import Union
 import pandas as pd
-import modin.pandas as mpd
+
+try:
+    import modin.pandas as mpd
+except:
+    logging.info("modin is not installed, so using pandas for computations")
 import numpy as np
 import numbers
 
@@ -82,7 +87,7 @@ class CPI:
 
         min_date = cpi_series.index.min()
         cpis = np.array(
-            cpi_series[np.searchsorted(cpi_series.index, date, side="right") - 1],
+            cpi_series[np.searchsorted(cpi_series.index.values, date, side="right") - 1],
             dtype=float,
         )
         cpis[date < min_date] = np.nan

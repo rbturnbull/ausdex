@@ -24,7 +24,7 @@ def get_cached_path(filename: str) -> Path:
     return cache_dir / filename
 
 
-def cached_download(url: str, local_path: Union[str, Path], force: bool = False, verbose:bool = False) -> None:
+def cached_download(url: str, local_path: Union[str, Path], force: bool = False, verbose: bool = False) -> None:
     """
     Downloads a file if a local file does not already exist.
 
@@ -94,11 +94,10 @@ def cached_download_abs(
         online_dir = f"{quarter}-quarter-{year}"
     else:
         online_dir = f"{quarter}-{year}"
-    
 
     local_path = local_path or get_cached_path(f"{id}-{quarter}-{year}.{extension}")
     local_path = Path(local_path)
-    
+
     url = f"https://www.abs.gov.au/statistics/economy/price-indexes-and-inflation/consumer-price-index-australia/{online_dir}/{id}.{extension}"
     cached_download(url, local_path, force=force)
 
