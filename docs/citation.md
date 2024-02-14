@@ -2,7 +2,23 @@
 
 ausdex was written by [Dr Robert Turnbull](https://findanexpert.unimelb.edu.au/profile/877006-robert-turnbull) and [Dr Jonathan Garber](https://findanexpert.unimelb.edu.au/profile/787135-jonathan-garber) from the [Melbourne Data Analytics Platform](https://mdap.unimelb.edu.au/).
 
-Please cite from the article when it is released. Details to come soon.
+If you use this software package, please cite the following article:
+    
+Robert Turnbull and Jonathan Garber, (2022). ausdex: A Python package for adjusting Australian dollars for inflation. *Journal of Open Source Software*, 7(75), 4212, https://doi.org/10.21105/joss.04212
+
+## BibTeX
+
+    @article{ausdex, 
+        author = {Robert Turnbull and Jonathan Garber}, 
+        title = {ausdex: A Python package for adjusting Australian dollars for inflation}, 
+        journal = {Journal of Open Source Software},
+        doi = {10.21105/joss.04212}, 
+        year = {2022}, 
+        volume = {7}, 
+        number = {75}, 
+        pages = {4212},
+        publisher = {The Open Journal} 
+    }
 
 ## Acknowledgements
 
