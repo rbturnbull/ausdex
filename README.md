@@ -1,6 +1,7 @@
 # ausdex
 
-![pipline](https://github.com/rbturnbull/ausdex/actions/workflows/pipeline.yml/badge.svg)
+![testing](https://github.com/rbturnbull/ausdex/actions/workflows/testing.yml/badge.svg)
+![extras](https://github.com/rbturnbull/ausdex/actions/workflows/extras.yml/badge.svg)
 [<img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/rbturnbull/49262550cc8b0fb671d46df58de213d4/raw/coverage-badge.json">](<https://rbturnbull.github.io/ausdex/coverage/>)
 [<img src="https://github.com/rbturnbull/ausdex/actions/workflows/docs.yml/badge.svg">](<https://rbturnbull.github.io/ausdex/>)
 [<img src="https://img.shields.io/badge/code%20style-black-000000.svg">](<https://github.com/psf/black>)
