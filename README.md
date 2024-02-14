@@ -118,7 +118,7 @@ We recommend that users exercise their own care and judgment with respect to the
 
 If you use this software package, please cite the following article:
     
-Robert Turnbull and Jonathan Garber, (2022). ausdex: A Python package for adjusting Australian dollars for inflation. *Journal of Open Source Software*, 7(75), 4212, https://doi.org/10.21105/joss.04212
+Robert Turnbull and Jonathan Garber, (2022). ausdex: A Python package for adjusting Australian dollars for inflation. *Journal of Open Source Software*, 7(75), 4212, [https://doi.org/10.21105/joss.04212](https://doi.org/10.21105/joss.04212).
 
 ## BibTeX
 
