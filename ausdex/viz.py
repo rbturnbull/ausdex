@@ -9,7 +9,7 @@ try:
     import plotly.express as px
 except:
     raise ModuleNotFoundError(
-        "Plotly and/or Kaleido not installed. Install with plotting utilities using hte following line: `pip install ausdex[plotly]`"
+        "Plotly and/or Kaleido not installed. Install with plotting utilities using the following line: `pip install ausdex[plotly]`"
     )
 
 from .location import Location
