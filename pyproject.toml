@@ -21,6 +21,7 @@ kaleido = {version="0.2.1", optional = true}
 numpy = "^1.22.0"
 pandas = "^2"
 modin = {version = "^0.26.1", optional = true}
+importlib-metadata = "^7.0.1"
 
 [tool.poetry.dev-dependencies]
 ipykernel = "^6.2.0"
